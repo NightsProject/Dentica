@@ -234,6 +234,7 @@ class Dashboard(QWidget):
         #test pr
         #test again pr
 
+        #test_Nights
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Dashboard()
