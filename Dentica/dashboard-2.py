@@ -231,6 +231,7 @@ class Dashboard(QWidget):
         content.addLayout(panels)
         root_layout.addLayout(content, 1)
 
+        #test pr
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Dashboard()
