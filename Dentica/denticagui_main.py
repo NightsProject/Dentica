@@ -6,6 +6,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.setFixedSize(1200, 800)
+        MainWindow.setWindowTitle("Dentica")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         
@@ -17,11 +18,9 @@ class Ui_MainWindow(object):
         self.SidebarFrame.setStyleSheet("""
         QFrame {
                 background-color: #fff;
-                border-right: 1px solid #e2e8f0; /* Light right border for separation */
+                border-right: 5px solid #e2e8f0; 
         }
         """)
-        self.SidebarFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.SidebarFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.SidebarFrame.setObjectName("SidebarFrame")
 
         #Dentica Label
@@ -382,7 +381,7 @@ class Ui_MainWindow(object):
 
         #Upcoming Appintment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.frame_2.setGeometry(QtCore.QRect(30, 230, 591, 461))
+        self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
                 background: #ffffff;
