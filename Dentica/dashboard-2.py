@@ -91,13 +91,17 @@ class Dashboard(QWidget):
         cards.setSpacing(20)
         def make_card(title, value):
             f = QFrame()
+            f.setObjectName("cardFrame")
             f.setStyleSheet("""
-                QFrame {
+                #cardFrame {
                     background: #fff;
                     border: 1px solid #e5e7eb;
                     border-radius: 12px;
                     padding: 20px;
                 }
+                QFrame {
+                    background: #fff;
+                }           
             """)
             l = QVBoxLayout(f)
             t = QLabel(title)
