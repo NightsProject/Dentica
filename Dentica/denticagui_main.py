@@ -6,6 +6,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.setFixedSize(1200, 800)
+        MainWindow.setWindowTitle("Dentica")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         
@@ -14,12 +15,7 @@ class Ui_MainWindow(object):
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
         self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, MainWindow.height()))
         self.SidebarFrame.setAutoFillBackground(False)
-        self.SidebarFrame.setStyleSheet("""
-        QFrame {
-                background-color: #fff;
-                border-right: 1px solid #e2e8f0; /* Light right border for separation */
-        }
-        """)
+        self.SidebarFrame.setStyleSheet("background-color: #fff;")
         self.SidebarFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.SidebarFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.SidebarFrame.setObjectName("SidebarFrame")
@@ -202,7 +198,7 @@ class Ui_MainWindow(object):
 
         #Notification button
         self.not_btn = QtWidgets.QPushButton(parent=self.frame)
-        self.not_btn.setGeometry(QtCore.QRect(850, 30, 41, 31))
+        self.not_btn.setGeometry(QtCore.QRect(850, 23, 40, 40))
         self.not_btn.setText("")
         not_icon = QtGui.QIcon("Dentica/icons/Notification.svg")
         self.not_btn.setIcon(not_icon)
@@ -211,6 +207,7 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px;                   
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -220,8 +217,7 @@ class Ui_MainWindow(object):
 
         #User button
         self.userbtn = QtWidgets.QPushButton(parent=self.frame)
-        self.userbtn.setGeometry(QtCore.QRect(900, 30, 41, 31))
-        self.userbtn.setText("")
+        self.userbtn.setGeometry(QtCore.QRect(900, 23, 40, 40))
         user_icon = QtGui.QIcon("Dentica/icons/User.svg")
         self.userbtn.setIcon(user_icon)
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
@@ -230,6 +226,7 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px;
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -382,7 +379,7 @@ class Ui_MainWindow(object):
 
         #Upcoming Appintment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.frame_2.setGeometry(QtCore.QRect(30, 230, 591, 461))
+        self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
                 background: #ffffff;
@@ -477,24 +474,23 @@ class Ui_MainWindow(object):
         self.frame_3.setObjectName("frame_3")
         self.label_11 = QtWidgets.QLabel(parent=self.frame_3)
         self.label_11.setGeometry(QtCore.QRect(20, 10, 190, 51))
+        self.label_11.setStyleSheet("background-color: #fff;")
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(12)
         font.setBold(True)
         font.setWeight(75)
         self.label_11.setFont(font)
-        self.label_11.setStyleSheet("background: #fff;")
         self.label_11.setObjectName("label_11")
         self.Pages.addWidget(self.Dashboard_page)
 
         #Patients Page
         self.Patients_page = QtWidgets.QWidget()
         self.Patients_page.setObjectName("Patients_page")
+        
         self.frame_4 = QtWidgets.QFrame(parent=self.Patients_page)
         self.frame_4.setGeometry(QtCore.QRect(0, -10, 991, 71))
         self.frame_4.setStyleSheet("background-color: #fff;")
-        self.frame_4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_4.setObjectName("frame_4")
         self.label_12 = QtWidgets.QLabel(parent=self.frame_4)
         self.label_12.setGeometry(QtCore.QRect(20, 30, 131, 31))
@@ -506,13 +502,14 @@ class Ui_MainWindow(object):
         self.label_12.setFont(font)
         self.label_12.setObjectName("label_12")
         self.not_btn_2 = QtWidgets.QPushButton(parent=self.frame_4)
-        self.not_btn_2.setGeometry(QtCore.QRect(735, 30, 41, 31))
+        self.not_btn_2.setGeometry(QtCore.QRect(735, 23, 40, 40))
         self.not_btn_2.setIcon(not_icon)
         self.not_btn_2.setIconSize(QtCore.QSize(25, 25))
         self.not_btn_2.setStyleSheet("""
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px;                      
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -522,7 +519,7 @@ class Ui_MainWindow(object):
 
         #User Button 2
         self.pushButton_3 = QtWidgets.QPushButton(parent=self.frame_4)
-        self.pushButton_3.setGeometry(QtCore.QRect(780, 30, 41, 31))
+        self.pushButton_3.setGeometry(QtCore.QRect(780, 23, 40, 40))
         self.pushButton_3.setText("")
         self.pushButton_3.setIcon(user_icon)
         self.pushButton_3.setIconSize(QtCore.QSize(25, 25))
@@ -530,6 +527,7 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px;                         
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -559,18 +557,23 @@ class Ui_MainWindow(object):
 
         #Patient Table Frame
         self.Pat_table_Frame = QtWidgets.QFrame(parent=self.Patients_page)
-        self.Pat_table_Frame.setGeometry(QtCore.QRect(20, 80, 781, 581))
-        self.Pat_table_Frame.setStyleSheet("  background: #fff; border-radius: 12px; border: 1px solid #e5e7eb;\n"
-"               ")
+        self.Pat_table_Frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
+        self.Pat_table_Frame.setStyleSheet("""
+        #Pat_table_Frame {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;  
+                border-radius: 12px;
+        }
+        """)
         self.Pat_table_Frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.Pat_table_Frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.Pat_table_Frame.setObjectName("Pat_table_Frame")
 
         #Patients table
         self.Patients_table = QtWidgets.QTableWidget(parent=self.Pat_table_Frame)
-        self.Patients_table.setGeometry(QtCore.QRect(10, 20, 751, 541))
+        self.Patients_table.setGeometry(QtCore.QRect(10, 20, 900, 680))
         self.Patients_table.setObjectName("Patients_table")
-        self.Patients_table.setColumnCount(5)
+        self.Patients_table.setColumnCount(7)
         self.Patients_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.Patients_table.setHorizontalHeaderItem(0, item)
@@ -582,16 +585,38 @@ class Ui_MainWindow(object):
         self.Patients_table.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.Patients_table.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.Patients_table.setHorizontalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.Patients_table.setHorizontalHeaderItem(6, item)
         self.Pages.addWidget(self.Patients_page)
-
+        self.Patients_table.setStyleSheet("""
+        QTableWidget {
+        background-color: #fff;
+        border: none;
+        border-radius: 12px;                                  
+        }
+        QTableWidget::item {
+                border-bottom: 1px solid #e5e7eb;
+        }
+        QHeaderView::section {
+                border: none;
+                background-color: #fff;
+        }
+        """)
+        self.Patients_table.horizontalHeader().setStyleSheet("""
+        QHeaderView::section {
+                font-family: "Inter"; 
+                font-size: 14px;        
+                color: #64748B;                
+        }
+        """)
         #Appointments Page
         self.Appointments_page = QtWidgets.QWidget()
         self.Appointments_page.setObjectName("Appointments_page")
         self.app_frame = QtWidgets.QFrame(parent=self.Appointments_page)
         self.app_frame.setGeometry(QtCore.QRect(0, -10, 991, 71))
         self.app_frame.setStyleSheet("background-color: #fff;")
-        self.app_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.app_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.app_frame.setObjectName("app_frame")
         self.label_13 = QtWidgets.QLabel(parent=self.app_frame)
         self.label_13.setGeometry(QtCore.QRect(20, 30, 171, 31))
@@ -605,13 +630,14 @@ class Ui_MainWindow(object):
 
         #Notification button 3
         self.not_btn_3 = QtWidgets.QPushButton(parent=self.app_frame)
-        self.not_btn_3.setGeometry(QtCore.QRect(690, 30, 41, 31))
+        self.not_btn_3.setGeometry(QtCore.QRect(690, 23, 40, 40))
         self.not_btn_3.setIcon(not_icon)
         self.not_btn_3.setIconSize(QtCore.QSize(25, 25))
         self.not_btn_3.setStyleSheet("""
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px; 
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -621,13 +647,14 @@ class Ui_MainWindow(object):
 
         #User button 5
         self.pushButton_4 = QtWidgets.QPushButton(parent=self.app_frame)
-        self.pushButton_4.setGeometry(QtCore.QRect(735, 30, 41, 31))
+        self.pushButton_4.setGeometry(QtCore.QRect(735, 23, 40, 40))
         self.pushButton_4.setIcon(user_icon)
         self.pushButton_4.setIconSize(QtCore.QSize(25, 25))
         self.pushButton_4.setStyleSheet("""
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px; 
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -657,19 +684,37 @@ class Ui_MainWindow(object):
 
         #Appointment Table Frame
         self.app_table_frame = QtWidgets.QFrame(parent=self.Appointments_page)
-        self.app_table_frame.setGeometry(QtCore.QRect(10, 80, 781, 581))
-        self.app_table_frame.setStyleSheet("  background: #fff; border-radius: 12px; \n"
-"               ")
+        self.app_table_frame.setGeometry(QtCore.QRect(10, 80, 900, 680))
+        self.app_table_frame.setStyleSheet("""
+        #app_table_frame {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;  
+                border-radius: 12px;
+        }
+        """)
         self.app_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.app_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.app_table_frame.setObjectName("app_table_frame")
 
         #Appointment table
         self.Appointments_table = QtWidgets.QTableWidget(parent=self.app_table_frame)
-        self.Appointments_table.setGeometry(QtCore.QRect(10, 60, 751, 501))
+        self.Appointments_table.setGeometry(QtCore.QRect(150, 60, 751, 501))
         self.Appointments_table.setObjectName("Appointments_table")
         self.Appointments_table.setColumnCount(5)
         self.Appointments_table.setRowCount(0)
+        self.Appointments_table.setStyleSheet("""
+        QTableWidget {
+        background-color: #fff;
+        border: none;
+        }
+        QTableWidget::item {
+                border-bottom: 1px solid #e5e7eb;
+        }
+        QHeaderView::section {
+                border: none;
+                background-color: #fff;
+        }
+        """)
         item = QtWidgets.QTableWidgetItem()
         self.Appointments_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -680,11 +725,19 @@ class Ui_MainWindow(object):
         self.Appointments_table.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.Appointments_table.setHorizontalHeaderItem(4, item)
+        self.Appointments_table.horizontalHeader().setStyleSheet("""
+        QHeaderView::section {
+                font-family: "Inter"; 
+                font-size: 14px;        
+                color: #64748B;               
+        }
+        """)
 
         #Appointments buttons layout
         self.horizontalLayoutWidget = QtWidgets.QWidget(parent=self.app_table_frame)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 10, 461, 41))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        self.horizontalLayoutWidget.setStyleSheet("background-color: #fff;")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -692,21 +745,85 @@ class Ui_MainWindow(object):
         #Appointments All button
         self.pushButton_8 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget)
         self.pushButton_8.setObjectName("pushButton_8")
+        self.pushButton_8.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;                
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout.addWidget(self.pushButton_8)
 
         #Appointments Scheduled button
         self.pushButton_9 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget)
         self.pushButton_9.setObjectName("pushButton_9")
+        self.pushButton_9.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;                
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout.addWidget(self.pushButton_9)
 
         #Appointments Confirmed button
         self.pushButton_7 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget)
         self.pushButton_7.setObjectName("pushButton_7")
+        self.pushButton_7.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout.addWidget(self.pushButton_7)
         
         #Appointments Waiting button
         self.pushButton_6 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget)
         self.pushButton_6.setObjectName("pushButton_6")
+        self.pushButton_6.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout.addWidget(self.pushButton_6)
         self.Pages.addWidget(self.Appointments_page)
 
@@ -716,8 +833,6 @@ class Ui_MainWindow(object):
         self.Bill_frame = QtWidgets.QFrame(parent=self.Billing_page)
         self.Bill_frame.setGeometry(QtCore.QRect(0, -10, 991, 71))
         self.Bill_frame.setStyleSheet("background-color: #fff;")
-        self.Bill_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.Bill_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.Bill_frame.setObjectName("Bill_frame")
 
         #Billing
@@ -733,7 +848,7 @@ class Ui_MainWindow(object):
 
         #Notification button 4
         self.not_btn_4 = QtWidgets.QPushButton(parent=self.Bill_frame)
-        self.not_btn_4.setGeometry(QtCore.QRect(737, 30, 41, 31))
+        self.not_btn_4.setGeometry(QtCore.QRect(737, 23, 40, 40))
         self.not_btn_4.setText("")
         self.not_btn_4.setIcon(not_icon)
         self.not_btn_4.setIconSize(QtCore.QSize(25, 25))
@@ -741,6 +856,7 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px; 
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -750,7 +866,7 @@ class Ui_MainWindow(object):
 
         #User button 4
         self.pushButton_10 = QtWidgets.QPushButton(parent=self.Bill_frame)
-        self.pushButton_10.setGeometry(QtCore.QRect(780, 30, 41, 31))
+        self.pushButton_10.setGeometry(QtCore.QRect(780, 23, 40, 40))
         self.pushButton_10.setText("")
         self.pushButton_10.setIcon(user_icon)
         self.pushButton_10.setIconSize(QtCore.QSize(25, 25))
@@ -758,6 +874,7 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
+                border-radius: 20px;                          
         }
         QPushButton:hover {
                 background-color: #72A8FF;
@@ -786,19 +903,37 @@ class Ui_MainWindow(object):
 
         #Billing Table frame
         self.bill_table_frame = QtWidgets.QFrame(parent=self.Billing_page)
-        self.bill_table_frame.setGeometry(QtCore.QRect(10, 80, 781, 581))
-        self.bill_table_frame.setStyleSheet("  background: #fff; border-radius: 12px; \n"
-"               ")
+        self.bill_table_frame.setGeometry(QtCore.QRect(10, 80, 900, 680))
+        self.bill_table_frame.setStyleSheet("""
+        #bill_table_frame {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;  
+                border-radius: 12px;
+        }
+        """)
         self.bill_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.bill_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.bill_table_frame.setObjectName("bill_table_frame")
 
         #Billing Table
         self.Billing_table = QtWidgets.QTableWidget(parent=self.bill_table_frame)
-        self.Billing_table.setGeometry(QtCore.QRect(10, 60, 751, 501))
+        self.Billing_table.setGeometry(QtCore.QRect(150, 60, 751, 501))
         self.Billing_table.setObjectName("Billing_table")
         self.Billing_table.setColumnCount(6)
         self.Billing_table.setRowCount(0)
+        self.Billing_table.setStyleSheet("""
+        QTableWidget {
+        background-color: #fff;
+        border: none;
+        }
+        QTableWidget::item {
+                border-bottom: 1px solid #e5e7eb;
+        }
+        QHeaderView::section {
+                border: none;
+                background-color: #fff;
+        }
+        """)
         item = QtWidgets.QTableWidgetItem()
         self.Billing_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -811,11 +946,20 @@ class Ui_MainWindow(object):
         self.Billing_table.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.Billing_table.setHorizontalHeaderItem(5, item)
+        self.Billing_table.horizontalHeader().setStyleSheet("""
+        QHeaderView::section {
+                font-family: "Inter"; 
+                font-size: 14px;        
+                color: #64748B;       
+                padding: 5px;         
+        }
+        """)
 
         #Billing buttons layout
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(parent=self.bill_table_frame)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(20, 10, 461, 41))
         self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
+        self.horizontalLayoutWidget_2.setStyleSheet("background-color: #fff;")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -823,21 +967,85 @@ class Ui_MainWindow(object):
         #All Billing button
         self.pushButton_12 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_12.setObjectName("pushButton_12")
+        self.pushButton_12.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;                
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout_2.addWidget(self.pushButton_12)
 
         #Pending Billing button
         self.pushButton_13 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_13.setObjectName("pushButton_13")
+        self.pushButton_13.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;                
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout_2.addWidget(self.pushButton_13)
         
 
         #Paid Billing button
         self.pushButton_14 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_14.setObjectName("pushButton_14")
+        self.pushButton_14.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;                
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.horizontalLayout_2.addWidget(self.pushButton_14)
 
         #Overdue Billing button
         self.pushButton_15 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
+        self.pushButton_15.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: #fff;
+                        border: none;
+                        color: #475569;
+                        font-size: 16px;
+                        text-align: center;                
+                }
+                QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+                """)
         self.pushButton_15.setObjectName("pushButton_15")
 
         self.horizontalLayout_2.addWidget(self.pushButton_15)
@@ -851,8 +1059,6 @@ class Ui_MainWindow(object):
         self.Reports_topbar_frame = QtWidgets.QFrame(parent=self.Reports_page)
         self.Reports_topbar_frame.setGeometry(QtCore.QRect(0, -10, 991, 71))
         self.Reports_topbar_frame.setStyleSheet("background-color: #fff;")
-        self.Reports_topbar_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.Reports_topbar_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.Reports_topbar_frame.setObjectName("Reports_topbar_frame")
 
         #Reports
@@ -866,11 +1072,53 @@ class Ui_MainWindow(object):
         self.label_15.setFont(font)
         self.label_15.setObjectName("label_15")
 
+        #Notification button 5
+        self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
+        self.not_btn_5.setGeometry(QtCore.QRect(850, 23, 40, 40))
+        not_icon = QtGui.QIcon("Dentica/icons/Notification.svg")
+        self.not_btn_5.setIcon(not_icon)
+        self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
+        self.not_btn_5.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;                   
+        }
+        QPushButton:hover {
+                background-color: #72A8FF;
+        }                           
+        """)
+        self.not_btn_5.setObjectName("not_btn_5")
+
+        #User button 5
+        self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
+        self.userbtn_5.setGeometry(QtCore.QRect(900, 23, 40, 40))
+        user_icon = QtGui.QIcon("Dentica/icons/User.svg")
+        self.userbtn_5.setIcon(user_icon)
+        self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
+        self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
+        self.userbtn_5.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #72A8FF;
+        }
+        """)
+        self.userbtn.setObjectName("userbtn_5")
+
         #Reports table frame
         self.Reports_table_frame = QtWidgets.QFrame(parent=self.Reports_page)
-        self.Reports_table_frame.setGeometry(QtCore.QRect(20, 70, 781, 581))
-        self.Reports_table_frame.setStyleSheet("  background: #fff; border-radius: 12px; \n"
-"               ")
+        self.Reports_table_frame.setGeometry(QtCore.QRect(10, 80, 900, 680))
+        self.Reports_table_frame.setStyleSheet("""
+        #Reports_table_frame {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;  
+                border-radius: 12px;
+        }
+        """)
         self.Reports_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.Reports_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.Reports_table_frame.setObjectName("Reports_table_frame")
@@ -923,15 +1171,20 @@ class Ui_MainWindow(object):
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
         item = self.Patients_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Patient"))
+        item.setText(_translate("MainWindow", "Name"))
         item = self.Patients_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Time"))
+        item.setText(_translate("MainWindow", "Address"))
         item = self.Patients_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "New Column"))
+        item.setText(_translate("MainWindow", "Gender"))
         item = self.Patients_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Status"))
+        item.setText(_translate("MainWindow", "Contact"))
         item = self.Patients_table.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Email"))
+        item = self.Patients_table.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Birthdate"))
+        item = self.Patients_table.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "Action"))
+
         self.label_13.setText(_translate("MainWindow", "Appointments"))
         self.Search_app.setPlaceholderText(_translate("MainWindow", "Search appointments..."))
         self.AddApp_btn.setText(_translate("MainWindow", "Add Appointments"))
