@@ -571,7 +571,7 @@ class Ui_MainWindow(object):
 
         #Patients table
         self.Patients_table = QtWidgets.QTableWidget(parent=self.Pat_table_Frame)
-        self.Patients_table.setGeometry(QtCore.QRect(10, 20, 900, 680))
+        self.Patients_table.setGeometry(QtCore.QRect(10, 20, 700, 680))
         self.Patients_table.setObjectName("Patients_table")
         self.Patients_table.setColumnCount(7)
         self.Patients_table.setRowCount(0)
