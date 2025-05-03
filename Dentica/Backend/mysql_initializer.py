@@ -1,14 +1,12 @@
 import mysql.connector
 from mysql.connector import Error
 
-from config.config import host, username, password, databaseName
 
-
-def connectDB():
+def connectDB(host, user, password, databaseName):
     try:
         connection = mysql.connector.connect(
             host=host,
-            user=username,
+            user=user,
             password=password,
             database=databaseName
         )

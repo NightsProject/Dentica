@@ -1,6 +1,11 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtCore import pyqtSignal
 
 class LoginPopup(QtWidgets.QDialog):
+    
+    credentialsSubmitted = pyqtSignal(str, str, str, str)
+
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Login")
@@ -31,10 +36,30 @@ class LoginPopup(QtWidgets.QDialog):
 
         self.dbname_input = QtWidgets.QLineEdit(self)
         self.dbname_input.setGeometry(110, 160, 160, 22)
-
-
+        
+        self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
+        self.cancel_btn.setGeometry(160, 210, 80, 30)
+        self.cancel_btn.clicked.connect(self.reject)
+        
         self.login_btn = QtWidgets.QPushButton("Login", self)
         self.login_btn.setGeometry(110, 210, 80, 30)
-        self.login_btn.clicked.connect(self.accept)
+        self.login_btn.clicked.connect(self.on_login_pressed)
+        
+        
+        
+    def on_login_pressed(self):
+        host = self.host_input.text()
+        user = self.username_input.text()
+        password = self.password_input.text()
+        databaseName = self.dbname_input.text()
+        
+        # Emit the signal with the entered credentials
+        self.credentialsSubmitted.emit(host, user, password, databaseName)
+        
+        #ToDO
+        #notify in the login panel for succesful or failed connection
+        
+        self.accept()
+            
 
 
