@@ -1,8 +1,9 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-import os
+from Dialogues.UserPopup import LoginPopup
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.setFixedSize(1200, 800)
@@ -232,8 +233,8 @@ class Ui_MainWindow(object):
                 background-color: #72A8FF;
         }
         """)
+        self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.userbtn.setObjectName("userbtn")
-
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.TotPat_card.setGeometry(QtCore.QRect(20, 90, 190, 120))
@@ -1124,6 +1125,9 @@ class Ui_MainWindow(object):
         self.Reports_table_frame.setObjectName("Reports_table_frame")
         self.Pages.addWidget(self.Reports_page)
 
+        #User popup dialog
+
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1067, 21))
@@ -1132,6 +1136,7 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+
 
         self.retranslateUi(MainWindow)
         self.Pages.setCurrentIndex(0)
@@ -1222,6 +1227,11 @@ class Ui_MainWindow(object):
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
         self.pushButton_15.setText(_translate("MainWindow", "Overdue"))
         self.label_15.setText(_translate("MainWindow", "Reports"))
+
+   
+    def open_login_popup(self):
+        popup = LoginPopup(self.MainWindow)
+        popup.exec()
 
 
 if __name__ == "__main__":
