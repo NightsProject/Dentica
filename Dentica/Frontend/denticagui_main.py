@@ -1,5 +1,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from Dialogues.UserPopup import LoginPopup
+from .Dialogues.UserPopup import LoginPopup
+
+from Backend import main_gui_comp
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -43,7 +45,7 @@ class Ui_MainWindow(object):
         
         #Dashboard Button
         self.Dash_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        dash_icon = QtGui.QIcon("Dentica/icons/Dashboard.svg")
+        dash_icon = QtGui.QIcon("Dentica/Frontend/icons/Dashboard.svg")
         self.Dash_btn.setIcon(dash_icon)
         self.Dash_btn.setIconSize(QtCore.QSize(25, 25))
         self.Dash_btn.setObjectName("Dash_btn")
@@ -68,7 +70,7 @@ class Ui_MainWindow(object):
 
         #Patient button
         self.Patient_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        pat_icon = QtGui.QIcon("Dentica/icons/Patients.svg")
+        pat_icon = QtGui.QIcon("Dentica/Frontend/icons/Patients.svg")
         self.Patient_btn.setIcon(pat_icon)
         self.Patient_btn.setIconSize(QtCore.QSize(25, 25))
         self.Patient_btn.setObjectName("Patient_btn")
@@ -94,7 +96,7 @@ class Ui_MainWindow(object):
 
         #Appointment button
         self.Apntmnt_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        apt_icon = QtGui.QIcon("Dentica/icons/Appointments.svg")
+        apt_icon = QtGui.QIcon("Dentica/Frontend/icons/Appointments.svg")
         self.Apntmnt_btn.setIcon(apt_icon)
         self.Apntmnt_btn.setIconSize(QtCore.QSize(25, 25))
         self.Apntmnt_btn.setObjectName("Apntmnt_btn")
@@ -119,7 +121,7 @@ class Ui_MainWindow(object):
 
         #Billing button
         self.Bill_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        bil_icon = QtGui.QIcon("Dentica/icons/Billing.svg")
+        bil_icon = QtGui.QIcon("Dentica/Frontend/icons/Billing.svg")
         self.Bill_btn.setIcon(bil_icon)
         self.Bill_btn.setIconSize(QtCore.QSize(25, 25))
         self.Bill_btn.setObjectName("Bill_btn")
@@ -144,7 +146,7 @@ class Ui_MainWindow(object):
 
         #Reports button
         self.Rep_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        rep_icon= QtGui.QIcon("Dentica/icons/Reports.svg")
+        rep_icon= QtGui.QIcon("Dentica/Frontend/icons/Reports.svg")
         self.Rep_btn.setIcon(rep_icon)
         self.Rep_btn.setIconSize(QtCore.QSize(25, 25))
         self.Rep_btn.setObjectName("Rep_btn")
@@ -201,7 +203,7 @@ class Ui_MainWindow(object):
         self.not_btn = QtWidgets.QPushButton(parent=self.frame)
         self.not_btn.setGeometry(QtCore.QRect(830, 23, 40, 40))
         self.not_btn.setText("")
-        not_icon = QtGui.QIcon("Dentica/icons/Notification.svg")
+        not_icon = QtGui.QIcon("Dentica/Frontend/icons/Notification.svg")
         self.not_btn.setIcon(not_icon)
         self.not_btn.setIconSize(QtCore.QSize(25, 25))
         self.not_btn.setStyleSheet("""
@@ -557,7 +559,7 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.add_icon.setFont(font)
         self.add_icon.setStyleSheet("background-color: #3b82f6; border-radius: 8px; color: white;")
-        add_icon = QtGui.QIcon("Dentica/icons/Add.svg")
+        add_icon = QtGui.QIcon("Dentica/Frontend/icons/Add.svg")
         self.add_icon.setIcon(add_icon)
         self.add_icon.setIconSize(QtCore.QSize(23, 23))
         self.add_icon.setObjectName("add_icon")
@@ -1085,7 +1087,7 @@ class Ui_MainWindow(object):
         #Notification button 5
         self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
         self.not_btn_5.setGeometry(QtCore.QRect(850, 23, 40, 40))
-        not_icon = QtGui.QIcon("Dentica/icons/Notification.svg")
+        not_icon = QtGui.QIcon("Dentica/Frontend/icons/Notification.svg")
         self.not_btn_5.setIcon(not_icon)
         self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
         self.not_btn_5.setStyleSheet("""
@@ -1103,7 +1105,7 @@ class Ui_MainWindow(object):
         #User button 5
         self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
         self.userbtn_5.setGeometry(QtCore.QRect(900, 23, 40, 40))
-        user_icon = QtGui.QIcon("Dentica/icons/User.svg")
+        user_icon = QtGui.QIcon("Dentica/Frontend/icons/User.svg")
         self.userbtn_5.setIcon(user_icon)
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1239,15 +1241,4 @@ class Ui_MainWindow(object):
 
    
     def open_login_popup(self):
-        popup = LoginPopup(self.MainWindow)
-        popup.exec()
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec())
+        main_gui_comp.database_login()
