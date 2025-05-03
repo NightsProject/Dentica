@@ -14,11 +14,9 @@ class Ui_MainWindow(object):
 
         #Sidebar Frame
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
-        self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, MainWindow.height()))
+        self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, 780))
         self.SidebarFrame.setAutoFillBackground(False)
-        self.SidebarFrame.setStyleSheet("background-color: #fff;")
-        self.SidebarFrame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.SidebarFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.SidebarFrame.setStyleSheet("background-color: #fff; border-right: 1px solid #E5E7EB;")
         self.SidebarFrame.setObjectName("SidebarFrame")
 
         #Dentica Label
@@ -172,7 +170,7 @@ class Ui_MainWindow(object):
 
         #Pages
         self.Pages = QtWidgets.QStackedWidget(parent=self.centralwidget)
-        self.Pages.setGeometry(QtCore.QRect(240, 0, 1200, 800))
+        self.Pages.setGeometry(QtCore.QRect(260, 0, 1200, 800))
         self.Pages.setStyleSheet("background: #F8FAFC;")
         self.Pages.setObjectName("Pages")
         self.Dashboard_page = QtWidgets.QWidget()
@@ -181,9 +179,11 @@ class Ui_MainWindow(object):
 
         #Dashboard top bar
         self.frame = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.frame.setGeometry(QtCore.QRect(0, -10, 991, 71))
-        self.frame.setStyleSheet("background-color: #fff;")
-        self.frame.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.frame.setStyleSheet("""
+                #frame { background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                        }
+                                 """)
         self.frame.setObjectName("frame")
 
 
@@ -199,7 +199,7 @@ class Ui_MainWindow(object):
 
         #Notification button
         self.not_btn = QtWidgets.QPushButton(parent=self.frame)
-        self.not_btn.setGeometry(QtCore.QRect(850, 23, 40, 40))
+        self.not_btn.setGeometry(QtCore.QRect(830, 23, 40, 40))
         self.not_btn.setText("")
         not_icon = QtGui.QIcon("Dentica/icons/Notification.svg")
         self.not_btn.setIcon(not_icon)
@@ -218,7 +218,7 @@ class Ui_MainWindow(object):
 
         #User button
         self.userbtn = QtWidgets.QPushButton(parent=self.frame)
-        self.userbtn.setGeometry(QtCore.QRect(900, 23, 40, 40))
+        self.userbtn.setGeometry(QtCore.QRect(880, 23, 40, 40)) 
         user_icon = QtGui.QIcon("Dentica/icons/User.svg")
         self.userbtn.setIcon(user_icon)
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
@@ -490,9 +490,12 @@ class Ui_MainWindow(object):
         self.Patients_page.setObjectName("Patients_page")
         
         self.frame_4 = QtWidgets.QFrame(parent=self.Patients_page)
-        self.frame_4.setGeometry(QtCore.QRect(0, -10, 991, 71))
-        self.frame_4.setStyleSheet("background-color: #fff;")
         self.frame_4.setObjectName("frame_4")
+        self.frame_4.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.frame_4.setStyleSheet("""
+                #frame_4 { background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                        }
+                         """)
         self.label_12 = QtWidgets.QLabel(parent=self.frame_4)
         self.label_12.setGeometry(QtCore.QRect(20, 30, 131, 31))
         font = QtGui.QFont()
