@@ -21,7 +21,7 @@ class Ui_MainWindow(object):
 
         #Dentica Label
         self.Dentica = QtWidgets.QLabel(parent=self.SidebarFrame)
-        self.Dentica.setGeometry(QtCore.QRect(70, 20, 121, 51))
+        self.Dentica.setGeometry(QtCore.QRect(70, 25, 121, 51))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(20)
@@ -188,7 +188,7 @@ class Ui_MainWindow(object):
 
 
         self.label = QtWidgets.QLabel(parent=self.frame)
-        self.label.setGeometry(QtCore.QRect(20, 30, 131, 31))
+        self.label.setGeometry(QtCore.QRect(20, 25, 131, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(18)
@@ -489,6 +489,7 @@ class Ui_MainWindow(object):
         self.Patients_page = QtWidgets.QWidget()
         self.Patients_page.setObjectName("Patients_page")
         
+        #Patients top bar
         self.frame_4 = QtWidgets.QFrame(parent=self.Patients_page)
         self.frame_4.setObjectName("frame_4")
         self.frame_4.setGeometry(QtCore.QRect(0, 0, 940, 71))
@@ -497,7 +498,7 @@ class Ui_MainWindow(object):
                         }
                          """)
         self.label_12 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_12.setGeometry(QtCore.QRect(20, 30, 131, 31))
+        self.label_12.setGeometry(QtCore.QRect(20, 25, 131, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(18)
@@ -505,8 +506,10 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label_12.setFont(font)
         self.label_12.setObjectName("label_12")
+
+        #Notification button 2
         self.not_btn_2 = QtWidgets.QPushButton(parent=self.frame_4)
-        self.not_btn_2.setGeometry(QtCore.QRect(735, 23, 40, 40))
+        self.not_btn_2.setGeometry(QtCore.QRect(725, 20, 40, 40))
         self.not_btn_2.setIcon(not_icon)
         self.not_btn_2.setIconSize(QtCore.QSize(25, 25))
         self.not_btn_2.setStyleSheet("""
@@ -523,7 +526,7 @@ class Ui_MainWindow(object):
 
         #User Button 2
         self.pushButton_3 = QtWidgets.QPushButton(parent=self.frame_4)
-        self.pushButton_3.setGeometry(QtCore.QRect(780, 23, 40, 40))
+        self.pushButton_3.setGeometry(QtCore.QRect(765, 20, 40, 40))
         self.pushButton_3.setText("")
         self.pushButton_3.setIcon(user_icon)
         self.pushButton_3.setIconSize(QtCore.QSize(25, 25))
@@ -541,14 +544,14 @@ class Ui_MainWindow(object):
 
         #Search patient
         self.search_patient = QtWidgets.QLineEdit(parent=self.frame_4)
-        self.search_patient.setGeometry(QtCore.QRect(520, 30, 211, 31))
+        self.search_patient.setGeometry(QtCore.QRect(500, 25, 211, 31))
         self.search_patient.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.search_patient.setReadOnly(False)
         self.search_patient.setObjectName("search_patient")
 
         #Add Patient Button
         self.add_icon = QtWidgets.QPushButton(parent=self.frame_4)
-        self.add_icon.setGeometry(QtCore.QRect(830, 30, 111, 31))
+        self.add_icon.setGeometry(QtCore.QRect(810, 25, 111, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(10)
@@ -619,11 +622,14 @@ class Ui_MainWindow(object):
         self.Appointments_page = QtWidgets.QWidget()
         self.Appointments_page.setObjectName("Appointments_page")
         self.app_frame = QtWidgets.QFrame(parent=self.Appointments_page)
-        self.app_frame.setGeometry(QtCore.QRect(0, -10, 991, 71))
-        self.app_frame.setStyleSheet("background-color: #fff;")
         self.app_frame.setObjectName("app_frame")
+        self.app_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.app_frame.setStyleSheet("""
+                #app_frame { background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                        }
+                         """)
         self.label_13 = QtWidgets.QLabel(parent=self.app_frame)
-        self.label_13.setGeometry(QtCore.QRect(20, 30, 171, 31))
+        self.label_13.setGeometry(QtCore.QRect(20, 25, 180, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(18)
@@ -676,7 +682,7 @@ class Ui_MainWindow(object):
 
         #Add Appointment button
         self.AddApp_btn = QtWidgets.QPushButton(parent=self.app_frame)
-        self.AddApp_btn.setGeometry(QtCore.QRect(790, 30, 151, 31))
+        self.AddApp_btn.setGeometry(QtCore.QRect(780, 25, 151, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(10)
