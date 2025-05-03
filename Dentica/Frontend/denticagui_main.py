@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
         #User button
         self.userbtn = QtWidgets.QPushButton(parent=self.frame)
         self.userbtn.setGeometry(QtCore.QRect(880, 23, 40, 40)) 
-        user_icon = QtGui.QIcon("Dentica/icons/User.svg")
+        user_icon = QtGui.QIcon("Dentica/Frontend/icons/User.svg")
         self.userbtn.setIcon(user_icon)
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
