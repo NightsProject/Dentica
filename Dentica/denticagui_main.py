@@ -404,7 +404,7 @@ class Ui_MainWindow(object):
 
         #Upcoming Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 521, 361))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 361))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -571,7 +571,7 @@ class Ui_MainWindow(object):
 
         #Patients table
         self.Patients_table = QtWidgets.QTableWidget(parent=self.Pat_table_Frame)
-        self.Patients_table.setGeometry(QtCore.QRect(10, 20, 900, 680))
+        self.Patients_table.setGeometry(QtCore.QRect(10, 20, 700, 680))
         self.Patients_table.setObjectName("Patients_table")
         self.Patients_table.setColumnCount(7)
         self.Patients_table.setRowCount(0)
@@ -698,7 +698,7 @@ class Ui_MainWindow(object):
 
         #Appointment table
         self.Appointments_table = QtWidgets.QTableWidget(parent=self.app_table_frame)
-        self.Appointments_table.setGeometry(QtCore.QRect(150, 60, 751, 501))
+        self.Appointments_table.setGeometry(QtCore.QRect(150, 60, 500, 501))
         self.Appointments_table.setObjectName("Appointments_table")
         self.Appointments_table.setColumnCount(5)
         self.Appointments_table.setRowCount(0)
@@ -917,7 +917,7 @@ class Ui_MainWindow(object):
 
         #Billing Table
         self.Billing_table = QtWidgets.QTableWidget(parent=self.bill_table_frame)
-        self.Billing_table.setGeometry(QtCore.QRect(150, 60, 751, 501))
+        self.Billing_table.setGeometry(QtCore.QRect(150, 60, 600, 501))
         self.Billing_table.setObjectName("Billing_table")
         self.Billing_table.setColumnCount(6)
         self.Billing_table.setRowCount(0)
