@@ -1157,6 +1157,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.Pages.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -1253,7 +1254,14 @@ class Ui_MainWindow(object):
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
 
+    
+    def summary_data_update(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.label_5.setText(_translate("MainWindow", TOTAL_PATIENT))    
+        self.label_6.setText(_translate("MainWindow", TODAYS_APPOINTMENTS))
+        self.label_7.setText(_translate("MainWindow", PENDING_PAYMENTS))
+        self.label_9.setText(_translate("MainWindow", COMPLETED_TREATMENTS))
+       
         
-   
     def open_login_popup(self):
         main_gui_comp.database_login()

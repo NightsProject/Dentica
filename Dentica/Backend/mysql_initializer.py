@@ -1,8 +1,21 @@
 import mysql.connector
 from mysql.connector import Error
 
+HOST = ""
+USER = ""
+PASSWORD = ""
+DATABASE_NAME = ""
 
-def connectDB(host, user, password, databaseName):
+#  store the credentials globally
+def set_credentials(host, user, password, database):
+    global HOST, USER, PASSWORD, DATABASE_NAME
+    HOST = host
+    USER = user
+    PASSWORD = password
+    DATABASE_NAME = database
+
+#try to connect to the database once
+def connectDBF(host, user, password, databaseName):
     try:
         connection = mysql.connector.connect(
             host=host,
@@ -19,6 +32,27 @@ def connectDB(host, user, password, databaseName):
     
     return None
     
+#try to connect to the database using the saved credentials
+def connectDB():
+    try:
+        connection = mysql.connector.connect(
+            host=HOST,
+            user=USER,
+            password=PASSWORD,
+            database=DATABASE_NAME
+        )
+        if connection.is_connected():
+            return connection
+    except Error as e:
+        pass
+        #ToDO
+        #error handling
+    
+    return None
+
+
+
+
 def createAllTables(conn):
     cursor = conn.cursor()
     
