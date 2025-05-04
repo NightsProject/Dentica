@@ -58,6 +58,7 @@ class LoginPopup(QtWidgets.QDialog):
         
         #ToDO
         #notify in the login panel for succesful or failed connection
+        #database created succesfully if not exists
         
         self.accept()
             

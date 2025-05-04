@@ -1,7 +1,14 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
+
 from .Dialogues.UserPopup import LoginPopup
 
 from Backend import main_gui_comp
+from Backend.sub_comp.dashboard_comp import count_patients, todays_appointments, pending_payments, completed_treatments
+
+TOTAL_PATIENT = count_patients()
+TODAYS_APPOINTMENTS = todays_appointments()
+PENDING_PAYMENTS = pending_payments()
+COMPLETED_TREATMENTS =completed_treatments()
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -1137,8 +1144,6 @@ class Ui_MainWindow(object):
         self.Pages.addWidget(self.Reports_page)
 
         #User popup dialog
-
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1067, 21))
@@ -1157,6 +1162,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.Dentica.setText(_translate("MainWindow", "Dentica"))
+        
+        #Dashboard Tab
         self.Dash_btn.setText(_translate("MainWindow", "Dashboard"))
         self.Patient_btn.setText(_translate("MainWindow", "Patients"))
         self.Apntmnt_btn.setText(_translate("MainWindow", "Appointments"))
@@ -1164,13 +1171,13 @@ class Ui_MainWindow(object):
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
         self.label.setText(_translate("MainWindow", "Dashboard"))
         self.label_2.setText(_translate("MainWindow", "Total Patient"))
-        self.label_5.setText(_translate("MainWindow", "100"))
+        self.label_5.setText(_translate("MainWindow", TOTAL_PATIENT))
         self.label_3.setText(_translate("MainWindow", "Today\'s Appointments"))
-        self.label_6.setText(_translate("MainWindow", "8"))
+        self.label_6.setText(_translate("MainWindow", TODAYS_APPOINTMENTS))
         self.label_4.setText(_translate("MainWindow", "Pending Payments"))
-        self.label_7.setText(_translate("MainWindow", "12"))
+        self.label_7.setText(_translate("MainWindow", PENDING_PAYMENTS))
         self.label_8.setText(_translate("MainWindow", "Completed Treatments"))
-        self.label_9.setText(_translate("MainWindow", "45"))
+        self.label_9.setText(_translate("MainWindow", COMPLETED_TREATMENTS))
         self.label_10.setText(_translate("MainWindow", "Upcoming Appointments"))
         item = self.UpAp_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Patient"))
@@ -1183,6 +1190,8 @@ class Ui_MainWindow(object):
         item = self.UpAp_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Action"))
         self.label_11.setText(_translate("MainWindow", "Recent Notifications"))
+        
+        #Patients Tab
         self.label_12.setText(_translate("MainWindow", "Patients"))
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
@@ -1201,6 +1210,7 @@ class Ui_MainWindow(object):
         item = self.Patients_table.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "Action"))
 
+        #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
         self.Search_app.setPlaceholderText(_translate("MainWindow", "Search appointments..."))
         self.AddApp_btn.setText(_translate("MainWindow", "Add Appointments"))
@@ -1219,6 +1229,8 @@ class Ui_MainWindow(object):
         self.pushButton_7.setText(_translate("MainWindow", "Confirmed"))
         self.pushButton_6.setText(_translate("MainWindow", "Waiting"))
         self.label_14.setText(_translate("MainWindow", "Billing"))
+        
+        #Billings Tab
         self.Search_bill.setPlaceholderText(_translate("MainWindow", "Search invoices..."))
         self.AddBill_btn.setText(_translate("MainWindow", "New Invoice"))
         item = self.Billing_table.horizontalHeaderItem(0)
@@ -1237,6 +1249,8 @@ class Ui_MainWindow(object):
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
         self.pushButton_15.setText(_translate("MainWindow", "Overdue"))
+        
+        #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
 
    

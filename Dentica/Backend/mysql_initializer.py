@@ -23,14 +23,6 @@ def createAllTables(conn):
     cursor = conn.cursor()
     
     
-    # #Delete all table
-    # cursor.execute(
-    # """
-    # DROP TABLE Appointment;
-    # Drop TABLE Patient;
-    # """)
-    
-    
     #Creating patients table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Patient (
@@ -116,7 +108,8 @@ def createAllTables(conn):
             Appointment_ID VARCHAR(6) NOT NULL,
             Amount_Paid DECIMAL(10, 4) NOT NULL,
             Payment_Method ENUM('Cash', 'Card', 'GCash') NOT NULL,
-
+            Payment_Status ENUM('Paid','Unpaid') NOT NULL,
+            
             PRIMARY KEY (Payment_ID),
             FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
             FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID)
