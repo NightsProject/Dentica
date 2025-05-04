@@ -1,6 +1,10 @@
 from Frontend.Dialogues.UserPopup import LoginPopup
 from Backend.mysql_initializer import connectDB, createAllTables
 
+from .sub_comp import dashboard_comp
+
+
+
 #===== Database Login ================
 def  database_login():  
     login_popup = LoginPopup()
@@ -13,9 +17,15 @@ def handle_credentials(host, user, password, databaseName):
     connection = connectDB(host, user, password, databaseName)
     if connection:
         print(f"Successfully connected to {databaseName} database")
+       
         createAllTables(connection)
+        load_data()
+         
     else:
         print("Failed to connect to the database.")
         
     #ToDO
     #Notify to gui
+    
+    def load_data():
+        dashboard_comp.CONNECTED_TO_DATABASE = True

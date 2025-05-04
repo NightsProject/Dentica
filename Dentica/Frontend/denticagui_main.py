@@ -1253,6 +1253,7 @@ class Ui_MainWindow(object):
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
 
+        
    
     def open_login_popup(self):
         main_gui_comp.database_login()
