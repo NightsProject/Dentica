@@ -1,11 +1,7 @@
-from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtCore import pyqtSignal
+from PyQt6 import QtWidgets
 
-class LoginPopup(QtWidgets.QDialog):
-    
-    credentialsSubmitted = pyqtSignal(str, str, str, str)
-
-    
+class Database_Login(QtWidgets.QDialog):
+ 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Login")
@@ -43,24 +39,8 @@ class LoginPopup(QtWidgets.QDialog):
         
         self.login_btn = QtWidgets.QPushButton("Login", self)
         self.login_btn.setGeometry(110, 210, 80, 30)
-        self.login_btn.clicked.connect(self.on_login_pressed)
         
         
-        
-    def on_login_pressed(self):
-        host = self.host_input.text()
-        user = self.username_input.text()
-        password = self.password_input.text()
-        databaseName = self.dbname_input.text()
-        
-        # Emit the signal with the entered credentials
-        self.credentialsSubmitted.emit(host, user, password, databaseName)
-        
-        #ToDO
-        #notify in the login panel for succesful or failed connection
-        #database created succesfully if not exists
-        
-        self.accept()
-            
+
 
 

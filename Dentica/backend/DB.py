@@ -1,10 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
 
-HOST = ""
-USER = ""
-PASSWORD = ""
-DATABASE_NAME = ""
 
 #  store the credentials globally
 def set_credentials(host, user, password, database):
@@ -13,6 +9,7 @@ def set_credentials(host, user, password, database):
     USER = user
     PASSWORD = password
     DATABASE_NAME = database
+
 
 #try to connect to the database once
 def connectDBF(host, user, password, databaseName):
@@ -32,6 +29,7 @@ def connectDBF(host, user, password, databaseName):
     
     return None
     
+    
 #try to connect to the database using the saved credentials
 def connectDB():
     try:
@@ -49,6 +47,9 @@ def connectDB():
         #error handling
     
     return None
+
+
+
 
 
 
@@ -100,7 +101,8 @@ def createAllTables(conn):
             Cost DECIMAL(10, 4) NOT NULL,
             Treatment_Procedure VARCHAR(128) NOT NULL,
             Treatment_Date_Time DATETIME NOT NULL,
-
+            Treatment_Status ENUM('Completed', 'In-Progress', 'Waiting', 'Canceled'),
+            
             PRIMARY KEY (Appointment_ID, Treatment_ID),
             FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID)
         );

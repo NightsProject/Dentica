@@ -1,16 +1,9 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from .Dialogues.UserPopup import LoginPopup
-
-from Backend import main_gui_comp
-from Backend.sub_comp.dashboard_comp import count_patients, todays_appointments, pending_payments, completed_treatments
-
-TOTAL_PATIENT = count_patients()
-TODAYS_APPOINTMENTS = todays_appointments()
-PENDING_PAYMENTS = pending_payments()
-COMPLETED_TREATMENTS =completed_treatments()
+filepath = "Dentica/ui/icons/"
 
 class Ui_MainWindow(object):
+   
     def setupUi(self, MainWindow):
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
@@ -52,7 +45,7 @@ class Ui_MainWindow(object):
         
         #Dashboard Button
         self.Dash_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        dash_icon = QtGui.QIcon("Dentica/Frontend/icons/Dashboard.svg")
+        dash_icon = QtGui.QIcon(f"{filepath}Dashboard.svg")
         self.Dash_btn.setIcon(dash_icon)
         self.Dash_btn.setIconSize(QtCore.QSize(25, 25))
         self.Dash_btn.setObjectName("Dash_btn")
@@ -77,7 +70,7 @@ class Ui_MainWindow(object):
 
         #Patient button
         self.Patient_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        pat_icon = QtGui.QIcon("Dentica/Frontend/icons/Patients.svg")
+        pat_icon = QtGui.QIcon(f"{filepath}Patients.svg")
         self.Patient_btn.setIcon(pat_icon)
         self.Patient_btn.setIconSize(QtCore.QSize(25, 25))
         self.Patient_btn.setObjectName("Patient_btn")
@@ -103,7 +96,7 @@ class Ui_MainWindow(object):
 
         #Appointment button
         self.Apntmnt_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        apt_icon = QtGui.QIcon("Dentica/Frontend/icons/Appointments.svg")
+        apt_icon = QtGui.QIcon(f"{filepath}Appointments.svg")
         self.Apntmnt_btn.setIcon(apt_icon)
         self.Apntmnt_btn.setIconSize(QtCore.QSize(25, 25))
         self.Apntmnt_btn.setObjectName("Apntmnt_btn")
@@ -128,7 +121,7 @@ class Ui_MainWindow(object):
 
         #Billing button
         self.Bill_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        bil_icon = QtGui.QIcon("Dentica/Frontend/icons/Billing.svg")
+        bil_icon = QtGui.QIcon(f"{filepath}Billing.svg")
         self.Bill_btn.setIcon(bil_icon)
         self.Bill_btn.setIconSize(QtCore.QSize(25, 25))
         self.Bill_btn.setObjectName("Bill_btn")
@@ -153,7 +146,7 @@ class Ui_MainWindow(object):
 
         #Reports button
         self.Rep_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        rep_icon= QtGui.QIcon("Dentica/Frontend/icons/Reports.svg")
+        rep_icon= QtGui.QIcon(f"{filepath}Reports.svg")
         self.Rep_btn.setIcon(rep_icon)
         self.Rep_btn.setIconSize(QtCore.QSize(25, 25))
         self.Rep_btn.setObjectName("Rep_btn")
@@ -210,7 +203,7 @@ class Ui_MainWindow(object):
         self.not_btn = QtWidgets.QPushButton(parent=self.frame)
         self.not_btn.setGeometry(QtCore.QRect(830, 23, 40, 40))
         self.not_btn.setText("")
-        not_icon = QtGui.QIcon("Dentica/Frontend/icons/Notification.svg")
+        not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
         self.not_btn.setIcon(not_icon)
         self.not_btn.setIconSize(QtCore.QSize(25, 25))
         self.not_btn.setStyleSheet("""
@@ -228,7 +221,7 @@ class Ui_MainWindow(object):
         #User button
         self.userbtn = QtWidgets.QPushButton(parent=self.frame)
         self.userbtn.setGeometry(QtCore.QRect(880, 23, 40, 40)) 
-        user_icon = QtGui.QIcon("Dentica/Frontend/icons/User.svg")
+        user_icon = QtGui.QIcon(f"{filepath}User.svg")
         self.userbtn.setIcon(user_icon)
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
@@ -242,7 +235,6 @@ class Ui_MainWindow(object):
                 background-color: #72A8FF;
         }
         """)
-        self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.userbtn.setObjectName("userbtn")
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
@@ -566,7 +558,7 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.add_icon.setFont(font)
         self.add_icon.setStyleSheet("background-color: #3b82f6; border-radius: 8px; color: white;")
-        add_icon = QtGui.QIcon("Dentica/Frontend/icons/Add.svg")
+        add_icon = QtGui.QIcon(f"{filepath}Add.svg")
         self.add_icon.setIcon(add_icon)
         self.add_icon.setIconSize(QtCore.QSize(23, 23))
         self.add_icon.setObjectName("add_icon")
@@ -1094,7 +1086,7 @@ class Ui_MainWindow(object):
         #Notification button 5
         self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
         self.not_btn_5.setGeometry(QtCore.QRect(850, 23, 40, 40))
-        not_icon = QtGui.QIcon("Dentica/Frontend/icons/Notification.svg")
+        not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
         self.not_btn_5.setIcon(not_icon)
         self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
         self.not_btn_5.setStyleSheet("""
@@ -1112,7 +1104,7 @@ class Ui_MainWindow(object):
         #User button 5
         self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
         self.userbtn_5.setGeometry(QtCore.QRect(900, 23, 40, 40))
-        user_icon = QtGui.QIcon("Dentica/Frontend/icons/User.svg")
+        user_icon = QtGui.QIcon(f"{filepath}User.svg")
         self.userbtn_5.setIcon(user_icon)
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1172,13 +1164,13 @@ class Ui_MainWindow(object):
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
         self.label.setText(_translate("MainWindow", "Dashboard"))
         self.label_2.setText(_translate("MainWindow", "Total Patient"))
-        self.label_5.setText(_translate("MainWindow", TOTAL_PATIENT))
+        self.label_5.setText(_translate("MainWindow", "0"))
         self.label_3.setText(_translate("MainWindow", "Today\'s Appointments"))
-        self.label_6.setText(_translate("MainWindow", TODAYS_APPOINTMENTS))
+        self.label_6.setText(_translate("MainWindow", "0"))
         self.label_4.setText(_translate("MainWindow", "Pending Payments"))
-        self.label_7.setText(_translate("MainWindow", PENDING_PAYMENTS))
+        self.label_7.setText(_translate("MainWindow", "0"))
         self.label_8.setText(_translate("MainWindow", "Completed Treatments"))
-        self.label_9.setText(_translate("MainWindow", COMPLETED_TREATMENTS))
+        self.label_9.setText(_translate("MainWindow", "0"))
         self.label_10.setText(_translate("MainWindow", "Upcoming Appointments"))
         item = self.UpAp_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Patient"))
@@ -1253,15 +1245,5 @@ class Ui_MainWindow(object):
         
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
-
-    
-    def summary_data_update(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.label_5.setText(_translate("MainWindow", TOTAL_PATIENT))    
-        self.label_6.setText(_translate("MainWindow", TODAYS_APPOINTMENTS))
-        self.label_7.setText(_translate("MainWindow", PENDING_PAYMENTS))
-        self.label_9.setText(_translate("MainWindow", COMPLETED_TREATMENTS))
-       
-        
-    def open_login_popup(self):
-        main_gui_comp.database_login()
+            
+            
