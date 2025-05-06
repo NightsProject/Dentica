@@ -1,6 +1,6 @@
 __pycache__/
-Backend/__pycache__/
-Backend/config/__pycache__/
-Frontend/__pycache__/
-Frontend/Dialogues/__pycache__/
+backend/__pycache__/
+backend/config/__pycache__/
+ui/__pycache__/
+ui/Dialogues/__pycache__/
 
