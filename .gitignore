@@ -1,6 +1,6 @@
 __pycache__/
 backend/__pycache__/
-backend/config/__pycache__/
+controller/__pycache__/
 ui/__pycache__/
 ui/Dialogues/__pycache__/
 
