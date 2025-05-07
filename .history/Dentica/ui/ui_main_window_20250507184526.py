@@ -1190,6 +1190,7 @@ class Ui_MainWindow(object):
         self.Pages.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -1287,6 +1288,7 @@ class Ui_MainWindow(object):
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
             
+
     def toggle_dropdown(self, userbtn, centralwidget, user_menu):
         if not userbtn.isVisible():
                 btn_pos = userbtn.mapTo(centralwidget, QtCore.QPoint(0, userbtn.height()))

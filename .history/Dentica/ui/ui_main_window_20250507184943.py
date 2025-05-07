@@ -248,7 +248,7 @@ class Ui_MainWindow(object):
         self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
         self.user_menu.setStyleSheet("""
         #user_menu{
-                background: #fff; 
+                background: red; 
                 border: 1px solid #e5e7eb;
                 border-radius: 5px;
                 }

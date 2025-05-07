@@ -572,7 +572,7 @@ class Ui_MainWindow(object):
         #Search patient
         self.search_patient = QtWidgets.QLineEdit(parent=self.frame_4)
         self.search_patient.setGeometry(QtCore.QRect(490, 25, 211, 31))
-        self.search_patient.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
+        self.search_patient.setStyleSheet("background-color: #B3C8CF; border-radius: 8px;")
         self.search_patient.setReadOnly(False)
         self.search_patient.setObjectName("search_patient")
 
@@ -874,7 +874,7 @@ class Ui_MainWindow(object):
         self.Billing_page = QtWidgets.QWidget()
         self.Billing_page.setObjectName("Billing_page")
         self.Bill_frame = QtWidgets.QFrame(parent=self.Billing_page)
-        self.Bill_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.Bill_frame.setGeometry(QtCore.QRect(0, 0, 940, 70))
         self.Bill_frame.setStyleSheet("""
                 #Bill_frame {background-color: #fff; border-bottom: 1px solid #E5E7EB;
                 }
@@ -1103,7 +1103,7 @@ class Ui_MainWindow(object):
         self.Reports_page = QtWidgets.QWidget()
         self.Reports_page.setObjectName("Reports_page")
         self.Reports_topbar_frame = QtWidgets.QFrame(parent=self.Reports_page)
-        self.Reports_topbar_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.Reports_topbar_frame.setGeometry(QtCore.QRect(0, 0, 940, 70))
         self.Reports_topbar_frame.setStyleSheet("""
                 #Reports_topbar_frame {background-color: #fff; border-bottom: 1px solid #E5E7EB;
                 }
@@ -1120,12 +1120,10 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label_15.setFont(font)
         self.label_15.setObjectName("label_15")
-        
 
-        
         #Notification button 5
         self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
-        self.not_btn_5.setGeometry(QtCore.QRect(840, 23, 40, 40))
+        self.not_btn_5.setGeometry(QtCore.QRect(850, 23, 40, 40))
         not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
         self.not_btn_5.setIcon(not_icon)
         self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1143,7 +1141,7 @@ class Ui_MainWindow(object):
 
         #User button 5
         self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
-        self.userbtn_5.setGeometry(QtCore.QRect(890, 23, 40, 40))
+        self.userbtn_5.setGeometry(QtCore.QRect(900, 23, 40, 40))
         user_icon = QtGui.QIcon(f"{filepath}User.svg")
         self.userbtn_5.setIcon(user_icon)
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1159,10 +1157,10 @@ class Ui_MainWindow(object):
         }
         """)
         self.userbtn.setObjectName("userbtn_5")
-        
+
         #Reports table frame
         self.Reports_table_frame = QtWidgets.QFrame(parent=self.Reports_page)
-        self.Reports_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
+        self.Reports_table_frame.setGeometry(QtCore.QRect(10, 80, 900, 680))
         self.Reports_table_frame.setStyleSheet("""
         #Reports_table_frame {
                 background: #ffffff;
@@ -1190,6 +1188,7 @@ class Ui_MainWindow(object):
         self.Pages.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -1287,6 +1286,7 @@ class Ui_MainWindow(object):
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
             
+
     def toggle_dropdown(self, userbtn, centralwidget, user_menu):
         if not userbtn.isVisible():
                 btn_pos = userbtn.mapTo(centralwidget, QtCore.QPoint(0, userbtn.height()))

@@ -572,7 +572,7 @@ class Ui_MainWindow(object):
         #Search patient
         self.search_patient = QtWidgets.QLineEdit(parent=self.frame_4)
         self.search_patient.setGeometry(QtCore.QRect(490, 25, 211, 31))
-        self.search_patient.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
+        self.search_patient.setStyleSheet("background-color: #B3C8CF; border-radius: 8px;")
         self.search_patient.setReadOnly(False)
         self.search_patient.setObjectName("search_patient")
 
@@ -1125,7 +1125,7 @@ class Ui_MainWindow(object):
         
         #Notification button 5
         self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
-        self.not_btn_5.setGeometry(QtCore.QRect(840, 23, 40, 40))
+        self.not_btn_5.setGeometry(QtCore.QRect(835, 23, 40, 40))
         not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
         self.not_btn_5.setIcon(not_icon)
         self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1143,7 +1143,7 @@ class Ui_MainWindow(object):
 
         #User button 5
         self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
-        self.userbtn_5.setGeometry(QtCore.QRect(890, 23, 40, 40))
+        self.userbtn_5.setGeometry(QtCore.QRect(885, 23, 40, 40))
         user_icon = QtGui.QIcon(f"{filepath}User.svg")
         self.userbtn_5.setIcon(user_icon)
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1190,6 +1190,7 @@ class Ui_MainWindow(object):
         self.Pages.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -1287,6 +1288,7 @@ class Ui_MainWindow(object):
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
             
+
     def toggle_dropdown(self, userbtn, centralwidget, user_menu):
         if not userbtn.isVisible():
                 btn_pos = userbtn.mapTo(centralwidget, QtCore.QPoint(0, userbtn.height()))
