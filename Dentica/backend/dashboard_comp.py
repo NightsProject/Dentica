@@ -83,12 +83,21 @@ def get_todays_appointments():
 
     conn = connectDB()
     cursor = conn.cursor()
+    
     cursor.execute("""
-        SELECT * 
-        FROM Appointment 
-        WHERE DATE(Schedule) = CURDATE()
-          AND Status = 'Scheduled'
+        SELECT 
+            a.Appointment_ID,
+            CONCAT(p.First_Name, ' ', p.Middle_Name, ' ', p.Last_Name) AS Patient_Full_Name,
+            TIME(t.Treatment_Date_Time) AS Treatment_Time,
+            t.Treatment_Procedure,
+            t.Treatment_Status
+        FROM Appointment a
+        JOIN Patient p ON a.Patient_ID = p.Patient_ID
+        LEFT JOIN Treatment t ON a.Appointment_ID = t.Appointment_ID
+        WHERE DATE(a.Schedule) = CURDATE()
+          AND a.Status = 'Scheduled'
     """)
+    
     result = cursor.fetchall()
     if result:
         for row in result:
@@ -97,7 +106,7 @@ def get_todays_appointments():
     cursor.close()
     conn.close()
     
-    #print("Today's Appointments:", todays_appointments)
+    print(todays_appointments)
     return todays_appointments
 
     

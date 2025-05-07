@@ -23,5 +23,5 @@ def get_all_patients():
     cursor.close()
     conn.close()
     
-    print("\nAll Patients:", all_patients)
+    #print("\nAll Patients:", all_patients)
     return all_patients

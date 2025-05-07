@@ -1159,15 +1159,15 @@ class Ui_MainWindow(object):
         
         self.label_10.setText(_translate("MainWindow", "Todays Appointments"))
         item = self.UpAp_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Patient"))
+        item.setText(_translate("MainWindow", "Apppointment ID"))
         item = self.UpAp_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Time"))
+        item.setText(_translate("MainWindow", "Patient Name"))
         item = self.UpAp_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Treatment"))
+        item.setText(_translate("MainWindow", "Time"))
         item = self.UpAp_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Status"))
+        item.setText(_translate("MainWindow", "Treatment"))
         item = self.UpAp_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Action"))
+        item.setText(_translate("MainWindow", "Treatment Status"))
         
         self.label_11.setText(_translate("MainWindow", "Recent Notifications"))
         
