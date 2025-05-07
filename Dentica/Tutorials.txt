@@ -1,0 +1,25 @@
+Step 1: Ready the MySql Database
+
+Download the MySql Server
+
+create Database
+    CREATE DATABSE databaseName;
+
+create a new User
+    CREATE USER 'username'@'localhost' IDENTIFIED BY 'yourpassword';
+
+grant privileges to the new username
+    GRANDT ALL PRIVILEGES ON databaseName.* TO 'username'@'localhost';
+
+Remember your Credentials
+User = username
+Password = yourpassword
+Host = localhost
+Database Name = databaseName
+
+
+Step 2: Run the app
+
+click the profile icon at the upper right
+click the database login then input the Credentials
+click login

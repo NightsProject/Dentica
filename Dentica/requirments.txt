@@ -1,2 +1,5 @@
 pyqt6
 mysql-connector-python
+
+
+
