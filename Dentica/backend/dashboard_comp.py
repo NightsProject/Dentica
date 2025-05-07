@@ -78,3 +78,26 @@ def completed_treatments():
     print("Completed Treatments:", treatments_completed)
     return str(treatments_completed)
 
+def get_todays_appointments():
+    todays_appointments = []
+
+    conn = connectDB()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT * 
+        FROM Appointment 
+        WHERE DATE(Schedule) = CURDATE()
+          AND Status = 'Scheduled'
+    """)
+    result = cursor.fetchall()
+    if result:
+        for row in result:
+            todays_appointments.append(row)
+
+    cursor.close()
+    conn.close()
+    
+    #print("Today's Appointments:", todays_appointments)
+    return todays_appointments
+
+    

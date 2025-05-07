@@ -65,11 +65,11 @@ def createAllTables(conn):
             First_Name VARCHAR(128) NOT NULL,
             Middle_Name VARCHAR(128) NOT NULL,
             Last_Name VARCHAR(128) NOT NULL,
-            Address VARCHAR(100) NOT NULL,
             Gender VARCHAR(100) NOT NULL,
+            Birth_Date DATE NOT NULL,
             Contact_Number VARCHAR(15) NOT NULL,
             Email VARCHAR(100) NOT NULL,
-            Birth_Date DATE NOT NULL,
+            Address VARCHAR(100) NOT NULL,
 
             PRIMARY KEY (Patient_ID),
             UNIQUE (Patient_ID)
