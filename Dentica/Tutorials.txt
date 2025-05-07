@@ -2,6 +2,8 @@ Step 1: Ready the MySql Database
 
 Download the MySql Server
 
+inside the MySql cli
+
 create Database
     CREATE DATABSE databaseName;
 
@@ -16,6 +18,9 @@ User = username
 Password = yourpassword
 Host = localhost
 Database Name = databaseName
+
+import the test_file/insert_dummy_data.sql to the MySql
+    mysql -u username -p databaseName < /path/to/your/file.sql
 
 
 Step 2: Run the app
