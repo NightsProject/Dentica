@@ -66,7 +66,6 @@ class MainController(QMainWindow, Ui_MainWindow):
            
     #====================LOAD DATAS TO UI=============== end
     #=======================================================
-
     
     def handle_credentials(self, host, port, user, password, databaseName):
         print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
@@ -77,7 +76,9 @@ class MainController(QMainWindow, Ui_MainWindow):
                 raise Exception("Connection returned None")
             
             print(f"Successfully connected to {databaseName} database")
-            set_credentials(host,port, user, password, databaseName)
+            
+            set_credentials("localhost","3306", "root", "root", "dentica")
+            #set_credentials(host,port, user, password, databaseName)
 
             createAllTables(connection)
 
