@@ -276,7 +276,6 @@ class Ui_MainWindow(object):
         #database login
         self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
         self.logout_btn.setGeometry(10, 50, 130, 30)
-        self.logout_btn.clicked.connect(lambda: self.open_login_popup())
         self.logout_btn.setObjectName("logout_btn")
         
         #Total Patient Card

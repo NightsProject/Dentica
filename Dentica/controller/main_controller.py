@@ -14,9 +14,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-     
-        self.userbtn.clicked.connect(lambda: self.open_login_popup())
-    
+        
+        self.logout_btn.clicked.connect(lambda: self.open_login_popup())
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
