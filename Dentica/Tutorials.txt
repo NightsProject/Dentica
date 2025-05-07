@@ -2,7 +2,7 @@ Step 1: Ready the MySql Database
 
 Download the MySql Server
 
-inside the MySql cli
+inside the MySql cli or MySql Command Line Client(search in windows)
 
     create Database
         CREATE DATABSE databaseName;
