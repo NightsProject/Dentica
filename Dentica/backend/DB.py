@@ -2,7 +2,17 @@ import mysql.connector
 from mysql.connector import Error
 
 
-def connectDB(host, user, password, databaseName):
+#  store the credentials globally
+def set_credentials(host, user, password, database):
+    global HOST, USER, PASSWORD, DATABASE_NAME
+    HOST = host
+    USER = user
+    PASSWORD = password
+    DATABASE_NAME = database
+
+
+#try to connect to the database once
+def connectDBF(host, user, password, databaseName):
     try:
         connection = mysql.connector.connect(
             host=host,
@@ -19,16 +29,33 @@ def connectDB(host, user, password, databaseName):
     
     return None
     
+    
+#try to connect to the database using the saved credentials
+def connectDB():
+    try:
+        connection = mysql.connector.connect(
+            host=HOST,
+            user=USER,
+            password=PASSWORD,
+            database=DATABASE_NAME
+        )
+        if connection.is_connected():
+            return connection
+    except Error as e:
+        pass
+        #ToDO
+        #error handling
+    
+    return None
+
+
+
+
+
+
+
 def createAllTables(conn):
     cursor = conn.cursor()
-    
-    
-    # #Delete all table
-    # cursor.execute(
-    # """
-    # DROP TABLE Appointment;
-    # Drop TABLE Patient;
-    # """)
     
     
     #Creating patients table
@@ -38,11 +65,11 @@ def createAllTables(conn):
             First_Name VARCHAR(128) NOT NULL,
             Middle_Name VARCHAR(128) NOT NULL,
             Last_Name VARCHAR(128) NOT NULL,
-            Address VARCHAR(100) NOT NULL,
             Gender VARCHAR(100) NOT NULL,
+            Birth_Date DATE NOT NULL,
             Contact_Number VARCHAR(15) NOT NULL,
             Email VARCHAR(100) NOT NULL,
-            Birth_Date DATE NOT NULL,
+            Address VARCHAR(100) NOT NULL,
 
             PRIMARY KEY (Patient_ID),
             UNIQUE (Patient_ID)
@@ -74,7 +101,8 @@ def createAllTables(conn):
             Cost DECIMAL(10, 4) NOT NULL,
             Treatment_Procedure VARCHAR(128) NOT NULL,
             Treatment_Date_Time DATETIME NOT NULL,
-
+            Treatment_Status ENUM('Completed', 'In-Progress', 'Waiting', 'Canceled'),
+            
             PRIMARY KEY (Appointment_ID, Treatment_ID),
             FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID)
         );
@@ -116,7 +144,8 @@ def createAllTables(conn):
             Appointment_ID VARCHAR(6) NOT NULL,
             Amount_Paid DECIMAL(10, 4) NOT NULL,
             Payment_Method ENUM('Cash', 'Card', 'GCash') NOT NULL,
-
+            Payment_Status ENUM('Paid','Unpaid') NOT NULL,
+            
             PRIMARY KEY (Payment_ID),
             FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
             FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID)
