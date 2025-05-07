@@ -307,7 +307,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
-        font.setBold(True)
+        font.setWeight(75)
         self.label_5.setFont(font) 
         self.label_5.setStyleSheet("background: #fff;")
         self.label_5.setObjectName("label_5")
@@ -344,6 +344,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_6.setFont(font)
         self.label_6.setStyleSheet("background: #fff;")
         self.label_6.setObjectName("label_6")
@@ -380,6 +381,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_7.setFont(font)
         self.label_7.setStyleSheet("background: #fff;")
         self.label_7.setObjectName("label_7")
@@ -416,6 +418,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_9.setFont(font)
         self.label_9.setStyleSheet("background: #fff;")
         self.label_9.setObjectName("label_9")
@@ -425,7 +428,7 @@ class Ui_MainWindow(object):
         self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
-                background: #ffffff;
+                background: red;
                 border: 1px solid #e5e7eb;  
                 border-radius: 12px;
         }
@@ -446,7 +449,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 361))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 550, 361))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -1251,37 +1254,36 @@ class Ui_MainWindow(object):
         self.Search_app.setPlaceholderText(_translate("MainWindow", "Search appointments..."))
         self.AddApp_btn.setText(_translate("MainWindow", "Add Appointments"))
         item = self.Appointments_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Appointmnet ID"))
+        item.setText(_translate("MainWindow", "Patient"))
         item = self.Appointments_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Patient Name"))
+        item.setText(_translate("MainWindow", "Date & Time"))
         item = self.Appointments_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Date"))
+        item.setText(_translate("MainWindow", "Treatment"))
         item = self.Appointments_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Status"))
         item = self.Appointments_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Treatment/s"))
+        item.setText(_translate("MainWindow", "Action"))
         self.pushButton_8.setText(_translate("MainWindow", "All"))
         self.pushButton_9.setText(_translate("MainWindow", "Scheduled"))
-        self.pushButton_7.setText(_translate("MainWindow", "Completed"))
-        self.pushButton_6.setText(_translate("MainWindow", "Canceled"))
-
+        self.pushButton_7.setText(_translate("MainWindow", "Confirmed"))
+        self.pushButton_6.setText(_translate("MainWindow", "Waiting"))
+        self.label_14.setText(_translate("MainWindow", "Billing"))
         
         #Billings Tab
-        self.label_14.setText(_translate("MainWindow", "Billing"))
         self.Search_bill.setPlaceholderText(_translate("MainWindow", "Search invoices..."))
         self.AddBill_btn.setText(_translate("MainWindow", "New Invoice"))
         item = self.Billing_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Billing ID"))
+        item.setText(_translate("MainWindow", "Patient"))
         item = self.Billing_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Patient Name"))
+        item.setText(_translate("MainWindow", "Date & Time"))
         item = self.Billing_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Appointment ID"))
+        item.setText(_translate("MainWindow", "Treatment"))
         item = self.Billing_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Total Amount"))
+        item.setText(_translate("MainWindow", "Amount"))
         item = self.Billing_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Method"))
-        item = self.Billing_table.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Status"))
+        item = self.Billing_table.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Action"))
         self.pushButton_12.setText(_translate("MainWindow", "All"))
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
