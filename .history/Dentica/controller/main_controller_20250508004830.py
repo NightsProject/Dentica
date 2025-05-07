@@ -7,9 +7,6 @@ from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
 
 from controller.database_login_ctr import Database_Dialog_Ctr
-from controller.appointment_ctr import Appointment_Dialog_Ctr
-from controller.user_login_ctr import User_Dialog_Ctr
-
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments
 from backend.patients_comp import get_all_patients
@@ -22,22 +19,11 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         
         self.logout_btn.clicked.connect(lambda: self.open_login_popup())
-        self.settings_btn.clicked.connect(lambda: self.user_login_popup())
-        self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
         login_popup.credentialsSubmitted.connect(self.handle_credentials)
         login_popup.exec()
-    
-    def user_login_popup(self):
-        user_popup = User_Dialog_Ctr()
-        user_popup.exec()
-        
-    def open_appointment(self):
-        app_popup = Appointment_Dialog_Ctr()
-        #app_popup.appointment_details.connect()
-        app_popup.exec()
         
     #=========================================================
     #====================LOAD DATAS TO UI=============== start
