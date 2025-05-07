@@ -44,7 +44,7 @@ class Database_Login(QtWidgets.QDialog):
         self.cancel_btn.clicked.connect(self.reject)
         
         self.login_btn = QtWidgets.QPushButton("Login", self)
-        self.login_btn.setGeometry(80, 240, 80, 30)
+        self.login_btn.setGeometry(80, 210, 80, 30)
         
         
 
