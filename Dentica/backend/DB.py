@@ -1,27 +1,27 @@
 import mysql.connector
 from mysql.connector import Error
 
-#==============For testing purposes==start
-#  store the credentials globally
-def set_credentials(host, port, user, password, database):
-    global HOST, PORT, USER, PASSWORD, DATABASE_NAME
-    HOST = "localhost"
-    PORT ="3306"
-    USER = "user"
-    PASSWORD = "user"
-    DATABASE_NAME = "denticadb"
-#===============For testing purposes===end
-
-
-
+# #==============For testing purposes==start
 # #  store the credentials globally
 # def set_credentials(host, port, user, password, database):
 #     global HOST, PORT, USER, PASSWORD, DATABASE_NAME
-#     HOST = host
-#     PORT = port
-#     USER = user
-#     PASSWORD = password
-#     DATABASE_NAME = database
+#     HOST = "localhost"
+#     PORT ="3306"
+#     USER = "user"
+#     PASSWORD = "user"
+#     DATABASE_NAME = "denticadb"
+# #===============For testing purposes===end
+
+
+
+#  store the credentials globally
+def set_credentials(host, port, user, password, database):
+    global HOST, PORT, USER, PASSWORD, DATABASE_NAME
+    HOST = host
+    PORT = port
+    USER = user
+    PASSWORD = password
+    DATABASE_NAME = database
 
 
 #try to connect to the database once
