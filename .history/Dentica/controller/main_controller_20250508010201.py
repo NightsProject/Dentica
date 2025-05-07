@@ -8,8 +8,6 @@ import mysql.connector
 
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
-from controller.user_login_ctr import User_Dialog_Ctr
-
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments
 from backend.patients_comp import get_all_patients
