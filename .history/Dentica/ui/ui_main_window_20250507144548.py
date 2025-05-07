@@ -30,9 +30,7 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Dentica.setFont(font)
-        self.Dentica.setStyleSheet("""border: none;
-                                      color: black;
-                                      """)
+        self.Dentica.setStyleSheet("border: none;")
         self.Dentica.setObjectName("Dentica")
 
         #Sidebar Layout
@@ -175,9 +173,7 @@ class Ui_MainWindow(object):
         #Pages
         self.Pages = QtWidgets.QStackedWidget(parent=self.centralwidget)
         self.Pages.setGeometry(QtCore.QRect(260, 0, 1200, 800))
-        self.Pages.setStyleSheet("""background: #F8FAFC;
-                                    color: black;
-                                    """)
+        self.Pages.setStyleSheet("background: #F8FAFC;")
         self.Pages.setObjectName("Pages")
         self.Dashboard_page = QtWidgets.QWidget()
         self.Dashboard_page.setObjectName("Dashboard_page")
