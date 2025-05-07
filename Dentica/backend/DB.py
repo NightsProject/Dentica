@@ -1,14 +1,25 @@
 import mysql.connector
 from mysql.connector import Error
 
-
+#==============For testing purposes==start
 #  store the credentials globally
 def set_credentials(host, user, password, database):
     global HOST, USER, PASSWORD, DATABASE_NAME
-    HOST = host
-    USER = user
-    PASSWORD = password
-    DATABASE_NAME = database
+    HOST = "localhost"
+    USER = "user"
+    PASSWORD = "user"
+    DATABASE_NAME = "denticadb"
+#===============For testing purposes===end
+
+
+
+# #  store the credentials globally
+# def set_credentials(host, user, password, database):
+#     global HOST, USER, PASSWORD, DATABASE_NAME
+#     HOST = host
+#     USER = user
+#     PASSWORD = password
+#     DATABASE_NAME = database
 
 
 #try to connect to the database once
