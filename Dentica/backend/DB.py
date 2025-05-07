@@ -156,8 +156,8 @@ def createAllTables(conn):
             Payment_ID VARCHAR(7) NOT NULL,
             Patient_ID VARCHAR(6) NOT NULL,
             Appointment_ID VARCHAR(6) NOT NULL,
-            Amount_Paid DECIMAL(10, 4) NOT NULL,
-            Payment_Method ENUM('Cash', 'Card', 'GCash') NOT NULL,
+            Total_Amount DECIMAL(10, 4) NOT NULL,
+            Payment_Method ENUM('Cash', 'Card', 'GCash', 'None') NOT NULL,
             Payment_Status ENUM('Paid','Unpaid') NOT NULL,
             
             PRIMARY KEY (Payment_ID),
