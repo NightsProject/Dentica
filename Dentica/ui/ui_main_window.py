@@ -239,7 +239,46 @@ class Ui_MainWindow(object):
                 background-color: #72A8FF;
         }
         """)
+        
+        self.userbtn.clicked.connect(lambda: self.toggle_dropdown(self.userbtn, self.centralwidget, self.user_menu))
         self.userbtn.setObjectName("userbtn")
+
+        #User menu drop-down
+        self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
+        self.user_menu.setObjectName("user_menu")
+        self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
+        self.user_menu.setStyleSheet("""
+        #user_menu{
+                background: #fff; 
+                border: 1px solid #e5e7eb;
+                border-radius: 5px;
+                }
+        QPushButton {
+                        text-align: left;
+                        background-color: transparent;
+                        border: none;
+                        color: #475569;
+                        font-size: 12px;
+                }
+        QPushButton:hover {
+                        background-color: #f1f5f9;
+                        color: #000000;
+                        border-radius: 8px;
+                }
+        """)
+        self.user_menu.setVisible(False)
+
+        #User login
+        self.settings_btn = QtWidgets.QPushButton("User login", parent=self.user_menu)
+        self.settings_btn.setGeometry(10, 10, 130, 30)
+        self.settings_btn.setObjectName("settings_btn")
+
+        #database login
+        self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
+        self.logout_btn.setGeometry(10, 50, 130, 30)
+        self.logout_btn.clicked.connect(lambda: self.open_login_popup())
+        self.logout_btn.setObjectName("logout_btn")
+        
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.TotPat_card.setGeometry(QtCore.QRect(20, 90, 190, 120))
@@ -1237,4 +1276,9 @@ class Ui_MainWindow(object):
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
             
-            
+
+    def toggle_dropdown(self, userbtn, centralwidget, user_menu):
+        if not userbtn.isVisible():
+                btn_pos = userbtn.mapTo(centralwidget, QtCore.QPoint(0, userbtn.height()))
+                userbtn.move(btn_pos)
+        user_menu.setVisible(not user_menu.isVisible())
