@@ -23,7 +23,7 @@ def connectDBF(host, user, password, databaseName):
         if connection.is_connected():
             return connection
     except Error as e:
-        pass
+        print(e)
         #ToDO
         #error handling
     
@@ -42,7 +42,7 @@ def connectDB():
         if connection.is_connected():
             return connection
     except Error as e:
-        pass
+        print(e)
         #ToDO
         #error handling
     
