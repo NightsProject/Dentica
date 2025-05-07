@@ -307,7 +307,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
-        font.setBold(True)
+        font.setWeight(75)
         self.label_5.setFont(font) 
         self.label_5.setStyleSheet("background: #fff;")
         self.label_5.setObjectName("label_5")
@@ -344,6 +344,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_6.setFont(font)
         self.label_6.setStyleSheet("background: #fff;")
         self.label_6.setObjectName("label_6")
@@ -380,6 +381,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_7.setFont(font)
         self.label_7.setStyleSheet("background: #fff;")
         self.label_7.setObjectName("label_7")
@@ -416,6 +418,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_9.setFont(font)
         self.label_9.setStyleSheet("background: #fff;")
         self.label_9.setObjectName("label_9")
@@ -425,7 +428,7 @@ class Ui_MainWindow(object):
         self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
-                background: #ffffff;
+                background: red;
                 border: 1px solid #e5e7eb;  
                 border-radius: 12px;
         }
@@ -446,7 +449,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 361))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 600, 361))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {

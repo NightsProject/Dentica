@@ -307,7 +307,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
-        font.setBold(True)
+        font.setWeight(75)
         self.label_5.setFont(font) 
         self.label_5.setStyleSheet("background: #fff;")
         self.label_5.setObjectName("label_5")
@@ -344,6 +344,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_6.setFont(font)
         self.label_6.setStyleSheet("background: #fff;")
         self.label_6.setObjectName("label_6")
@@ -380,6 +381,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_7.setFont(font)
         self.label_7.setStyleSheet("background: #fff;")
         self.label_7.setObjectName("label_7")
@@ -416,6 +418,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
+        font.setWeight(75)
         self.label_9.setFont(font)
         self.label_9.setStyleSheet("background: #fff;")
         self.label_9.setObjectName("label_9")
@@ -428,6 +431,7 @@ class Ui_MainWindow(object):
                 background: #ffffff;
                 border: 1px solid #e5e7eb;  
                 border-radius: 12px;
+                color: red;
         }
         """)
         self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
