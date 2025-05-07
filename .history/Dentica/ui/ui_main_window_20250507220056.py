@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
         #Pages
         self.Pages = QtWidgets.QStackedWidget(parent=self.centralwidget)
         self.Pages.setGeometry(QtCore.QRect(260, 0, 1200, 800))
-        self.Pages.setStyleSheet("""background: #F8FAFC;
+        self.Pages.setStyleSheet("""background: #FFFFFF;
                                     color: black;
                                     """)
         self.Pages.setObjectName("Pages")
@@ -200,7 +200,6 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.label.setFont(font)
-        self.label.setStyleSheet("background-color: #fff;")
         self.label.setObjectName("label")
 
         #Notification button
@@ -533,7 +532,6 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.label_12.setFont(font)
-        self.label_12.setStyleSheet("background-color: #fff;")
         self.label_12.setObjectName("label_12")
 
         #Notification button 2
@@ -668,7 +666,6 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.label_13.setFont(font)
-        self.label_13.setStyleSheet("background-color: #fff;")
         self.label_13.setObjectName("label_13")
 
         #Notification button 3
@@ -893,7 +890,6 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.label_14.setFont(font)
-        self.label_14.setStyleSheet("background-color: #fff;")
         self.label_14.setObjectName("label_14")
 
         #Notification button 4
@@ -1123,7 +1119,6 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.label_15.setFont(font)
-        self.label_15.setStyleSheet("background-color: #fff;")
         self.label_15.setObjectName("label_15")
         
 
