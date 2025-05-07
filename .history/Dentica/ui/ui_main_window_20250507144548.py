@@ -30,9 +30,7 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Dentica.setFont(font)
-        self.Dentica.setStyleSheet("""border: none;
-                                      color: black;
-                                      """)
+        self.Dentica.setStyleSheet("border: none;")
         self.Dentica.setObjectName("Dentica")
 
         #Sidebar Layout
@@ -175,9 +173,7 @@ class Ui_MainWindow(object):
         #Pages
         self.Pages = QtWidgets.QStackedWidget(parent=self.centralwidget)
         self.Pages.setGeometry(QtCore.QRect(260, 0, 1200, 800))
-        self.Pages.setStyleSheet("""background: #F8FAFC;
-                                    color: black;
-                                    """)
+        self.Pages.setStyleSheet("background: #F8FAFC;")
         self.Pages.setObjectName("Pages")
         self.Dashboard_page = QtWidgets.QWidget()
         self.Dashboard_page.setObjectName("Dashboard_page")
@@ -383,7 +379,7 @@ class Ui_MainWindow(object):
         self.label_9.setStyleSheet("background: #fff;")
         self.label_9.setObjectName("label_9")
 
-        #Todays Appintment Frame
+        #Upcoming Appintment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
@@ -408,7 +404,7 @@ class Ui_MainWindow(object):
         self.label_10.setStyleSheet("background: #fff;")
         self.label_10.setObjectName("label_10")
 
-        #Todays Appointment Table
+        #Upcoming Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
         self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 361))
         self.UpAp_table.setShowGrid(False)
@@ -449,7 +445,22 @@ class Ui_MainWindow(object):
         }
         """)
 
-  
+        row_position = self.UpAp_table.rowCount()
+        self.UpAp_table.insertRow(row_position)
+        self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem("Patient A"))
+        self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem("10:00 AM"))
+        self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem("Dental Cleaning"))
+        self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem("Confirmed"))
+        self.UpAp_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem("View"))
+
+        self.UpAp_table.insertRow(row_position)
+        self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem("Patient B"))
+        self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem("11:00 AM"))
+        self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem("Check-up"))
+        self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem("Waiting"))
+        self.UpAp_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem("View"))
+
+
         # Recent Notifications Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame_3.setGeometry(QtCore.QRect(700, 230, 220, 461))
@@ -1154,25 +1165,23 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Dashboard"))
         self.label_2.setText(_translate("MainWindow", "Total Patient"))
         self.label_5.setText(_translate("MainWindow", "0"))
-        self.label_3.setText(_translate("MainWindow", "Today's Appointments"))
+        self.label_3.setText(_translate("MainWindow", "Today\'s Appointments"))
         self.label_6.setText(_translate("MainWindow", "0"))
         self.label_4.setText(_translate("MainWindow", "Pending Payments"))
         self.label_7.setText(_translate("MainWindow", "0"))
         self.label_8.setText(_translate("MainWindow", "Completed Treatments"))
         self.label_9.setText(_translate("MainWindow", "0"))
-        
-        self.label_10.setText(_translate("MainWindow", "Todays Appointments"))
+        self.label_10.setText(_translate("MainWindow", "Upcoming Appointments"))
         item = self.UpAp_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Apppointment ID"))
+        item.setText(_translate("MainWindow", "Patient"))
         item = self.UpAp_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Patient Name"))
-        item = self.UpAp_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Time"))
-        item = self.UpAp_table.horizontalHeaderItem(3)
+        item = self.UpAp_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Treatment"))
+        item = self.UpAp_table.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Status"))
         item = self.UpAp_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Treatment Status"))
-        
+        item.setText(_translate("MainWindow", "Action"))
         self.label_11.setText(_translate("MainWindow", "Recent Notifications"))
         
         #Patients Tab
@@ -1180,19 +1189,19 @@ class Ui_MainWindow(object):
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
         item = self.Patients_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Patient ID"))
-        item = self.Patients_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Name"))
+        item = self.Patients_table.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Address"))
         item = self.Patients_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Gender"))
         item = self.Patients_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Birthdate"))
-        item = self.Patients_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Contact"))
-        item = self.Patients_table.horizontalHeaderItem(5)
+        item = self.Patients_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Email"))
+        item = self.Patients_table.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Birthdate"))
         item = self.Patients_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Address"))
+        item.setText(_translate("MainWindow", "Action"))
 
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
