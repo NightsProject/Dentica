@@ -12,7 +12,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle("Dentica")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        
 
         #Sidebar Frame
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
