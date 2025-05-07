@@ -26,19 +26,25 @@ class Database_Login(QtWidgets.QDialog):
 
         self.host_input = QtWidgets.QLineEdit(self)
         self.host_input.setGeometry(110, 120, 160, 22)
+        
+        self.port_label = QtWidgets.QLabel("Port:", self)
+        self.port_label.setGeometry(20, 160, 80, 20)
+
+        self.port_input = QtWidgets.QLineEdit(self)
+        self.port_input.setGeometry(110, 160, 160, 22)
 
         self.dbname_label = QtWidgets.QLabel("Database Name:", self)
-        self.dbname_label.setGeometry(20, 160, 90, 20)
+        self.dbname_label.setGeometry(20, 200, 90, 20)
 
         self.dbname_input = QtWidgets.QLineEdit(self)
-        self.dbname_input.setGeometry(110, 160, 160, 22)
+        self.dbname_input.setGeometry(110, 200, 160, 22)
         
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
-        self.cancel_btn.setGeometry(160, 210, 80, 30)
+        self.cancel_btn.setGeometry(160, 240, 80, 30)
         self.cancel_btn.clicked.connect(self.reject)
         
         self.login_btn = QtWidgets.QPushButton("Login", self)
-        self.login_btn.setGeometry(80, 210, 80, 30)
+        self.login_btn.setGeometry(80, 240, 80, 30)
         
         
 
