@@ -3,7 +3,8 @@
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMainWindow
 from ui.ui_main_window import Ui_MainWindow
-
+from PyQt6.QtWidgets import QMessageBox
+import mysql.connector
 
 from controller.database_login_ctr import Database_Dialog_Ctr
 from backend.DB import connectDBF, set_credentials, createAllTables
@@ -66,32 +67,33 @@ class MainController(QMainWindow, Ui_MainWindow):
     #====================LOAD DATAS TO UI=============== end
     #=======================================================
 
+    
     def handle_credentials(self, host, user, password, databaseName):
-        print(f"Received credentials: host={host}, user={user}, password={password}, databse name={databaseName}")
+        print(f"Received credentials: host={host}, user={user}, password={password}, database name={databaseName}")
         
-        connection = connectDBF(host, user, password, databaseName)
-        if connection:
+        try:
+            connection = connectDBF(host, user, password, databaseName)
+            if not connection:
+                raise Exception("Connection returned None")
+            
             print(f"Successfully connected to {databaseName} database")
+            set_credentials(host, user, password, databaseName)
 
-            set_credentials(host, user, password, databaseName) # later for global use 
-            
             createAllTables(connection)
-            
-            #===========LOAD DATAS=============
-            #Dashboard
-            summary_data = load_summary() 
+
+            summary_data = load_summary()
             self.update_summary(summary_data)
-            
+
             todays_appointments_list = get_todays_appointments()
             self.update_todays_appointments_table(todays_appointments_list)
-            
+
             all_patients_list = get_all_patients()
             self.update_patients_list(all_patients_list)
-            
-            
-        else:
-            print("Failed to connect to the database.")
-            
-        #ToDO
-        #Notify to gui
- 
+
+        except mysql.connector.Error as e:
+            print("MySQL Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+
+        except Exception as e:
+            print("Unexpected Error:", e)
+            QMessageBox.critical(None, "Error", str(e))

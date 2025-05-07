@@ -23,10 +23,9 @@ def connectDBF(host, user, password, databaseName):
         if connection.is_connected():
             return connection
     except Error as e:
-        print(e)
-        #ToDO
-        #error handling
-    
+        print(f"Database connection error: {e}")
+        raise  # Reraise the exception so the caller can handle it properly
+
     return None
     
     
