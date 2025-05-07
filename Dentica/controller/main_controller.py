@@ -77,8 +77,8 @@ class MainController(QMainWindow, Ui_MainWindow):
             
             print(f"Successfully connected to {databaseName} database")
             
-            set_credentials("localhost","3306", "root", "root", "dentica")
-            #set_credentials(host,port, user, password, databaseName)
+         
+            set_credentials(host,port, user, password, databaseName)
 
             createAllTables(connection)
 
