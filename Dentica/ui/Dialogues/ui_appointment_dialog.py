@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QDateEdit
 from PyQt6.QtCore import QDate
 from controller.treatment_ctr import Treatment_Dialog_Ctr
+from controller.patient_ctr import Patient_Dialog_Ctr
 
 class Add_Appointment(QtWidgets.QDialog):
     def __init__(self,parent=None):
@@ -24,10 +25,14 @@ class Add_Appointment(QtWidgets.QDialog):
         self.patient_input.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
 
         
-        self.AddTreat_btn = QtWidgets.QPushButton("Add Patient", self)
-        self.AddTreat_btn.setGeometry(400, 80, 120, 30)
-        
+        self.AddPatient_btn = QtWidgets.QPushButton("Add Patient", self)
+        self.AddPatient_btn.setGeometry(400, 80, 120, 30)
+        self.AddPatient_btn.clicked.connect(lambda: open_patient(self))
 
+        def open_patient(self):
+            patient_popup = Patient_Dialog_Ctr()
+            patient_popup.exec()
+        
  
         self.schedule = QtWidgets.QLabel("Schedule:", self)
         self.schedule.setGeometry(20, 120, 80, 20)

@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
 
 
         self.label = QtWidgets.QLabel(parent=self.frame)
-        self.label.setGeometry(QtCore.QRect(20, 25, 131, 31))
+        self.label.setGeometry(QtCore.QRect(20, 25, 150, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(18)
@@ -1128,7 +1128,7 @@ class Ui_MainWindow(object):
         
         #Notification button 5
         self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
-        self.not_btn_5.setGeometry(QtCore.QRect(840, 23, 40, 40))
+        self.not_btn_5.setGeometry(QtCore.QRect(830, 23, 40, 40))
         not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
         self.not_btn_5.setIcon(not_icon)
         self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
@@ -1146,7 +1146,7 @@ class Ui_MainWindow(object):
 
         #User button 5
         self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
-        self.userbtn_5.setGeometry(QtCore.QRect(890, 23, 40, 40))
+        self.userbtn_5.setGeometry(QtCore.QRect(880, 23, 40, 40))
         user_icon = QtGui.QIcon(f"{filepath}User.svg")
         self.userbtn_5.setIcon(user_icon)
         self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
