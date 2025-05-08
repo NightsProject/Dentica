@@ -28,3 +28,7 @@ Step 2: Run the app
 click the profile icon at the upper right
 click the database login then input the Credentials
 click login
+
+
+To start the mysql
+    mysql.server start
