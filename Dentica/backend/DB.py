@@ -1,11 +1,35 @@
 import mysql.connector
 from mysql.connector import Error
 
+# #==============For testing purposes==start
+# #  store the credentials globally
+# def set_credentials(host, port, user, password, database):
+#     global HOST, PORT, USER, PASSWORD, DATABASE_NAME
+#     HOST = "localhost"
+#     PORT ="3306"
+#     USER = "user"
+#     PASSWORD = "user"
+#     DATABASE_NAME = "denticadb"
+# #===============For testing purposes===end
 
-def connectDB(host, user, password, databaseName):
+
+
+#  store the credentials globally
+def set_credentials(host, port, user, password, database):
+    global HOST, PORT, USER, PASSWORD, DATABASE_NAME
+    HOST = host
+    PORT = port
+    USER = user
+    PASSWORD = password
+    DATABASE_NAME = database
+
+
+#try to connect to the database once
+def connectDBF(host, port, user, password, databaseName):
     try:
         connection = mysql.connector.connect(
             host=host,
+            port=port,
             user=user,
             password=password,
             database=databaseName
@@ -13,22 +37,39 @@ def connectDB(host, user, password, databaseName):
         if connection.is_connected():
             return connection
     except Error as e:
-        pass
+        print(f"Database connection error: {e}")
+        raise  # Reraise the exception so the caller can handle it properly
+
+    return None
+    
+    
+#try to connect to the database using the saved credentials
+def connectDB():
+    try:
+        connection = mysql.connector.connect(
+            host=HOST,
+            port=PORT,
+            user=USER,
+            password=PASSWORD,
+            database=DATABASE_NAME
+        )
+        if connection.is_connected():
+            return connection
+    except Error as e:
+        print(e)
         #ToDO
         #error handling
     
     return None
-    
+
+
+
+
+
+
+
 def createAllTables(conn):
     cursor = conn.cursor()
-    
-    
-    # #Delete all table
-    # cursor.execute(
-    # """
-    # DROP TABLE Appointment;
-    # Drop TABLE Patient;
-    # """)
     
     
     #Creating patients table
@@ -38,11 +79,11 @@ def createAllTables(conn):
             First_Name VARCHAR(128) NOT NULL,
             Middle_Name VARCHAR(128) NOT NULL,
             Last_Name VARCHAR(128) NOT NULL,
-            Address VARCHAR(100) NOT NULL,
             Gender VARCHAR(100) NOT NULL,
+            Birth_Date DATE NOT NULL,
             Contact_Number VARCHAR(15) NOT NULL,
             Email VARCHAR(100) NOT NULL,
-            Birth_Date DATE NOT NULL,
+            Address VARCHAR(100) NOT NULL,
 
             PRIMARY KEY (Patient_ID),
             UNIQUE (Patient_ID)
@@ -74,7 +115,8 @@ def createAllTables(conn):
             Cost DECIMAL(10, 4) NOT NULL,
             Treatment_Procedure VARCHAR(128) NOT NULL,
             Treatment_Date_Time DATETIME NOT NULL,
-
+            Treatment_Status ENUM('Completed', 'In-Progress', 'Waiting', 'Canceled'),
+            
             PRIMARY KEY (Appointment_ID, Treatment_ID),
             FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID)
         );
@@ -114,9 +156,10 @@ def createAllTables(conn):
             Payment_ID VARCHAR(7) NOT NULL,
             Patient_ID VARCHAR(6) NOT NULL,
             Appointment_ID VARCHAR(6) NOT NULL,
-            Amount_Paid DECIMAL(10, 4) NOT NULL,
-            Payment_Method ENUM('Cash', 'Card', 'GCash') NOT NULL,
-
+            Total_Amount DECIMAL(10, 4) NOT NULL,
+            Payment_Method ENUM('Cash', 'Card', 'GCash', 'None') NOT NULL,
+            Payment_Status ENUM('Paid','Unpaid') NOT NULL,
+            
             PRIMARY KEY (Payment_ID),
             FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
             FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID)

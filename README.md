@@ -21,3 +21,4 @@ To solve these issues, we present the Dentica Management System — a modern, st
 
 - [@NightsProject](https://www.github.com/NightsProject)
 - [@Orginary33](https://www.github.com/Ordinary33)
+- [@CodeDotCom2](https://github.com/CodeDotcom2)

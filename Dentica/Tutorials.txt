@@ -1,0 +1,30 @@
+Step 1: Ready the MySql Database
+
+Download the MySql Server
+
+inside the MySql cli or MySql Command Line Client(search in windows)
+
+    create Database
+        CREATE DATABSE databaseName;
+
+    create a new User
+        CREATE USER 'username'@'localhost' IDENTIFIED BY 'yourpassword';
+
+    grant privileges to the new username
+        GRANDT ALL PRIVILEGES ON databaseName.* TO 'username'@'localhost';
+
+    Remember your Credentials
+    User = username
+    Password = yourpassword
+    Host = localhost
+    Database Name = databaseName
+
+    import the test_file/insert_dummy_data.sql to the MySql
+        mysql -u username -p databaseName < /path/to/your/file.sql
+
+
+Step 2: Run the app
+
+click the profile icon at the upper right
+click the database login then input the Credentials
+click login
