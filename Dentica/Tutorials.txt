@@ -30,5 +30,7 @@ click the database login then input the Credentials
 click login
 
 
+
+========= using the docker image =========
 To start the mysql
     mysql.server start
