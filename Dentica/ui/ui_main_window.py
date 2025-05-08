@@ -1,5 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+
 filepath = "Dentica/ui/icons/"
 
 class Ui_MainWindow(object):
@@ -420,7 +421,7 @@ class Ui_MainWindow(object):
         self.label_9.setStyleSheet("background: #fff;")
         self.label_9.setObjectName("label_9")
 
-        #Todays Appintment Frame
+        #Todays Appointment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
