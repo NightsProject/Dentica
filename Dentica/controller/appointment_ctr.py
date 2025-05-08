@@ -1,5 +1,5 @@
 from PyQt6.QtCore import pyqtSignal
-from ui.Dialogues.ui_database_dialog import Add_Appointment
+from ui.Dialogues.ui_appointment_dialog import Add_Appointment
 
 class Appointment_Dialog_Ctr(Add_Appointment):
     

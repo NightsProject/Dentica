@@ -1,5 +1,5 @@
 from PyQt6.QtCore import pyqtSignal
-from ui.Dialogues.ui_database_dialog import User_Login
+from ui.Dialogues.ui_user_dialog import User_Login
 
 class User_Dialog_Ctr(User_Login):
     
