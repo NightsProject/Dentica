@@ -2,7 +2,8 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
 	"name": "Dentica",
-	"image": "nightsproject/dentica-dev:latest"
+	"image": "nightsproject/dentica-dev:latest",
 
+	"remoteUser": "vscode"
 }
 

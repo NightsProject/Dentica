@@ -3,4 +3,4 @@ backend/__pycache__/
 controller/__pycache__/
 ui/__pycache__/
 ui/Dialogues/__pycache__/
-
+.history/
