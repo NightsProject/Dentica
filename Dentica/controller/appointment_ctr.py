@@ -7,9 +7,9 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
     def __init__(self):
         super().__init__()
-        self.add_btn.clicked.connect(self.on_login_pressed)
+        self.add_btn.clicked.connect(self.on_add_pressed)
         
-    def on_login_pressed(self):
+    def on_add_pressed(self):
         app_id = self.appointment_input.text()
         pat_id = self.patient_input.text()
         sched = self.schedule_input.dateTime()
