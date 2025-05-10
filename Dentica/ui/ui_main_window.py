@@ -1,5 +1,5 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+from PyQt6 import QtSvgWidgets, QtSvg
 
 filepath = "Dentica/ui/icons/"
 
@@ -18,21 +18,28 @@ class Ui_MainWindow(object):
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
         self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, 780))
         self.SidebarFrame.setAutoFillBackground(False)
-        self.SidebarFrame.setStyleSheet("background-color: #fff; border-right: 1px solid #E5E7EB;")
+        self.SidebarFrame.setStyleSheet("background-color: #1F1F21 ; border-right: 1px solid #1F1F21 ;")
         self.SidebarFrame.setObjectName("SidebarFrame")
 
         #Dentica Label
         self.Dentica = QtWidgets.QLabel(parent=self.SidebarFrame)
-        self.Dentica.setGeometry(QtCore.QRect(70, 25, 121, 51))
+        self.Dentica.setGeometry(QtCore.QRect(65, 25, 121, 51))
         font = QtGui.QFont()
-        font.setFamily("Inter")
+        font.setFamily("Katarine")
         font.setPointSize(20)
         font.setBold(True)
         self.Dentica.setFont(font)
         self.Dentica.setStyleSheet("""border: none;
-                                      color: black;
+                                      color: #fff;
                                       """)
         self.Dentica.setObjectName("Dentica")
+
+        #Dentica Icon
+        self.DenticaIcon = QtWidgets.QLabel(parent = self.SidebarFrame)
+        self.DenticaIcon.setGeometry(QtCore.QRect(30, 33, 35, 35))
+        dent_icon = QtGui.QIcon(f"{filepath}Dentica.svg")
+        pixmap = dent_icon.pixmap(35,35)
+        self.DenticaIcon.setPixmap(pixmap)
 
         #Sidebar Layout
         self.verticalLayoutWidget = QtWidgets.QWidget(parent=self.SidebarFrame)
@@ -57,12 +64,14 @@ class Ui_MainWindow(object):
                         padding: 10px;
                         background-color: transparent;
                         border: none;
-                        color: #475569;
+                        color: #fff;
                         font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #fff;
                         border-radius: 8px;
                 }
                 """)
@@ -82,12 +91,14 @@ class Ui_MainWindow(object):
                         padding: 10px;
                         background-color: transparent;
                         border: none;
-                        color: #475569;
+                        color: #fff;
                         font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #fff;
                         border-radius: 8px;
                 }
                 """)
@@ -108,12 +119,14 @@ class Ui_MainWindow(object):
                         padding: 10px;
                         background-color: transparent;
                         border: none;
-                        color: #475569;
+                        color: #fff;
                         font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #fff;
                         border-radius: 8px;
                 }
                 """)
@@ -133,12 +146,14 @@ class Ui_MainWindow(object):
                         padding: 10px;
                         background-color: transparent;
                         border: none;
-                        color: #475569;
+                        color: #fff;
                         font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #fff;
                         border-radius: 8px;
                 }
                 """)
@@ -158,12 +173,14 @@ class Ui_MainWindow(object):
                         padding: 10px;
                         background-color: transparent;
                         border: none;
-                        color: #475569;
+                        color: #fff;
                         font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #fff;
                         border-radius: 8px;
                 }
                 """)
@@ -174,7 +191,7 @@ class Ui_MainWindow(object):
         #Pages
         self.Pages = QtWidgets.QStackedWidget(parent=self.centralwidget)
         self.Pages.setGeometry(QtCore.QRect(260, 0, 1200, 800))
-        self.Pages.setStyleSheet("""background: #F8FAFC;
+        self.Pages.setStyleSheet("""background: #B2CDE9;
                                     color: black;
                                     """)
         self.Pages.setObjectName("Pages")
@@ -186,7 +203,8 @@ class Ui_MainWindow(object):
         self.frame = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
         self.frame.setStyleSheet("""
-                #frame { background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                #frame { background-color: #B2CDE9; 
+                                 
                         }
                                  """)
         self.frame.setObjectName("frame")
@@ -195,11 +213,11 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(parent=self.frame)
         self.label.setGeometry(QtCore.QRect(20, 25, 150, 31))
         font = QtGui.QFont()
-        font.setFamily("Inter")
+        font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
         self.label.setFont(font)
-        self.label.setStyleSheet("background-color: #fff;")
+        self.label.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label.setObjectName("label")
 
         #Notification button
@@ -216,7 +234,7 @@ class Ui_MainWindow(object):
                 border-radius: 20px;                   
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }                           
         """)
         self.not_btn.setObjectName("not_btn")
@@ -235,7 +253,7 @@ class Ui_MainWindow(object):
                 border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         
@@ -248,7 +266,7 @@ class Ui_MainWindow(object):
         self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
         self.user_menu.setStyleSheet("""
         #user_menu{
-                background: #fff; 
+                background: #1F1F21; 
                 border: 1px solid #e5e7eb;
                 border-radius: 5px;
                 }
@@ -256,13 +274,12 @@ class Ui_MainWindow(object):
                         text-align: left;
                         background-color: transparent;
                         border: none;
-                        color: #475569;
+                        color: #fff;
                         font-size: 12px;
                 }
         QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
-                        border-radius: 8px;
+                        background-color: #8DB8E0;
+                        color: #fff;
                 }
         """)
         self.user_menu.setVisible(False)
@@ -279,11 +296,11 @@ class Ui_MainWindow(object):
         
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.TotPat_card.setGeometry(QtCore.QRect(20, 90, 190, 120))
+        self.TotPat_card.setGeometry(QtCore.QRect(20, 90, 200, 120))
         self.TotPat_card.setStyleSheet("""
         #TotPat_card {
-                background: #fff;
-                border: 1px solid #e5e7eb;  
+                background: #C0D1E6;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -291,15 +308,23 @@ class Ui_MainWindow(object):
         self.TotPat_card.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.TotPat_card.setObjectName("TotPat_card")
 
+        #patient icon
+        self.totpat_icon = QtWidgets.QLabel(parent=self.TotPat_card)
+        self.totpat_icon.setGeometry(QtCore.QRect(20, 15, 30, 30))
+        self.totpat_icon.setStyleSheet("background: transparent;")
+        pat_icon2 = QtGui.QIcon(f"{filepath}Patients2.svg")
+        pixmap = pat_icon2.pixmap(25,25)
+        self.totpat_icon.setPixmap(pixmap)
+
         # Total Patient
         self.label_2 = QtWidgets.QLabel(parent=self.TotPat_card)
-        self.label_2.setGeometry(QtCore.QRect(20, 20, 121, 21))
+        self.label_2.setGeometry(QtCore.QRect(50, 20, 121, 21))
         font = QtGui.QFont()
         font.setFamily("Inter")
-        font.setPointSize(11)
+        font.setPointSize(9)
         font.setBold(True)
         self.label_2.setFont(font)
-        self.label_2.setStyleSheet("background: #fff; color: #64748B;")
+        self.label_2.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_2.setObjectName("label_2")
 
         # Count Patient
@@ -310,16 +335,18 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         font.setBold(True)
         self.label_5.setFont(font) 
-        self.label_5.setStyleSheet("background: #fff;")
+        self.label_5.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_5.setObjectName("label_5")
+
+   
 
         #Total Appointments Card
         self.TodApp_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.TodApp_card.setGeometry(QtCore.QRect(255, 90, 190, 120))
+        self.TodApp_card.setGeometry(QtCore.QRect(255, 90, 200, 120))
         self.TodApp_card.setStyleSheet("""
         #TodApp_card {
-                background: #fff;
-                border: 1px solid #e5e7eb;  
+                background: #C0D1E6;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -327,98 +354,122 @@ class Ui_MainWindow(object):
         self.TodApp_card.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.TodApp_card.setObjectName("TodApp_card")
 
+        #appointment icon
+        self.totapp_icon = QtWidgets.QLabel(parent=self.TodApp_card)
+        self.totapp_icon.setGeometry(QtCore.QRect(10, 15, 30, 30))
+        self.totapp_icon.setStyleSheet("background: transparent;")
+        app_icon2 = QtGui.QIcon(f"{filepath}Appointments2.svg")
+        pixmap2 = app_icon2.pixmap(23,23)
+        self.totapp_icon.setPixmap(pixmap2)
+
         #Today's Appointment
         self.label_3 = QtWidgets.QLabel(parent=self.TodApp_card)
-        self.label_3.setGeometry(QtCore.QRect(10, 20, 165, 21))
+        self.label_3.setGeometry(QtCore.QRect(35, 20, 155, 21))
         font = QtGui.QFont()
         font.setFamily("Inter")
-        font.setPointSize(11)
+        font.setPointSize(9)
         font.setBold(True)
         self.label_3.setFont(font)
-        self.label_3.setStyleSheet("background: #fff; color: #64748B;")
+        self.label_3.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_3.setObjectName("label_3")
 
         #Count Appointment where date now
         self.label_6 = QtWidgets.QLabel(parent=self.TodApp_card)
-        self.label_6.setGeometry(QtCore.QRect(20, 50, 51, 31))
+        self.label_6.setGeometry(QtCore.QRect(10, 50, 51, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
         self.label_6.setFont(font)
-        self.label_6.setStyleSheet("background: #fff;")
+        self.label_6.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_6.setObjectName("label_6")
 
         #Pending Payment Card
         self.PendPay_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.PendPay_card.setGeometry(QtCore.QRect(490, 90, 190, 120))
+        self.PendPay_card.setGeometry(QtCore.QRect(490, 90, 200, 120))
         self.PendPay_card.setStyleSheet("""
         #PendPay_card {
-                background: #fff;
-                border: 1px solid #e5e7eb;  
+                background: #C0D1E6;
+                border: 1px solid #fff;  
                 border-radius: 12px;
-        }
+        }                            
         """)
         self.PendPay_card.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.PendPay_card.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.PendPay_card.setObjectName("PendPay_card")
 
+        #payment icon
+        self.pay_icon = QtWidgets.QLabel(parent=self.PendPay_card)
+        self.pay_icon.setGeometry(QtCore.QRect(10, 15, 30, 30))
+        self.pay_icon.setStyleSheet("background: transparent;")
+        bil_icon2 = QtGui.QIcon(f"{filepath}Billing2.svg")
+        pixmap3 = bil_icon2.pixmap(25, 25)
+        self.pay_icon.setPixmap(pixmap3)
+
         #Pending Payment
         self.label_4 = QtWidgets.QLabel(parent=self.PendPay_card)
-        self.label_4.setGeometry(QtCore.QRect(10, 20, 175, 21))
+        self.label_4.setGeometry(QtCore.QRect(40, 20, 155, 21))
         font = QtGui.QFont()
         font.setFamily("Inter")
-        font.setPointSize(11)
+        font.setPointSize(9)
         font.setBold(True)
         self.label_4.setFont(font)
-        self.label_4.setStyleSheet("background: #fff; color: #64748B;")
+        self.label_4.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_4.setObjectName("label_4")
 
         #Count Payment
         self.label_7 = QtWidgets.QLabel(parent=self.PendPay_card)
-        self.label_7.setGeometry(QtCore.QRect(20, 50, 51, 31))
+        self.label_7.setGeometry(QtCore.QRect(10, 50, 51, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
         self.label_7.setFont(font)
-        self.label_7.setStyleSheet("background: #fff;")
+        self.label_7.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_7.setObjectName("label_7")
 
         #Completed Treatment Card
         self.ComTreat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.ComTreat_card.setGeometry(QtCore.QRect(725, 90, 190, 120))
+        self.ComTreat_card.setGeometry(QtCore.QRect(725, 90, 200, 120))
         self.ComTreat_card.setStyleSheet("""
         #ComTreat_card {
-                background: #fff;
-                border: 1px solid #e5e7eb;  
+                background: #C0D1E6;
+                border: 1px solid #fff;  
                 border-radius: 12px;
-        }
+         }
         """)
         self.ComTreat_card.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.ComTreat_card.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.ComTreat_card.setObjectName("ComTreat_card")
+
+        #treatment icon
+        self.treat_icon = QtWidgets.QLabel(parent=self.ComTreat_card)
+        self.treat_icon.setGeometry(QtCore.QRect(10, 15, 30, 30))
+        self.treat_icon.setStyleSheet("background: transparent;")
+        treat_icon = QtGui.QIcon(f"{filepath}Treatment.svg")
+        pixmap4 = treat_icon.pixmap(25, 25)
+        self.treat_icon.setPixmap(pixmap4)
         
         #Completed Treatment
         self.label_8 = QtWidgets.QLabel(parent=self.ComTreat_card)
-        self.label_8.setGeometry(QtCore.QRect(10, 20, 175, 21))
+        self.label_8.setGeometry(QtCore.QRect(35, 20, 155, 21))
         font = QtGui.QFont()
         font.setFamily("Inter")
-        font.setPointSize(11)
+        font.setPointSize(9)
         font.setBold(True)
         self.label_8.setFont(font)
-        self.label_8.setStyleSheet("background: #fff; color: #64748B;")
+        self.label_8.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_8.setObjectName("label_8")
 
         #Count Treatment
         self.label_9 = QtWidgets.QLabel(parent=self.ComTreat_card)
-        self.label_9.setGeometry(QtCore.QRect(20, 50, 51, 31))
+        self.label_9.setGeometry(QtCore.QRect(10, 50, 51, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
         font.setBold(True)
         self.label_9.setFont(font)
-        self.label_9.setStyleSheet("background: #fff;")
+        self.label_9.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_9.setObjectName("label_9")
 
         #Todays Appointment Frame
@@ -426,8 +477,8 @@ class Ui_MainWindow(object):
         self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;  
+                background: #C0D1E6;
+                border: 1px solid #fff;
                 border-radius: 12px;
         }
         """)
@@ -442,7 +493,7 @@ class Ui_MainWindow(object):
         font.setPointSize(14)
         font.setBold(True)
         self.label_10.setFont(font)
-        self.label_10.setStyleSheet("background: #fff;")
+        self.label_10.setStyleSheet("background: #C0D1E6; color: #37547A;")
         self.label_10.setObjectName("label_10")
 
         #Todays Appointment Table
@@ -451,7 +502,7 @@ class Ui_MainWindow(object):
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
-        background-color: #fff;
+        background-color: #C0D1E6;
         border: none;
         }
         QTableWidget::item {
@@ -459,7 +510,7 @@ class Ui_MainWindow(object):
         }
         QHeaderView::section {
                 border: none;
-                background-color: #fff;
+                background-color: #C0D1E6;
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
@@ -492,8 +543,8 @@ class Ui_MainWindow(object):
         self.frame_3.setGeometry(QtCore.QRect(700, 230, 220, 461))
         self.frame_3.setStyleSheet("""
         #frame_3 {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;  
+                background: #C0D1E6;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -502,7 +553,7 @@ class Ui_MainWindow(object):
         self.frame_3.setObjectName("frame_3")
         self.label_11 = QtWidgets.QLabel(parent=self.frame_3)
         self.label_11.setGeometry(QtCore.QRect(20, 10, 190, 51))
-        self.label_11.setStyleSheet("background-color: #fff;")
+        self.label_11.setStyleSheet("background: #C0D1E6; color: #37547A;")
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(12)
