@@ -1,5 +1,5 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6 import QtSvgWidgets, QtSvg
+from PyQt6.QtCore import Qt
 
 filepath = "Dentica/ui/icons/"
 
@@ -11,12 +11,13 @@ class Ui_MainWindow(object):
         MainWindow.setEnabled(True)
         MainWindow.setFixedSize(1200, 800)
         MainWindow.setWindowTitle("Dentica")
+        #MainWindow.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         #Sidebar Frame
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
-        self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, 780))
+        self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, 800))
         self.SidebarFrame.setAutoFillBackground(False)
         self.SidebarFrame.setStyleSheet("background-color: #1F1F21 ; border-right: 1px solid #1F1F21 ;")
         self.SidebarFrame.setObjectName("SidebarFrame")
@@ -57,7 +58,7 @@ class Ui_MainWindow(object):
         self.Dash_btn.setIcon(dash_icon)
         self.Dash_btn.setIconSize(QtCore.QSize(25, 25))
         self.Dash_btn.setObjectName("Dash_btn")
-        self.Dash_btn.clicked.connect(lambda : self.Pages.setCurrentIndex(0))
+        self.Dash_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(0), self.set_active_button(self.Dash_btn)))
         self.Dash_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -74,6 +75,11 @@ class Ui_MainWindow(object):
                         color: #fff;
                         border-radius: 8px;
                 }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
                 """)
         self.verticalLayout.addWidget(self.Dash_btn)
         
@@ -84,7 +90,7 @@ class Ui_MainWindow(object):
         self.Patient_btn.setIcon(pat_icon)
         self.Patient_btn.setIconSize(QtCore.QSize(25, 25))
         self.Patient_btn.setObjectName("Patient_btn")
-        self.Patient_btn.clicked.connect(lambda : self.Pages.setCurrentIndex(1))
+        self.Patient_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(1), self.set_active_button(self.Patient_btn)))
         self.Patient_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -101,6 +107,11 @@ class Ui_MainWindow(object):
                         color: #fff;
                         border-radius: 8px;
                 }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
                 """)
         self.verticalLayout.addWidget(self.Patient_btn)
         
@@ -112,7 +123,7 @@ class Ui_MainWindow(object):
         self.Apntmnt_btn.setIcon(apt_icon)
         self.Apntmnt_btn.setIconSize(QtCore.QSize(25, 25))
         self.Apntmnt_btn.setObjectName("Apntmnt_btn")
-        self.Apntmnt_btn.clicked.connect(lambda : self.Pages.setCurrentIndex(2))
+        self.Apntmnt_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(2), self.set_active_button(self.Apntmnt_btn)))
         self.Apntmnt_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -129,6 +140,11 @@ class Ui_MainWindow(object):
                         color: #fff;
                         border-radius: 8px;
                 }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
                 """)
         self.verticalLayout.addWidget(self.Apntmnt_btn)
         
@@ -139,7 +155,7 @@ class Ui_MainWindow(object):
         self.Bill_btn.setIcon(bil_icon)
         self.Bill_btn.setIconSize(QtCore.QSize(25, 25))
         self.Bill_btn.setObjectName("Bill_btn")
-        self.Bill_btn.clicked.connect(lambda : self.Pages.setCurrentIndex(3))
+        self.Bill_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(3), self.set_active_button(self.Bill_btn)))
         self.Bill_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -156,6 +172,11 @@ class Ui_MainWindow(object):
                         color: #fff;
                         border-radius: 8px;
                 }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
                 """)
         self.verticalLayout.addWidget(self.Bill_btn)
         
@@ -166,7 +187,7 @@ class Ui_MainWindow(object):
         self.Rep_btn.setIcon(rep_icon)
         self.Rep_btn.setIconSize(QtCore.QSize(25, 25))
         self.Rep_btn.setObjectName("Rep_btn")
-        self.Rep_btn.clicked.connect(lambda : self.Pages.setCurrentIndex(4))
+        self.Rep_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(4), self.set_active_button(self.Rep_btn)))
         self.Rep_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -183,10 +204,25 @@ class Ui_MainWindow(object):
                         color: #fff;
                         border-radius: 8px;
                 }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
                 """)
         self.verticalLayout.addWidget(self.Rep_btn)
         self.verticalLayout.addStretch()
         
+        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
+                btn.setCheckable(True)
+
+        self.button_group = QtWidgets.QButtonGroup()
+        self.button_group.setExclusive(True)
+        self.button_group.addButton(self.Dash_btn)
+        self.button_group.addButton(self.Patient_btn)
+        self.button_group.addButton(self.Apntmnt_btn)
+        self.button_group.addButton(self.Bill_btn)
+        self.button_group.addButton(self.Rep_btn)
 
         #Pages
         self.Pages = QtWidgets.QStackedWidget(parent=self.centralwidget)
@@ -299,7 +335,7 @@ class Ui_MainWindow(object):
         self.TotPat_card.setGeometry(QtCore.QRect(20, 90, 200, 120))
         self.TotPat_card.setStyleSheet("""
         #TotPat_card {
-                background: #C0D1E6;
+                background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
         }
@@ -324,7 +360,7 @@ class Ui_MainWindow(object):
         font.setPointSize(9)
         font.setBold(True)
         self.label_2.setFont(font)
-        self.label_2.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_2.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_2.setObjectName("label_2")
 
         # Count Patient
@@ -335,7 +371,7 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         font.setBold(True)
         self.label_5.setFont(font) 
-        self.label_5.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_5.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_5.setObjectName("label_5")
 
    
@@ -345,7 +381,7 @@ class Ui_MainWindow(object):
         self.TodApp_card.setGeometry(QtCore.QRect(255, 90, 200, 120))
         self.TodApp_card.setStyleSheet("""
         #TodApp_card {
-                background: #C0D1E6;
+                background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
         }
@@ -370,7 +406,7 @@ class Ui_MainWindow(object):
         font.setPointSize(9)
         font.setBold(True)
         self.label_3.setFont(font)
-        self.label_3.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_3.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_3.setObjectName("label_3")
 
         #Count Appointment where date now
@@ -381,7 +417,7 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         font.setBold(True)
         self.label_6.setFont(font)
-        self.label_6.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_6.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_6.setObjectName("label_6")
 
         #Pending Payment Card
@@ -389,7 +425,7 @@ class Ui_MainWindow(object):
         self.PendPay_card.setGeometry(QtCore.QRect(490, 90, 200, 120))
         self.PendPay_card.setStyleSheet("""
         #PendPay_card {
-                background: #C0D1E6;
+                background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
         }                            
@@ -414,7 +450,7 @@ class Ui_MainWindow(object):
         font.setPointSize(9)
         font.setBold(True)
         self.label_4.setFont(font)
-        self.label_4.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_4.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_4.setObjectName("label_4")
 
         #Count Payment
@@ -425,7 +461,7 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         font.setBold(True)
         self.label_7.setFont(font)
-        self.label_7.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_7.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_7.setObjectName("label_7")
 
         #Completed Treatment Card
@@ -433,7 +469,7 @@ class Ui_MainWindow(object):
         self.ComTreat_card.setGeometry(QtCore.QRect(725, 90, 200, 120))
         self.ComTreat_card.setStyleSheet("""
         #ComTreat_card {
-                background: #C0D1E6;
+                background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
          }
@@ -458,7 +494,7 @@ class Ui_MainWindow(object):
         font.setPointSize(9)
         font.setBold(True)
         self.label_8.setFont(font)
-        self.label_8.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_8.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_8.setObjectName("label_8")
 
         #Count Treatment
@@ -469,7 +505,7 @@ class Ui_MainWindow(object):
         font.setPointSize(16)
         font.setBold(True)
         self.label_9.setFont(font)
-        self.label_9.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_9.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_9.setObjectName("label_9")
 
         #Todays Appointment Frame
@@ -477,7 +513,7 @@ class Ui_MainWindow(object):
         self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
-                background: #C0D1E6;
+                background: #C6D7EC;
                 border: 1px solid #fff;
                 border-radius: 12px;
         }
@@ -493,7 +529,7 @@ class Ui_MainWindow(object):
         font.setPointSize(14)
         font.setBold(True)
         self.label_10.setFont(font)
-        self.label_10.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_10.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.label_10.setObjectName("label_10")
 
         #Todays Appointment Table
@@ -502,7 +538,7 @@ class Ui_MainWindow(object):
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
-        background-color: #C0D1E6;
+        background-color: #C6D7EC;
         border: none;
         }
         QTableWidget::item {
@@ -510,7 +546,7 @@ class Ui_MainWindow(object):
         }
         QHeaderView::section {
                 border: none;
-                background-color: #C0D1E6;
+                background-color: #C6D7EC;
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
@@ -543,7 +579,7 @@ class Ui_MainWindow(object):
         self.frame_3.setGeometry(QtCore.QRect(700, 230, 220, 461))
         self.frame_3.setStyleSheet("""
         #frame_3 {
-                background: #C0D1E6;
+                background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
         }
@@ -553,7 +589,7 @@ class Ui_MainWindow(object):
         self.frame_3.setObjectName("frame_3")
         self.label_11 = QtWidgets.QLabel(parent=self.frame_3)
         self.label_11.setGeometry(QtCore.QRect(20, 10, 190, 51))
-        self.label_11.setStyleSheet("background: #C0D1E6; color: #37547A;")
+        self.label_11.setStyleSheet("background: #C6D7EC; color: #37547A;")
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(12)
@@ -571,18 +607,17 @@ class Ui_MainWindow(object):
         self.frame_4.setObjectName("frame_4")
         self.frame_4.setGeometry(QtCore.QRect(0, 0, 940, 71))
         self.frame_4.setStyleSheet("""
-                #frame_4 { background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                #frame_4 { background-color: #B2CDE9;
                         }
                          """)
         self.label_12 = QtWidgets.QLabel(parent=self.frame_4)
         self.label_12.setGeometry(QtCore.QRect(20, 25, 131, 31))
         font = QtGui.QFont()
-        font.setFamily("Inter")
+        font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
-        font.setWeight(75)
         self.label_12.setFont(font)
-        self.label_12.setStyleSheet("background-color: #fff;")
+        self.label_12.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_12.setObjectName("label_12")
 
         #Notification button 2
@@ -594,10 +629,10 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px;                      
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.not_btn_2.setObjectName("not_btn_2")
@@ -612,10 +647,10 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px;                         
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.pushButton_3.setObjectName("pushButton_3")
@@ -645,8 +680,8 @@ class Ui_MainWindow(object):
         self.Pat_table_Frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
         self.Pat_table_Frame.setStyleSheet("""
         #Pat_table_Frame {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;  
+                background: #C6D7EC;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -677,16 +712,15 @@ class Ui_MainWindow(object):
         self.Pages.addWidget(self.Patients_page)
         self.Patients_table.setStyleSheet("""
         QTableWidget {
-        background-color: #fff;
+        background-color: #C6D7EC;
         border: none;
-        border-radius: 12px;                                  
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
         }
         QHeaderView::section {
                 border: none;
-                background-color: #fff;
+                background-color: #C6D7EC;
         }
         """)
         self.Patients_table.horizontalHeader().setStyleSheet("""
@@ -706,18 +740,17 @@ class Ui_MainWindow(object):
         self.app_frame.setObjectName("app_frame")
         self.app_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
         self.app_frame.setStyleSheet("""
-                #app_frame { background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                #app_frame { background-color: #B2CDE9;
                         }
                          """)
         self.label_13 = QtWidgets.QLabel(parent=self.app_frame)
         self.label_13.setGeometry(QtCore.QRect(20, 25, 180, 31))
         font = QtGui.QFont()
-        font.setFamily("Inter")
+        font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
-        font.setWeight(75)
         self.label_13.setFont(font)
-        self.label_13.setStyleSheet("background-color: #fff;")
+        self.label_13.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_13.setObjectName("label_13")
 
         #Notification button 3
@@ -729,15 +762,15 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px; 
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.not_btn_3.setObjectName("not_btn_3")
 
-        #User button 5
+        #User button 3
         self.pushButton_4 = QtWidgets.QPushButton(parent=self.app_frame)
         self.pushButton_4.setGeometry(QtCore.QRect(725, 20, 40, 42))
         self.pushButton_4.setIcon(user_icon)
@@ -746,10 +779,10 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px; 
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.pushButton_4.setObjectName("pushButton_4")
@@ -779,8 +812,8 @@ class Ui_MainWindow(object):
         self.app_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
         self.app_table_frame.setStyleSheet("""
         #app_table_frame {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;  
+                background: #C6D7EC;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -796,7 +829,7 @@ class Ui_MainWindow(object):
         self.Appointments_table.setRowCount(0)
         self.Appointments_table.setStyleSheet("""
         QTableWidget {
-        background-color: #fff;
+        background-color: #C6D7EC;
         border: none;
         }
         QTableWidget::item {
@@ -804,7 +837,7 @@ class Ui_MainWindow(object):
         }
         QHeaderView::section {
                 border: none;
-                background-color: #fff;
+                background-color: #C6D7EC;
         }
         """)
         item = QtWidgets.QTableWidgetItem()
@@ -829,7 +862,7 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget = QtWidgets.QWidget(parent=self.app_table_frame)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 10, 461, 41))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setStyleSheet("background-color: #fff;")
+        self.horizontalLayoutWidget.setStyleSheet("background-color: #C6D7EC;")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -841,15 +874,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
-                        text-align: center;                
+                        text-align: center;
+                        font-family: Inter;                
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -862,15 +896,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
-                        text-align: center;                
+                        text-align: center;
+                        font-family: Inter;                
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -883,15 +918,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
                         text-align: center;
+                        font-family: Inter;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -904,15 +940,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
                         text-align: center;
+                        font-family: Inter;
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -928,7 +965,7 @@ class Ui_MainWindow(object):
         self.Bill_frame = QtWidgets.QFrame(parent=self.Billing_page)
         self.Bill_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
         self.Bill_frame.setStyleSheet("""
-                #Bill_frame {background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                #Bill_frame {background-color: #B2CDE9;
                 }
                 """)
         self.Bill_frame.setObjectName("Bill_frame")
@@ -937,12 +974,11 @@ class Ui_MainWindow(object):
         self.label_14 = QtWidgets.QLabel(parent=self.Bill_frame)
         self.label_14.setGeometry(QtCore.QRect(20, 25, 180, 31))
         font = QtGui.QFont()
-        font.setFamily("Inter")
+        font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
-        font.setWeight(75)
         self.label_14.setFont(font)
-        self.label_14.setStyleSheet("background-color: #fff;")
+        self.label_14.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_14.setObjectName("label_14")
 
         #Notification button 4
@@ -955,10 +991,10 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px; 
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.not_btn_4.setObjectName("not_btn_4")
@@ -973,10 +1009,10 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px;                          
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.pushButton_10.setObjectName("pushButton_10")
@@ -1005,8 +1041,8 @@ class Ui_MainWindow(object):
         self.bill_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
         self.bill_table_frame.setStyleSheet("""
         #bill_table_frame {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;  
+                background: #C6D7EC;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -1022,7 +1058,7 @@ class Ui_MainWindow(object):
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
-        background-color: #fff;
+        background-color: #C6D7EC;
         border: none;
         }
         QTableWidget::item {
@@ -1030,7 +1066,7 @@ class Ui_MainWindow(object):
         }
         QHeaderView::section {
                 border: none;
-                background-color: #fff;
+                background-color: #C6D7EC;
         }
         """)
         item = QtWidgets.QTableWidgetItem()
@@ -1058,7 +1094,7 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(parent=self.bill_table_frame)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(20, 10, 461, 41))
         self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
-        self.horizontalLayoutWidget_2.setStyleSheet("background-color: #fff;")
+        self.horizontalLayoutWidget_2.setStyleSheet("background-color: #C6D7EC;")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -1070,15 +1106,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
-                        text-align: center;                
+                        text-align: center;
+                        font-family: Inter;                
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -1091,15 +1128,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
-                        text-align: center;                
+                        text-align: center;
+                        font-family: Inter;                
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -1113,15 +1151,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
-                        text-align: center;                
+                        text-align: center;
+                        font-family: Inter;                
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -1133,15 +1172,16 @@ class Ui_MainWindow(object):
                 QPushButton {
                         text-align: left;
                         padding: 10px;
-                        background-color: #fff;
+                        background-color: #C6D7EC;
                         border: none;
-                        color: #475569;
+                        color: #37547A;
                         font-size: 16px;
-                        text-align: center;                
+                        text-align: center;
+                        font-family: Inter;                
                 }
                 QPushButton:hover {
-                        background-color: #f1f5f9;
-                        color: #000000;
+                        background-color: #8DB8E0;
+                        color: #37547A;
                         border-radius: 8px;
                 }
                 """)
@@ -1158,7 +1198,7 @@ class Ui_MainWindow(object):
         self.Reports_topbar_frame = QtWidgets.QFrame(parent=self.Reports_page)
         self.Reports_topbar_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
         self.Reports_topbar_frame.setStyleSheet("""
-                #Reports_topbar_frame {background-color: #fff; border-bottom: 1px solid #E5E7EB;
+                #Reports_topbar_frame {background-color: #B2CDE9;
                 }
                 """)
         self.Reports_topbar_frame.setObjectName("Reports_topbar_frame")
@@ -1167,12 +1207,11 @@ class Ui_MainWindow(object):
         self.label_15 = QtWidgets.QLabel(parent=self.Reports_topbar_frame)
         self.label_15.setGeometry(QtCore.QRect(20, 25, 180, 31))
         font = QtGui.QFont()
-        font.setFamily("Inter")
+        font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
-        font.setWeight(75)
         self.label_15.setFont(font)
-        self.label_15.setStyleSheet("background-color: #fff;")
+        self.label_15.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_15.setObjectName("label_15")
         
 
@@ -1187,11 +1226,11 @@ class Ui_MainWindow(object):
         QPushButton {
                 border: none;
                 background: transparent;
-                border-radius: 20px;                   
+                border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
-        }                           
+                background-color: #37547A;
+        }
         """)
         self.not_btn_5.setObjectName("not_btn_5")
 
@@ -1209,7 +1248,7 @@ class Ui_MainWindow(object):
                 border-radius: 20px;
         }
         QPushButton:hover {
-                background-color: #72A8FF;
+                background-color: #37547A;
         }
         """)
         self.userbtn.setObjectName("userbtn_5")
@@ -1219,8 +1258,8 @@ class Ui_MainWindow(object):
         self.Reports_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
         self.Reports_table_frame.setStyleSheet("""
         #Reports_table_frame {
-                background: #ffffff;
-                border: 1px solid #e5e7eb;  
+                background: #C6D7EC;
+                border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
@@ -1235,13 +1274,10 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1067, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
 
         self.retranslateUi(MainWindow)
         self.Pages.setCurrentIndex(0)
+        self.set_active_button(self.Dash_btn)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
     def retranslateUi(self, MainWindow):
@@ -1347,3 +1383,7 @@ class Ui_MainWindow(object):
                 btn_pos = userbtn.mapTo(centralwidget, QtCore.QPoint(0, userbtn.height()))
                 userbtn.move(btn_pos)
         user_menu.setVisible(not user_menu.isVisible())
+
+    def set_active_button(self, button):
+        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
+                btn.setChecked(btn == button)
