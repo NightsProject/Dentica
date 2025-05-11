@@ -11,7 +11,8 @@ class Ui_MainWindow(object):
         MainWindow.setEnabled(True)
         MainWindow.setFixedSize(1200, 800)
         MainWindow.setWindowTitle("Dentica")
-        #MainWindow.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        MainWindow.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self._drag_pos = None
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -669,7 +670,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(10)
         self.add_icon.setFont(font)
-        self.add_icon.setStyleSheet("background-color: #3b82f6; border-radius: 8px; color: white;")
+        self.add_icon.setStyleSheet("background-color: #0E283F; border-radius: 8px; color: white;")
         add_icon = QtGui.QIcon(f"{filepath}Add.svg")
         self.add_icon.setIcon(add_icon)
         self.add_icon.setIconSize(QtCore.QSize(23, 23))
@@ -802,7 +803,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(10)
         self.AddApp_btn.setFont(font)
-        self.AddApp_btn.setStyleSheet("background-color: #3b82f6; border-radius: 8px; color: white;")
+        self.AddApp_btn.setStyleSheet("background-color: #0E283F; border-radius: 8px; color: white;")
         self.AddApp_btn.setIcon(add_icon)
         self.AddApp_btn.setIconSize(QtCore.QSize(23, 23))
         self.AddApp_btn.setObjectName("AddApp_btn")
@@ -1031,7 +1032,7 @@ class Ui_MainWindow(object):
         font.setFamily("Inter")
         font.setPointSize(10)
         self.AddBill_btn.setFont(font)
-        self.AddBill_btn.setStyleSheet("background-color: #3b82f6; border-radius: 8px; color: white;")
+        self.AddBill_btn.setStyleSheet("background-color: #0E283F; border-radius: 8px; color: white;")
         self.AddBill_btn.setIcon(add_icon)
         self.AddBill_btn.setIconSize(QtCore.QSize(23, 23))
         self.AddBill_btn.setObjectName("AddBill_btn")
@@ -1377,6 +1378,19 @@ class Ui_MainWindow(object):
         
         #Reports Tab
         self.label_15.setText(_translate("MainWindow", "Reports"))
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self._drag_pos = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.MouseButton.LeftButton and self._drag_pos:
+            self.move(event.globalPosition().toPoint() - self._drag_pos)
+            event.accept()
+
+    def mouseReleaseEvent(MainWindow, event):
+        MainWindow.oldPos = None
             
     def toggle_dropdown(self, userbtn, centralwidget, user_menu):
         if not userbtn.isVisible():
