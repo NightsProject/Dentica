@@ -1,18 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
 
-# #==============For testing purposes==start
-# #  store the credentials globally
-# def set_credentials(host, port, user, password, database):
-#     global HOST, PORT, USER, PASSWORD, DATABASE_NAME
-#     HOST = "localhost"
-#     PORT ="3306"
-#     USER = "user"
-#     PASSWORD = "user"
-#     DATABASE_NAME = "denticadb"
-# #===============For testing purposes===end
-
-
 
 #  store the credentials globally
 def set_credentials(host, port, user, password, database):
@@ -32,8 +20,10 @@ def connectDBF(host, port, user, password, databaseName):
             port=port,
             user=user,
             password=password,
-            database=databaseName
+            database=databaseName,
+            use_pure= True
         )
+        print('here')
         if connection.is_connected():
             return connection
     except Error as e:
@@ -51,7 +41,8 @@ def connectDB():
             port=PORT,
             user=USER,
             password=PASSWORD,
-            database=DATABASE_NAME
+            database=DATABASE_NAME,
+            use_pure=True
         )
         if connection.is_connected():
             return connection

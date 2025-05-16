@@ -128,23 +128,23 @@ class MainController(QMainWindow, Ui_MainWindow):
             
          
             set_credentials(host,port, user, password, databaseName)
+            if connection:
+                createAllTables(connection)
 
-            createAllTables(connection)
+                summary_data = load_summary()
+                self.update_summary(summary_data)
 
-            summary_data = load_summary()
-            self.update_summary(summary_data)
+                todays_appointments_list = get_todays_appointments()
+                self.update_todays_appointments_table(todays_appointments_list)
 
-            todays_appointments_list = get_todays_appointments()
-            self.update_todays_appointments_table(todays_appointments_list)
+                all_patients_list = get_all_patients()
+                self.update_patients_list(all_patients_list)
+                
+                all_appointments_list = get_all_appointments_with_treatment_count()
+                self.update_appointments_list(all_appointments_list)
 
-            all_patients_list = get_all_patients()
-            self.update_patients_list(all_patients_list)
-            
-            all_appointments_list = get_all_appointments_with_treatment_count()
-            self.update_appointments_list(all_appointments_list)
-
-            all_billings_list = get_all_billings()
-            self.update_billing_list(all_billings_list)
+                all_billings_list = get_all_billings()
+                self.update_billing_list(all_billings_list)
             
             connection.close()
             
