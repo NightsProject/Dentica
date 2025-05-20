@@ -1547,7 +1547,7 @@ class Ui_MainWindow(object):
                 button_hover = "#4D4D4D"
                 table_bg = "#3D3D3D"
                 table_text = "#FFFFFF"
-                table_header = "#3D3D3D"
+                table_header = "red"
                 button = "#1F1F21"
                 hover = "gray"
                 

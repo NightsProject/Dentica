@@ -798,16 +798,14 @@ class Ui_MainWindow(object):
         QTableWidget {
                 background-color: #C6D7EC;
                 border: none;
-                color: #64748B;
                 gridline-color: transparent;
         }
         QTableWidget::item {
-                border-bottom: 1px solid #8DB8E0;
+                border-bottom: 1px solid #e5e7eb;
                 text-align: center;
         }
         QHeaderView::section {
                 border: none;
-                color: #64748B;
                 background: #C6D7EC;
         }
         """)

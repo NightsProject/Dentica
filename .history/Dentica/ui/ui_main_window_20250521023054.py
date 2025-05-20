@@ -1644,7 +1644,7 @@ class Ui_MainWindow(object):
                         """) 
                 table.setStyleSheet(f"""
                 QTableWidget {{
-                        background-color: {table_bg};
+                        background-color: red;
                         border: none;
                         color: {table_text};
                         gridline-color: transparent;

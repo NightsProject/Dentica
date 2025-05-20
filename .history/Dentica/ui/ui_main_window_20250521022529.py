@@ -1575,7 +1575,7 @@ class Ui_MainWindow(object):
     
         # Apply to main content area
         self.Pages.setStyleSheet(f"""
-                background: {main_bg};
+                background: {test};
                 color: {main_text};
         """)
         
