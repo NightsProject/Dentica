@@ -696,54 +696,67 @@ class Ui_MainWindow(object):
         self.Patients_table.setObjectName("Patients_table")
         self.Patients_table.setColumnCount(7)
         self.Patients_table.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(2, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(3, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(4, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(5, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(6, item)
-        self.Pages.addWidget(self.Patients_page)
+        
+        headers = ["Patient ID", "Name", "Gender", "Birthdate", "Contact", "Email", "Address"]
+        for i, header in enumerate(headers):
+                item = QtWidgets.QTableWidgetItem(header)
+                self.Patients_table.setHorizontalHeaderItem(i, item)
+        
+        
+        self.Patients_table.setColumnWidth(0, 60)    # Patient ID
+        self.Patients_table.setColumnWidth(1, 180)  # Name
+        self.Patients_table.setColumnWidth(2, 80)   # Gender
+        self.Patients_table.setColumnWidth(3, 60)   # Birthdate
+        self.Patients_table.setColumnWidth(4, 120)  # Contact
+        self.Patients_table.setColumnWidth(5, 280)  # Email
+        self.Patients_table.setColumnWidth(6, 100)  # Adress
+        
+        header = self.Patients_table.horizontalHeader()
+        header.setDefaultAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Fixed)  # ID
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)  # Name
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Fixed)  # Gender
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Fixed)  # Birthdate
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)  # Contact
+        header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeMode.Stretch)  # Email
+        header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeMode.Fixed)  # Address
+
+        
         self.Patients_table.setStyleSheet("""
         QTableWidget {
         background-color: #C6D7EC;
         border: none;
+        alternate-background-color: #B8CBE4;
+        selection-background-color: #9BB9E1;
+        gridline-color: #e5e7eb;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
+                padding: 5px;
         }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
+                padding: 8px;
+                font-family: "Inter";
+                font-size: 14px;
+                color: #64748B;
+                font-weight: 500;
+        }
+        QScrollBar:vertical {
+                border: none;
+                background: #D6E3F2;
+                width: 10px;
+                margin: 0px;
+        }
+        QScrollBar::handle:vertical {
+                background: #A8BED9;
+                min-height: 20px;
+                border-radius: 4px;
         }
         """)
-        self.Patients_table.horizontalHeader().setStyleSheet("""
-        QHeaderView::section {
-                font-family: "Inter"; 
-                font-size: 14px;        
-                color: #64748B;                
-        }
-        """)
+
         
-        # Sizing
-        self.Patients_table.setColumnWidth(0, 70)  # ID column
-        self.Patients_table.setColumnWidth(1, 150)  # Name
-        self.Patients_table.setColumnWidth(2, 80)  # Gender
-        self.Patients_table.setColumnWidth(3, 120)  # Birthdate
-        self.Patients_table.setColumnWidth(4, 120)  # Contact
-        self.Patients_table.setColumnWidth(5, 145)  # Email
-        self.Patients_table.setColumnWidth(6, 150)  # Address
-
-        # Row height for each patient
-        self.Patients_table.verticalHeader().setDefaultSectionSize(40)
-
         #Appointments Page
         
         #Appointments top bar
@@ -822,7 +835,7 @@ class Ui_MainWindow(object):
 
         #Appointment Table Frame
         self.app_table_frame = QtWidgets.QFrame(parent=self.Appointments_page)
-        self.app_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 640))
+        self.app_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
         self.app_table_frame.setStyleSheet("""
         #app_table_frame {
                 background: #C6D7EC;
@@ -836,7 +849,7 @@ class Ui_MainWindow(object):
 
         #Appointment table
         self.Appointments_table = QtWidgets.QTableWidget(parent=self.app_table_frame)
-        self.Appointments_table.setGeometry(QtCore.QRect(40, 60, 840, 560))
+        self.Appointments_table.setGeometry(QtCore.QRect(150, 60, 500, 501))
         self.Appointments_table.setObjectName("Appointments_table")
         self.Appointments_table.setColumnCount(5)
         self.Appointments_table.setRowCount(0)
@@ -870,16 +883,6 @@ class Ui_MainWindow(object):
                 color: #64748B;               
         }
         """)
-        
-        # Appointment table sizing
-        self.Appointments_table.setColumnWidth(0, 100)  # App. ID 
-        self.Appointments_table.setColumnWidth(1, 180)  # Pat. Name
-        self.Appointments_table.setColumnWidth(2, 150)  # Date
-        self.Appointments_table.setColumnWidth(3, 200)  # Status
-        self.Appointments_table.setColumnWidth(4, 150)  # Treatment
-        
-        self.Appointments_table.verticalHeader().setDefaultSectionSize(40)
-
 
         #Appointments buttons layout
         self.horizontalLayoutWidget = QtWidgets.QWidget(parent=self.app_table_frame)
@@ -1075,7 +1078,7 @@ class Ui_MainWindow(object):
 
         #Billing Table
         self.Billing_table = QtWidgets.QTableWidget(parent=self.bill_table_frame)
-        self.Billing_table.setGeometry(QtCore.QRect(40, 60, 840, 610))
+        self.Billing_table.setGeometry(QtCore.QRect(150, 60, 500, 501))
         self.Billing_table.setObjectName("Billing_table")
         self.Billing_table.setColumnCount(6)
         self.Billing_table.setRowCount(0)
@@ -1112,18 +1115,6 @@ class Ui_MainWindow(object):
                 padding: 5px;         
         }
         """)
-
-        # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 90)  # Bill ID 
-        self.Billing_table.setColumnWidth(1, 200)  # Pat. Name
-        self.Billing_table.setColumnWidth(2, 100)  # App. ID
-        self.Billing_table.setColumnWidth(3, 150)  # Total Amount
-        self.Billing_table.setColumnWidth(4, 130)  # Method
-        self.Billing_table.setColumnWidth(5, 130)  # Status
-
-        
-        self.Billing_table.verticalHeader().setDefaultSectionSize(40)
-
 
         #Billing buttons layout
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(parent=self.bill_table_frame)
