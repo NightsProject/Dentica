@@ -1,51 +1,76 @@
 from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtCore import Qt
 
 class Add_Treatment(QtWidgets.QDialog):
- 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Add Treatment")
-        self.setFixedSize(300, 400)
-        self.setStyleSheet("background-color: #1e293b; color: white;")
+        self.setFixedSize(350, 400)
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #B2CDE9;
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }
+        """)
+        self.oldPos = None
 
-        self.treat_id = QtWidgets.QLabel("Treatment ID", self)
-        self.treat_id.setGeometry(20, 40, 80, 20)
+        label_style = "color: #37547A; font-family: Inter; font-size: 14px;"
+        x_label = 20
+        x_input = 150
+        row_height = 40
+        row_start = 60
+
+        self.header = QtWidgets.QLabel("Treatment Form", self)
+        self.header.setGeometry(20, 20, 250, 25)
+        self.header.setStyleSheet("color: #fff; font-family: Katarine; font-size: 20px; font-weight: bold;")
+
+        def add_row(row, text, widget):
+            y = row_start + row * row_height
+            label = QtWidgets.QLabel(text, self)
+            label.setGeometry(x_label, y, 120, 20)
+            label.setStyleSheet(label_style)
+            widget.setGeometry(x_input, y, 160, 22)
 
         self.treat_id_input = QtWidgets.QLineEdit(self)
-        self.treat_id_input.setGeometry(110, 40, 160, 22)
-
-        self.diagnosis_label = QtWidgets.QLabel("Diagnosis:", self)
-        self.diagnosis_label.setGeometry(20, 80, 150, 20)
+        add_row(0, "Treatment ID:", self.treat_id_input)
 
         self.diagnosis_input = QtWidgets.QLineEdit(self)
-        self.diagnosis_input.setGeometry(110, 80, 160, 22)
-
-        self.procedure_label = QtWidgets.QLabel("Treatment Procedure:", self)
-        self.procedure_label.setGeometry(20, 120, 80, 20)
+        add_row(1, "Diagnosis:", self.diagnosis_input)
 
         self.procedure_input = QtWidgets.QLineEdit(self)
-        self.procedure_input.setGeometry(110, 120, 160, 22)
-        
-        self.sched_label = QtWidgets.QLabel("Treatment Schedule:", self)
-        self.sched_label.setGeometry(20, 160, 80, 20)
+        add_row(2, "Procedure:", self.procedure_input)
 
         self.sched_input = QtWidgets.QDateTimeEdit(self)
         self.sched_input.setCalendarPopup(True)
         self.sched_input.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.sched_input.setGeometry(110, 160, 160, 22)
-
-        self.cost_label = QtWidgets.QLabel("Cost:", self)
-        self.cost_label.setGeometry(20, 200, 90, 20)
+        add_row(3, "Schedule:", self.sched_input)
 
         self.cost_input = QtWidgets.QLineEdit(self)
-        self.cost_input.setGeometry(110, 200, 160, 22)
+        add_row(4, "Cost:", self.cost_input)
 
         self.add_btn = QtWidgets.QPushButton("Add", self)
-        self.add_btn.setGeometry(80, 240, 80, 30)
-        
+        self.add_btn.setGeometry(80, 340, 80, 30)
+        self.add_btn.setStyleSheet("background-color: #37547A; color: #fff;")
+
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
-        self.cancel_btn.setGeometry(160, 240, 80, 30)
+        self.cancel_btn.setGeometry(170, 340, 80, 30)
+        self.cancel_btn.setStyleSheet("""
+            QPushButton {background-color: #37547A; color: #fff;}
+            QPushButton:hover {background-color: #fff; color: #000;}
+        """)
         self.cancel_btn.clicked.connect(self.reject)
-        
-        
-        
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.oldPos = event.globalPosition().toPoint()
+
+    def mouseMoveEvent(self, event):
+        if self.oldPos:
+            delta = event.globalPosition().toPoint() - self.oldPos
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.oldPos = event.globalPosition().toPoint()
+
+    def mouseReleaseEvent(self, event):
+        self.oldPos = None
