@@ -17,6 +17,7 @@ class Database_Dialog_Ctr(Database_Login):
         databaseName = self.dbname_input.text()
         
         self.credentialsSubmitted.emit(host, port, user, password, databaseName)
+        self.close()
         
         #ToDO
         #notify in the login panel for succesful or failed connection
