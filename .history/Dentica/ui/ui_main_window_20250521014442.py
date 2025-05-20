@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         #User card
         self.UserCard = QtWidgets.QFrame(parent=self.SidebarFrame)
         self.UserCard.setGeometry(QtCore.QRect(20, 600, 220, 150))
-        self.UserCard.setStyleSheet("background-color: #B2CDE9 ; border-radius: 10px;")
+        self.UserCard.setStyleSheet("background-color: red ; border-radius: 10px;")
         self.UserCard.setObjectName("UserCard")
         
         #Dentist Profile
@@ -1575,9 +1575,6 @@ class Ui_MainWindow(object):
                 background: {main_bg};
                 color: {main_text};
         """)
-        
-        #Apply to user card
-        self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
         for frame in [self.frame, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:

@@ -1576,11 +1576,8 @@ class Ui_MainWindow(object):
                 color: {main_text};
         """)
         
-        #Apply to user card
-        self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
-        
         # Apply to top bars
-        for frame in [self.frame, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
+        for frame in [self.frame, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame,self.UserCard]:
                 frame.setStyleSheet(f"background-color: {main_bg};")
         
         # Apply to labels in top bars
