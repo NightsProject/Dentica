@@ -853,9 +853,13 @@ class Ui_MainWindow(object):
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
         }
+        QTableWidget QAbstractItemView {
+                text-align: center;
+        }       
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
+                qproperty-alignment: AlignCenter
         }
         """)
         item = QtWidgets.QTableWidgetItem()

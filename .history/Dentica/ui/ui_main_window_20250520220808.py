@@ -856,6 +856,7 @@ class Ui_MainWindow(object):
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
+                qproperty-alignment: AlignCenter;
         }
         """)
         item = QtWidgets.QTableWidgetItem()

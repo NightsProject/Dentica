@@ -884,6 +884,35 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(4, 125)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
+        # Center-align all existing header items
+        for i in range(self.Appointments_table.columnCount()):
+                header_item = self.Appointments_table.horizontalHeaderItem(i)
+                if header_item:
+                        header_item.setTextAlignment(QtCore.Qt.AlignCenter)
+
+        # Set default alignment for future items
+        self.Appointments_table.setStyleSheet("""
+        QTableWidget {
+        background-color: #C6D7EC;
+        border: none;
+        gridline-color: transparent;
+        }
+        QTableWidget::item {
+        border-bottom: 1px solid #e5e7eb;
+        }
+        QHeaderView::section {
+        border: none;
+        background-color: #C6D7EC;
+        }
+        """)
+
+        # This delegate will force center alignment for all cells
+        class CenterAlignDelegate(QtWidgets.QStyledItemDelegate):
+                def initStyleOption(self, option, index):
+                        super().initStyleOption(option, index)
+                        option.displayAlignment = QtCore.Qt.AlignCenter
+
+        self.Appointments_table.setItemDelegate(CenterAlignDelegate(self.Appointments_table))
 
 
         #Appointments buttons layout

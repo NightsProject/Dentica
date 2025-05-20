@@ -684,7 +684,6 @@ class Ui_MainWindow(object):
                 background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
-                
         }
         """)
         self.Pat_table_Frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
@@ -714,13 +713,11 @@ class Ui_MainWindow(object):
         self.Pages.addWidget(self.Patients_page)
         self.Patients_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
-                text-align: center;
         }
         QHeaderView::section {
                 border: none;
@@ -731,8 +728,7 @@ class Ui_MainWindow(object):
         QHeaderView::section {
                 font-family: "Inter"; 
                 font-size: 14px;        
-                color: #64748B;
-                background: #C6D7EC;                
+                color: #64748B;                
         }
         """)
         
@@ -746,7 +742,7 @@ class Ui_MainWindow(object):
         self.Patients_table.setColumnWidth(6, 152)  # Address
 
         # Row height for each patient
-        self.Patients_table.verticalHeader().setDefaultSectionSize(60)
+        self.Patients_table.verticalHeader().setDefaultSectionSize(40)
 
         #Appointments Page
         
@@ -846,9 +842,8 @@ class Ui_MainWindow(object):
         self.Appointments_table.setRowCount(0)
         self.Appointments_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -883,7 +878,7 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(3, 200)  # Status
         self.Appointments_table.setColumnWidth(4, 125)  # Treatment
         
-        self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
+        self.Appointments_table.verticalHeader().setDefaultSectionSize(40)
 
 
         #Appointments buttons layout
@@ -1086,9 +1081,8 @@ class Ui_MainWindow(object):
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -1127,7 +1121,7 @@ class Ui_MainWindow(object):
         self.Billing_table.setColumnWidth(5, 110)  # Status
 
         
-        self.Billing_table.verticalHeader().setDefaultSectionSize(60)
+        self.Billing_table.verticalHeader().setDefaultSectionSize(40)
 
 
         #Billing buttons layout

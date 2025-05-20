@@ -859,6 +859,7 @@ class Ui_MainWindow(object):
         }
         """)
         item = QtWidgets.QTableWidgetItem()
+        item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.Appointments_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.Appointments_table.setHorizontalHeaderItem(1, item)

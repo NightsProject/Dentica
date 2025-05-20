@@ -852,6 +852,7 @@ class Ui_MainWindow(object):
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
+                text-align: center;
         }
         QHeaderView::section {
                 border: none;

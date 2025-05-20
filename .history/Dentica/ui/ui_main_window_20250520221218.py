@@ -856,8 +856,10 @@ class Ui_MainWindow(object):
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
+                qproperty-alignment: AlignCenter;
         }
         """)
+        self.Appointments_table.setDefaultAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         item = QtWidgets.QTableWidgetItem()
         self.Appointments_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()

@@ -852,12 +852,19 @@ class Ui_MainWindow(object):
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
+                text-align: center;
         }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
         }
         """)
+        
+        for row in range(self.Appointments_table.rowCount()):
+                for col in range(self.Appointments_table.columnCount()):
+                        item = self.Appointments_table.item(row, col)
+                        if item is not None:
+                                item.setTextAlignment(QtCore.Qt.AlignCenter)
         item = QtWidgets.QTableWidgetItem()
         self.Appointments_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()

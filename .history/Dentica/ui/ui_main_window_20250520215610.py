@@ -846,9 +846,8 @@ class Ui_MainWindow(object):
         self.Appointments_table.setRowCount(0)
         self.Appointments_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -883,7 +882,7 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(3, 200)  # Status
         self.Appointments_table.setColumnWidth(4, 125)  # Treatment
         
-        self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
+        self.Appointments_table.verticalHeader().setDefaultSectionSize(40)
 
 
         #Appointments buttons layout
@@ -1086,9 +1085,8 @@ class Ui_MainWindow(object):
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -1127,7 +1125,7 @@ class Ui_MainWindow(object):
         self.Billing_table.setColumnWidth(5, 110)  # Status
 
         
-        self.Billing_table.verticalHeader().setDefaultSectionSize(60)
+        self.Billing_table.verticalHeader().setDefaultSectionSize(40)
 
 
         #Billing buttons layout

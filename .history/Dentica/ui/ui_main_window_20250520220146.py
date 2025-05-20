@@ -872,7 +872,7 @@ class Ui_MainWindow(object):
         QHeaderView::section {
                 font-family: "Inter"; 
                 font-size: 14px;        
-                color: #64748B;               
+                color: red;               
         }
         """)
         

@@ -618,7 +618,7 @@ class Ui_MainWindow(object):
         font.setPointSize(18)
         font.setBold(True)
         self.label_12.setFont(font)
-        self.label_12.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        self.label_12.setStyleSheet("background-color: red; color: #0E283F;")
         self.label_12.setObjectName("label_12")
 
         #Notification button 2
@@ -716,7 +716,6 @@ class Ui_MainWindow(object):
         QTableWidget {
                 background-color: #C6D7EC;
                 border: none;
-                gridline-color: transparent;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -746,7 +745,7 @@ class Ui_MainWindow(object):
         self.Patients_table.setColumnWidth(6, 152)  # Address
 
         # Row height for each patient
-        self.Patients_table.verticalHeader().setDefaultSectionSize(60)
+        self.Patients_table.verticalHeader().setDefaultSectionSize(40)
 
         #Appointments Page
         
@@ -846,9 +845,8 @@ class Ui_MainWindow(object):
         self.Appointments_table.setRowCount(0)
         self.Appointments_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -883,7 +881,7 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(3, 200)  # Status
         self.Appointments_table.setColumnWidth(4, 125)  # Treatment
         
-        self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
+        self.Appointments_table.verticalHeader().setDefaultSectionSize(40)
 
 
         #Appointments buttons layout
@@ -1086,9 +1084,8 @@ class Ui_MainWindow(object):
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
-                background-color: #C6D7EC;
-                border: none;
-                gridline-color: transparent;
+        background-color: #C6D7EC;
+        border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -1127,7 +1124,7 @@ class Ui_MainWindow(object):
         self.Billing_table.setColumnWidth(5, 110)  # Status
 
         
-        self.Billing_table.verticalHeader().setDefaultSectionSize(60)
+        self.Billing_table.verticalHeader().setDefaultSectionSize(40)
 
 
         #Billing buttons layout
