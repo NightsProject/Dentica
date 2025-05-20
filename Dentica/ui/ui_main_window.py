@@ -1,5 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
+from ui.Dialogues.ui_exit_dialog import Exit_App
 
 filepath = "Dentica/ui/icons/"
 
@@ -22,7 +23,108 @@ class Ui_MainWindow(object):
         self.SidebarFrame.setAutoFillBackground(False)
         self.SidebarFrame.setStyleSheet("background-color: #1F1F21 ; border-right: 1px solid #1F1F21 ;")
         self.SidebarFrame.setObjectName("SidebarFrame")
+        
+        #User card
+        self.UserCard = QtWidgets.QFrame(parent=self.SidebarFrame)
+        self.UserCard.setGeometry(QtCore.QRect(20, 600, 220, 150))
+        self.UserCard.setStyleSheet("background-color: #B2CDE9 ; border-radius: 10px;")
+        self.UserCard.setObjectName("UserCard")
+        
+        #Dentist Profile
+        self.Dentica_profile = QtWidgets.QLabel(parent=self.SidebarFrame)
+        self.Dentica_profile.setGeometry(QtCore.QRect(100, 580, 50, 50))
+        self.Dentica_profile.setStyleSheet("border: none; background: transparent;")
 
+        # Load and scale the image
+        orig = QtGui.QPixmap(f"{filepath}Dentist_Profile.png").scaled(
+        50, 50,
+        QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+        QtCore.Qt.TransformationMode.SmoothTransformation
+        )
+
+        # Create circular mask
+        mask = QtGui.QBitmap(50, 50)
+        mask.fill(QtCore.Qt.GlobalColor.color0)
+        p = QtGui.QPainter(mask)
+        p.setBrush(QtCore.Qt.GlobalColor.color1)
+        p.setPen(QtCore.Qt.PenStyle.NoPen)
+        p.drawEllipse(0, 0, 50, 50)
+        p.end()
+
+        # Apply mask
+        orig.setMask(mask)
+
+        # Set pixmap
+        self.Dentica_profile.setPixmap(orig)
+
+
+
+        #Dentist Label
+        self.Dentist = QtWidgets.QLabel(parent=self.UserCard)
+        self.Dentist.setGeometry(QtCore.QRect(15, 50, 200, 20))
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setPointSize(13)
+        font.setBold(True)
+        self.Dentist.setFont(font)
+        self.Dentist.setStyleSheet("""
+                                      color: #37547A;
+                                      border: none;
+                                      """)
+        self.Dentist.setText("Dr. Bobeth Maghuyop")
+        self.Dentist.setObjectName("Dentica")
+        
+        #Dentist Title Label
+        self.Dentist_title = QtWidgets.QLabel(parent=self.UserCard)
+        self.Dentist_title.setGeometry(QtCore.QRect(20, 70, 180, 20))
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setPointSize(8)
+        font.setBold(True)
+        self.Dentist_title.setFont(font)
+        self.Dentist_title.setStyleSheet("""
+                                      color: #FFF;
+                                      border: none;
+                                      """)
+        self.Dentist_title.setText("Doctor of Dental Surgery (DDS)")
+        self.Dentist_title.setObjectName("Dentica")
+        
+        #User button
+        self.userbtn = QtWidgets.QPushButton(parent=self.UserCard)
+        self.userbtn.setGeometry(QtCore.QRect(65, 100, 40, 40)) 
+        user_icon = QtGui.QIcon(f"{filepath}User.svg")
+        self.userbtn.setIcon(user_icon)
+        self.userbtn.setIconSize(QtCore.QSize(25, 25))
+        self.userbtn.setIconSize(QtCore.QSize(25, 25))
+        self.userbtn.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background-color: #37547A;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #C6D7EC;
+        }
+        """)
+        
+        #Exit button
+        self.exitbtn = QtWidgets.QPushButton(parent=self.UserCard)
+        self.exitbtn.setGeometry(QtCore.QRect(115, 100, 40, 40)) 
+        exit_icon = QtGui.QIcon(f"{filepath}Exit.svg")
+        self.exitbtn.setIcon(exit_icon)
+        self.exitbtn.setIconSize(QtCore.QSize(25, 25))
+        self.exitbtn.setIconSize(QtCore.QSize(25, 25))
+        self.exitbtn.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background-color: #37547A;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #C6D7EC;
+        }
+        """)
+        
         #Dentica Label
         self.Dentica = QtWidgets.QLabel(parent=self.SidebarFrame)
         self.Dentica.setGeometry(QtCore.QRect(65, 25, 121, 51))
@@ -45,7 +147,7 @@ class Ui_MainWindow(object):
 
         #Sidebar Layout
         self.verticalLayoutWidget = QtWidgets.QWidget(parent=self.SidebarFrame)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 80, 260, 620))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 80, 260, 490))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -257,79 +359,41 @@ class Ui_MainWindow(object):
         self.label.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label.setObjectName("label")
 
-        #Notification button
-        self.not_btn = QtWidgets.QPushButton(parent=self.frame)
-        self.not_btn.setGeometry(QtCore.QRect(830, 23, 40, 40))
-        self.not_btn.setText("")
-        not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
-        self.not_btn.setIcon(not_icon)
-        self.not_btn.setIconSize(QtCore.QSize(25, 25))
-        self.not_btn.setStyleSheet("""
-        QPushButton {
-                border: none;
-                background: transparent;
-                border-radius: 20px;                   
-        }
-        QPushButton:hover {
-                background-color: #37547A;
-        }                           
-        """)
-        self.not_btn.setObjectName("not_btn")
-
-        #User button
-        self.userbtn = QtWidgets.QPushButton(parent=self.frame)
-        self.userbtn.setGeometry(QtCore.QRect(880, 23, 40, 40)) 
-        user_icon = QtGui.QIcon(f"{filepath}User.svg")
-        self.userbtn.setIcon(user_icon)
-        self.userbtn.setIconSize(QtCore.QSize(25, 25))
-        self.userbtn.setIconSize(QtCore.QSize(25, 25))
-        self.userbtn.setStyleSheet("""
-        QPushButton {
-                border: none;
-                background: transparent;
-                border-radius: 20px;
-        }
-        QPushButton:hover {
-                background-color: #37547A;
-        }
-        """)
-        
-        self.userbtn.clicked.connect(lambda: self.toggle_dropdown(self.userbtn, self.centralwidget, self.user_menu))
         self.userbtn.setObjectName("userbtn")
 
-        #User menu drop-down
-        self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
-        self.user_menu.setObjectName("user_menu")
-        self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
-        self.user_menu.setStyleSheet("""
-        #user_menu{
-                background: #1F1F21; 
-                border: 1px solid #e5e7eb;
-                border-radius: 5px;
-                }
-        QPushButton {
-                        text-align: left;
-                        background-color: transparent;
-                        border: none;
-                        color: #fff;
-                        font-size: 12px;
-                }
-        QPushButton:hover {
-                        background-color: #8DB8E0;
-                        color: #fff;
-                }
-        """)
-        self.user_menu.setVisible(False)
+        # #User menu drop-down
+        # self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
+        # self.user_menu.setObjectName("user_menu")
+        # self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
+        # self.user_menu.setStyleSheet("""
+        # #user_menu{
+        #         background: #1F1F21; 
+        #         border: 1px solid #e5e7eb;
+        #         border-radius: 5px;
+        #         }
+        # QPushButton {
+        #                 text-align: left;
+        #                 background-color: transparent;
+        #                 border: none;
+        #                 color: #fff;
+        #                 font-size: 12px;
+        #         }
+        # QPushButton:hover {
+        #                 background-color: #8DB8E0;
+        #                 color: #fff;
+        #         }
+        # """)
+        # self.user_menu.setVisible(False)
 
-        #User login
-        self.settings_btn = QtWidgets.QPushButton("User login", parent=self.user_menu)
-        self.settings_btn.setGeometry(10, 10, 130, 30)
-        self.settings_btn.setObjectName("settings_btn")
+        # #User login
+        # self.settings_btn = QtWidgets.QPushButton("User login", parent=self.user_menu)
+        # self.settings_btn.setGeometry(10, 10, 130, 30)
+        # self.settings_btn.setObjectName("settings_btn")
 
-        #database login
-        self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
-        self.logout_btn.setGeometry(10, 50, 130, 30)
-        self.logout_btn.setObjectName("logout_btn")
+        # #database login
+        # self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
+        # self.logout_btn.setGeometry(10, 50, 130, 30)
+        # self.logout_btn.setObjectName("logout_btn")
         
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
@@ -624,6 +688,7 @@ class Ui_MainWindow(object):
         #Notification button 2
         self.not_btn_2 = QtWidgets.QPushButton(parent=self.frame_4)
         self.not_btn_2.setGeometry(QtCore.QRect(725, 20, 40, 42))
+        not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
         self.not_btn_2.setIcon(not_icon)
         self.not_btn_2.setIconSize(QtCore.QSize(25, 25))
         self.not_btn_2.setStyleSheet("""
