@@ -798,17 +798,15 @@ class Ui_MainWindow(object):
         QTableWidget {
                 background-color: #C6D7EC;
                 border: none;
-                color: #64748B;
                 gridline-color: transparent;
         }
         QTableWidget::item {
-                border-bottom: 1px solid #8DB8E0;
+                border-bottom: 1px solid #e5e7eb;
                 text-align: center;
         }
         QHeaderView::section {
                 border: none;
-                color: #64748B;
-                background: #C6D7EC;
+                background-color: #C6D7EC;
         }
         """)
         self.Patients_table.horizontalHeader().setStyleSheet("""
@@ -956,17 +954,16 @@ class Ui_MainWindow(object):
         QHeaderView::section {
                 font-family: "Inter"; 
                 font-size: 14px;        
-                color: #64748B;   
-                background-color: #C6D7EC;            
+                color: #64748B;               
         }
         """)
         
         #Appointment table sizing
-        self.Appointments_table.setColumnWidth(0, 105)  # App. ID 
+        self.Appointments_table.setColumnWidth(0, 100)  # App. ID 
         self.Appointments_table.setColumnWidth(1, 204)  # Pat. Name
         self.Appointments_table.setColumnWidth(2, 150)  # Date
         self.Appointments_table.setColumnWidth(3, 200)  # Status
-        self.Appointments_table.setColumnWidth(4, 120)  # Treatment
+        self.Appointments_table.setColumnWidth(4, 125)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
 
@@ -1639,7 +1636,7 @@ class Ui_MainWindow(object):
                         background: {table_header};  
                         font-family: "Inter"; 
                         font-size: 14px;        
-                        color: {table_text};                    
+                        color: #64748B;                    
                         }}
                         """) 
                 table.setStyleSheet(f"""

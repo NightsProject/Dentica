@@ -816,7 +816,7 @@ class Ui_MainWindow(object):
                 font-family: "Inter"; 
                 font-size: 14px;        
                 color: #64748B;
-                background: #C6D7EC;                
+                background: red;                
         }
         """)
         
