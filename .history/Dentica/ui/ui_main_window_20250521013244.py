@@ -1535,7 +1535,7 @@ class Ui_MainWindow(object):
     def apply_theme(self):
         if self.dark_mode:
                 # Dark theme colors
-                sidebar_bg = "#1F1F21"
+                sidebar_bg = "red"
                 sidebar_text = "#FFFFFF"
                 main_bg = "#2D2D2D"
                 main_text = "#FFFFFF"
@@ -1545,13 +1545,10 @@ class Ui_MainWindow(object):
                 table_bg = "#3D3D3D"
                 table_text = "#FFFFFF"
                 table_header = "#3D3D3D"
-                button = "#1F1F21"
-                hover = "gray"
-                
                 test = "red"
         else:
                 # Original/Light color
-                sidebar_bg = "#1F1F21"
+                sidebar_bg = "blue"
                 sidebar_text = "#fff"
                 main_bg = "#B2CDE9"
                 main_text = "#0E283F"
@@ -1561,8 +1558,6 @@ class Ui_MainWindow(object):
                 table_bg = "#C6D7EC"
                 table_text = "#64748B"
                 table_header = "#C6D7EC"
-                button = "#0E283F"
-                hover = "#37547A"
                 test = "blue"
 
         self.SidebarFrame.setStyleSheet(f"""
@@ -1575,9 +1570,6 @@ class Ui_MainWindow(object):
                 background: {main_bg};
                 color: {main_text};
         """)
-        
-        #Apply to user card
-        self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
         for frame in [self.frame, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
@@ -1694,24 +1686,11 @@ class Ui_MainWindow(object):
                 color: {table_text};
                 """)
         
-        buttons = [self.not_btn_2,self.pushButton_3,self.not_btn_3,self.pushButton_4,self.not_btn_4,self.pushButton_10]
-        for buttons in buttons:
-                buttons.setStyleSheet(f"""
-                QPushButton {{
-                        border: none;
-                        background: transparent;
-                        border-radius: 20px;
-        }}
-                QPushButton:hover {{
-                        background-color: {hover};
-        }}
-        """)
-        
         # Apply to add buttons
         add_buttons = [self.add_icon, self.AddApp_btn, self.AddBill_btn]
         for btn in add_buttons:
                 btn.setStyleSheet(f"""
-                background-color: {button};
+                background-color: {sidebar_bg};
                 border-radius: 8px;
                 color: {sidebar_text};
                 """)
