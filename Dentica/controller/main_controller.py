@@ -84,13 +84,13 @@ class MainController(QMainWindow, Ui_MainWindow):
         for patient in patients:
             row_position = self.Patients_table.rowCount()
             self.Patients_table.insertRow(row_position)
-            self.Patients_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(patient[0])))
-            self.Patients_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(patient[1])))
-            self.Patients_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(patient[2])))
-            self.Patients_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(patient[3])))
-            self.Patients_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(patient[4])))
-            self.Patients_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(patient[5])))
-            self.Patients_table.setItem(row_position, 6, QtWidgets.QTableWidgetItem(str(patient[6])))
+            self.Patients_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(patient[1])))
+            self.Patients_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(patient[2])))
+            self.Patients_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(patient[3])))
+            self.Patients_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(patient[4])))
+            self.Patients_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(patient[5])))
+            self.Patients_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(patient[6])))
+            # the patient is stored in patient[0]
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
