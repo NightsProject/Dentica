@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -91,17 +91,45 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Patients_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(patient[5])))
             self.Patients_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(patient[6])))
             
-            btn = QPushButton("View More")
-            btn.setProperty("Patient ID", patient[0])  # Store the value in the button
-            btn.clicked.connect(self.button_clicked)
-            self.Patients_table.setCellWidget(row_position, 6, btn)
-          
-            
-    def button_clicked(self):
-        # Get the button that was clicked
+            # Create buttons
+            view_btn = QPushButton("View")
+            view_btn.setProperty("Patient ID", patient[0])
+            view_btn.clicked.connect(self.view_patient)
+
+            edit_btn = QPushButton("Edit")
+            edit_btn.setProperty("Patient ID", patient[0])
+            edit_btn.clicked.connect(self.edit_patient)
+
+            delete_btn = QPushButton("Delete")
+            delete_btn.setProperty("Patient ID", patient[0])
+            delete_btn.clicked.connect(self.delete_patient)
+
+            # Add buttons to a horizontal layout
+            button_widget = QWidget()
+            layout = QHBoxLayout()
+            layout.addWidget(view_btn)
+            layout.addWidget(edit_btn)
+            layout.addWidget(delete_btn)
+            layout.setContentsMargins(0, 0, 0, 0)
+            button_widget.setLayout(layout)
+
+            self.Patients_table.setCellWidget(row_position, 6, button_widget)
+
+    def view_patient(self):
         button = self.sender()
-        name = button.property("Patient ID")
-        QMessageBox.information(self, "Greeting", f"Hello, {name}!")
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
+
+    def edit_patient(self):
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
+
+    def delete_patient(self):
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
