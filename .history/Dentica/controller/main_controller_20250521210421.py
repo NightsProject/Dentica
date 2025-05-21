@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -14,9 +14,10 @@ from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments
-from backend.patients_comp import get_all_patients
+from backend.patients_comp import get_all_patients, generate_new_patient_id
 from backend.appointments_comp import get_all_appointments_with_treatment_count
 from backend.billing_comp import get_all_billings
+
 
 class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -57,75 +58,66 @@ class MainController(QMainWindow, Ui_MainWindow):
         widget = QtWidgets.QWidget()
         widget.setStyleSheet("background: transparent;")
         
-        layout = QtWidgets.QHBoxLayout()
+        layout = QtWidgets.QHBoxLayout(widget)
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
         
-        # View More Button
+        # View Button
         view_btn = QtWidgets.QPushButton("View")
         view_btn.setMaximumWidth(60)
-        view_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #0056b3;
-            }
-        """)
-        view_btn.clicked.connect(self.view_patient)
+        view_btn.setProperty("patient_id", str(patient_id))
         
         # Edit Button
         edit_btn = QtWidgets.QPushButton("Edit")
         edit_btn.setMaximumWidth(60)
-        edit_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #28a745;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #1e7e34;
-            }
-        """)
-        edit_btn.clicked.connect(self.edit_patient)
+        edit_btn.setProperty("patient_id", str(patient_id))
         
         # Delete Button
         delete_btn = QtWidgets.QPushButton("Delete")
         delete_btn.setMaximumWidth(60)
-        delete_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #c82333;
-            }
+        delete_btn.setProperty("patient_id", str(patient_id))
+        
+        # Apply theme-consistent styling
+        button_style = """
+        QPushButton {
+            background: transparent;
+            border: 1px solid;
+            border-radius: 3px;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        QPushButton:hover {
+            opacity: 0.8;
+        }
+        """
+        
+        view_btn.setStyleSheet(button_style + """
+            background-color: #007bff;
+            color: white;
+            border-color: #0069d9;
         """)
-        delete_btn.clicked.connect(self.delete_patient)
+        
+        edit_btn.setStyleSheet(button_style + """
+            background-color: #28a745;
+            color: white;
+            border-color: #218838;
+        """)
+        
+        delete_btn.setStyleSheet(button_style + """
+            background-color: #dc3545;
+            color: white;
+            border-color: #c82333;
+        """)
+        
         
         layout.addWidget(view_btn)
         layout.addWidget(edit_btn)
         layout.addWidget(delete_btn)
         
-        widget.setLayout(layout)
         return widget
 
     def create_appointment_action_buttons(self, appointment_id, row):
         widget = QtWidgets.QWidget()
-        widget.setStyleSheet("background: transparent;")
-        
         layout = QtWidgets.QHBoxLayout()
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
@@ -146,7 +138,6 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #0056b3;
             }
         """)
-        view_btn2.clicked.connect(self.view_patient)
         
         # Edit Button
         edit_btn2 = QPushButton("Edit")
@@ -164,7 +155,6 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #1e7e34;
             }
         """)
-        edit_btn2.clicked.connect(self.edit_patient)
         
         # Delete Button
         delete_btn2 = QPushButton("Delete")
@@ -182,7 +172,6 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #c82333;
             }
         """)
-        delete_btn2.clicked.connect(self.delete_patient)
         
         layout.addWidget(view_btn2)
         layout.addWidget(edit_btn2)
@@ -191,20 +180,6 @@ class MainController(QMainWindow, Ui_MainWindow):
         widget.setLayout(layout)
         return widget
 
-    def view_patient(self):
-        button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
-
-    def edit_patient(self):
-        button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
-
-    def delete_patient(self):
-        button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
     #=========================================================
     #====================LOAD DATAS TO UI=============== start
     
@@ -236,6 +211,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         for patient in patients:
             row_position = self.Patients_table.rowCount()
             self.Patients_table.insertRow(row_position)
+            
             self.Patients_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(patient[1])))
             self.Patients_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(patient[2])))
             self.Patients_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(patient[3])))
@@ -248,6 +224,13 @@ class MainController(QMainWindow, Ui_MainWindow):
             action_widget = self.create_patient_action_buttons(patient_id, row_position)
             self.Patients_table.setCellWidget(row_position, 6, action_widget)
 
+
+    def button_clicked(self):
+        # Get the button that was clicked
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
@@ -255,11 +238,15 @@ class MainController(QMainWindow, Ui_MainWindow):
         for appointment in appointments:
             row_position = self.Appointments_table.rowCount()
             self.Appointments_table.insertRow(row_position)
-            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))
-            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))
-            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))
-            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))
-            self.Appointments_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))
+            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))
+            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
+            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            # the appointment is stored in appointment[0]
+            
+            appointment_id = appointment[0]
+            action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
+            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
     #Appointments TAB=================end
     
     #Billing TAB=================start

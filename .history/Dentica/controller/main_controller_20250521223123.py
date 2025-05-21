@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -14,9 +14,10 @@ from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments
-from backend.patients_comp import get_all_patients
+from backend.patients_comp import get_all_patients, generate_new_patient_id
 from backend.appointments_comp import get_all_appointments_with_treatment_count
 from backend.billing_comp import get_all_billings
+
 
 class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -255,11 +256,15 @@ class MainController(QMainWindow, Ui_MainWindow):
         for appointment in appointments:
             row_position = self.Appointments_table.rowCount()
             self.Appointments_table.insertRow(row_position)
-            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))
-            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))
-            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))
-            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))
-            self.Appointments_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))
+            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))
+            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
+            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            # the appointment is stored in appointment[0]
+            
+            appointment_id = appointment[0]
+            action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
+            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
     #Appointments TAB=================end
     
     #Billing TAB=================start
