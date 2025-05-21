@@ -98,11 +98,13 @@ class MainController(QMainWindow, Ui_MainWindow):
         for appointment in appointments:
             row_position = self.Appointments_table.rowCount()
             self.Appointments_table.insertRow(row_position)
-            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))
-            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))
-            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))
-            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))
-            self.Appointments_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))
+            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))
+            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
+            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            self.Appointments_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[5])))
+            # the appointment is stored in appointment[0]
+            
     #Appointments TAB=================end
     
     #Billing TAB=================start
