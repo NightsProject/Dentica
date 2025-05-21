@@ -21,8 +21,9 @@ def connectDBF(host, port, user, password, databaseName):
             user=user,
             password=password,
             database=databaseName,
-            use_pure=True
+            use_pure= True
         )
+        print('here')
         if connection.is_connected():
             return connection
     except Error as e:

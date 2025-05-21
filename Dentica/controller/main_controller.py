@@ -6,6 +6,7 @@ from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
 
+from ui.Dialogues.ui_exit_dialog import Exit_App
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.user_login_ctr import User_Dialog_Ctr
@@ -21,12 +22,14 @@ from backend.billing_comp import get_all_billings
 class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
+        
         self.setupUi(self)
         
-        self.logout_btn.clicked.connect(lambda: self.open_login_popup())
-        self.settings_btn.clicked.connect(lambda: self.user_login_popup())
+        self.userbtn.clicked.connect(lambda: self.open_login_popup())
+        # self.settings_btn.clicked.connect(lambda: self.user_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
+        self.exitbtn.clicked.connect(lambda: self.confirm_exit())
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
@@ -46,8 +49,10 @@ class MainController(QMainWindow, Ui_MainWindow):
         patient_popup = Patient_Dialog_Ctr()
         patient_popup.exec()
         
-   
-        
+    def confirm_exit(MainWindow):
+        confirm_popup = Exit_App()
+        if confirm_popup.exec():
+            MainWindow.close()
     #=========================================================
     #====================LOAD DATAS TO UI=============== start
     
@@ -131,7 +136,6 @@ class MainController(QMainWindow, Ui_MainWindow):
             
          
             set_credentials(host,port, user, password, databaseName)
-
             if connection:
                 createAllTables(connection)
 
