@@ -791,12 +791,12 @@ class Ui_MainWindow(object):
         
         #Sizing
         self.Patients_table.setColumnWidth(0, 162)  # Name
-        self.Patients_table.setColumnWidth(1, 67)  # Gender
+        self.Patients_table.setColumnWidth(1, 70)  # Gender
         self.Patients_table.setColumnWidth(2, 70)  # Birthdate
         self.Patients_table.setColumnWidth(3, 115)  # Contact
         self.Patients_table.setColumnWidth(4, 120)  # Email
         self.Patients_table.setColumnWidth(5, 145)  # Address
-        self.Patients_table.setColumnWidth(6, 160)  # Actions
+        self.Patients_table.setColumnWidth(6, 157)  # Actions
 
         #Row height for each patient
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
@@ -903,8 +903,8 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(0, 200)  # Pat. Name
         self.Appointments_table.setColumnWidth(1, 150)  # Date
         self.Appointments_table.setColumnWidth(2, 150)  # Status
-        self.Appointments_table.setColumnWidth(3, 117)  # Treatment
-        self.Appointments_table.setColumnWidth(4, 160)  # Actions
+        self.Appointments_table.setColumnWidth(3, 120)  # Treatment
+        self.Appointments_table.setColumnWidth(4, 157)  # Actions
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
 

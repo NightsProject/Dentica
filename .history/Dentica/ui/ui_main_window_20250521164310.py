@@ -903,7 +903,7 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(0, 200)  # Pat. Name
         self.Appointments_table.setColumnWidth(1, 150)  # Date
         self.Appointments_table.setColumnWidth(2, 150)  # Status
-        self.Appointments_table.setColumnWidth(3, 117)  # Treatment
+        self.Appointments_table.setColumnWidth(3, 120)  # Treatment
         self.Appointments_table.setColumnWidth(4, 160)  # Actions
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)

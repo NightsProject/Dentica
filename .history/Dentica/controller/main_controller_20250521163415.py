@@ -246,7 +246,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             
             appointment_id = appointment[0]
             action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
-            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
+            self.Appointments_table.setCellWidget(row_position, 6, action_widget)
     #Appointments TAB=================end
     
     #Billing TAB=================start
