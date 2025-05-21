@@ -780,7 +780,7 @@ class Ui_MainWindow(object):
         self.Patients_table.setColumnCount(7)
         self.Patients_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
-        self.Patients_table.setHorizontalHeaderItem(0, item)
+        self.Patients_table.setHorizontalHeade3rItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.Patients_table.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()

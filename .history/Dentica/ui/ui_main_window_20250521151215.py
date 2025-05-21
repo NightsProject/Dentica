@@ -1446,19 +1446,19 @@ class Ui_MainWindow(object):
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
         item = self.Patients_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Name"))
+        item.setText(_translate("MainWindow", "Patient ID"))
         item = self.Patients_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Gender"))
+        item.setText(_translate("MainWindow", "Name"))
         item = self.Patients_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Birthdate"))
+        item.setText(_translate("MainWindow", "Gender"))
         item = self.Patients_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Contact"))
+        item.setText(_translate("MainWindow", "Birthdate"))
         item = self.Patients_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Email"))
+        item.setText(_translate("MainWindow", "Contact"))
         item = self.Patients_table.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Address"))
+        item.setText(_translate("MainWindow", "Email"))
         item = self.Patients_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Actions"))
+        item.setText(_translate("MainWindow", "Address"))
 
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
@@ -1592,16 +1592,13 @@ class Ui_MainWindow(object):
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
                 
         # Apply to cards
-        for card in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
-                        self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
+        for card in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
                         self.bill_table_frame, self.Reports_table_frame]:
                 card.setStyleSheet(f"""
                         background: {card_bg};
                         border: 1px solid {border};  
                         border-radius: 12px;
                 """)
-
-        # Apply to table frame border
 
         # Apply to card labels
         for label in [self.label_2, self.label_3, self.label_4, self.label_5, self.label_6, 

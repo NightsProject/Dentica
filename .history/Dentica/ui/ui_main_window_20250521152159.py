@@ -802,7 +802,7 @@ class Ui_MainWindow(object):
                 gridline-color: transparent;
         }
         QTableWidget::item {
-                border-bottom: 1px solid #8DB8E0;
+                border-bottom: 1px solid red;
                 text-align: center;
         }
         QHeaderView::section {
@@ -1446,19 +1446,19 @@ class Ui_MainWindow(object):
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
         item = self.Patients_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Name"))
+        item.setText(_translate("MainWindow", "Patient ID"))
         item = self.Patients_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Gender"))
+        item.setText(_translate("MainWindow", "Name"))
         item = self.Patients_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Birthdate"))
+        item.setText(_translate("MainWindow", "Gender"))
         item = self.Patients_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Contact"))
+        item.setText(_translate("MainWindow", "Birthdate"))
         item = self.Patients_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Email"))
+        item.setText(_translate("MainWindow", "Contact"))
         item = self.Patients_table.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Address"))
+        item.setText(_translate("MainWindow", "Email"))
         item = self.Patients_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Actions"))
+        item.setText(_translate("MainWindow", "Address"))
 
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))

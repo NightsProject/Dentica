@@ -1446,19 +1446,19 @@ class Ui_MainWindow(object):
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
         item = self.Patients_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Name"))
+        item.setText(_translate("MainWindow", "Patient ID"))
         item = self.Patients_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Gender"))
+        item.setText(_translate("MainWindow", "Name"))
         item = self.Patients_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Birthdate"))
+        item.setText(_translate("MainWindow", "Gender"))
         item = self.Patients_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Contact"))
+        item.setText(_translate("MainWindow", "Birthdate"))
         item = self.Patients_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Email"))
+        item.setText(_translate("MainWindow", "Contact"))
         item = self.Patients_table.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Address"))
+        item.setText(_translate("MainWindow", "Email"))
         item = self.Patients_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Actions"))
+        item.setText(_translate("MainWindow", "Address"))
 
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
@@ -1593,15 +1593,12 @@ class Ui_MainWindow(object):
                 
         # Apply to cards
         for card in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
-                        self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
-                        self.bill_table_frame, self.Reports_table_frame]:
+                        self.frame_2, self.frame_3]:
                 card.setStyleSheet(f"""
                         background: {card_bg};
                         border: 1px solid {border};  
                         border-radius: 12px;
                 """)
-
-        # Apply to table frame border
 
         # Apply to card labels
         for label in [self.label_2, self.label_3, self.label_4, self.label_5, self.label_6, 
@@ -1640,6 +1637,17 @@ class Ui_MainWindow(object):
                         border-radius: 8px;
                 }}
                 """)
+        
+        # Apply to frame tables
+        table_frame = [self.Pat_table_Frame, self.app_table_frame, 
+                        self.bill_table_frame, self.Reports_table_frame]
+        for table_frame in table_frame:
+                table_frame.setStyleSheet(f"""
+                         
+                        background: {card_bg};
+                        border-radius: 12px;
+                """)
+        
         
         # Apply to tables
         tables = [self.UpAp_table, self.Patients_table, self.Appointments_table, self.Billing_table]

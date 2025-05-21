@@ -1446,19 +1446,19 @@ class Ui_MainWindow(object):
         self.search_patient.setPlaceholderText(_translate("MainWindow", "Search patients..."))
         self.add_icon.setText(_translate("MainWindow", "Add Patient"))
         item = self.Patients_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Name"))
+        item.setText(_translate("MainWindow", "Patient ID"))
         item = self.Patients_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Gender"))
+        item.setText(_translate("MainWindow", "Name"))
         item = self.Patients_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Birthdate"))
+        item.setText(_translate("MainWindow", "Gender"))
         item = self.Patients_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Contact"))
+        item.setText(_translate("MainWindow", "Birthdate"))
         item = self.Patients_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Email"))
+        item.setText(_translate("MainWindow", "Contact"))
         item = self.Patients_table.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Address"))
+        item.setText(_translate("MainWindow", "Email"))
         item = self.Patients_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Actions"))
+        item.setText(_translate("MainWindow", "Address"))
 
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
@@ -1550,7 +1550,7 @@ class Ui_MainWindow(object):
                 table_header = "#3D3D3D"
                 button = "#1F1F21"
                 hover = "gray"
-                border = "violet"
+                border = "red"
                 test = "red"
         else:
                 # Original/Light color
@@ -1590,7 +1590,6 @@ class Ui_MainWindow(object):
         # Apply to labels in top bars
         for label in [self.label, self.label_12, self.label_13, self.label_14, self.label_15]:
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
-                
         # Apply to cards
         for card in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
                         self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
@@ -1601,16 +1600,14 @@ class Ui_MainWindow(object):
                         border-radius: 12px;
                 """)
 
-        # Apply to table frame border
-
         # Apply to card labels
         for label in [self.label_2, self.label_3, self.label_4, self.label_5, self.label_6, 
-                        self.label_7, self.label_8, self.label_9, self.totapp_icon, self.totpat_icon, self.pay_icon,self.treat_icon]:
-                label.setStyleSheet(f"background: {card_bg}; color: {card_text};border: 1px solid {card_bg};")
+                        self.label_7, self.label_8, self.label_9, self.label_10, self.label_11]:
+                label.setStyleSheet(f"background: {card_bg}; color: {card_text}; border")
         
-        # Apply to other label
-        for other in [self.label_10, self.label_11]:
-                other.setStyleSheet(f"""
+        # Apply to cards info
+        for cards in [self.totpat_icon, self.label_2,self.label_5]:
+                cards.setStyleSheet(f"""
                         border: 1px solid {card_bg};
                         border-radius: 12px; 
                         color: {card_text}             
