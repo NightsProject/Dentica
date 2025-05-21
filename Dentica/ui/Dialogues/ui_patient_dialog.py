@@ -65,10 +65,6 @@ class Add_Patient(QtWidgets.QDialog):
         self.birth_input.setDate(QtCore.QDate.currentDate())
         add_row(8, "Birth Date:", self.birth_input)
         
-        #time input field
-            
-        
-
         self.add_patient = QtWidgets.QPushButton("Add", self)
         self.add_patient.setGeometry(80, 440, 80, 30)
         self.add_patient.setStyleSheet("background-color: #37547A; color: #fff;")

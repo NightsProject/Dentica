@@ -423,9 +423,9 @@ class Ui_MainWindow(object):
         self.dash_graph.setLayout(layout)
         labels = ['Scheduled', 'Completed', 'Cancelled']
         values = [15, 50, 10]
-        donut_chart = DonutChart(labels, values)
+        self.donut_chart = DonutChart(labels, values)
         layout.addWidget(self.graph_label)
-        layout.addWidget(donut_chart)
+        layout.addWidget(self.donut_chart)
         
         
         #Total Patient Card
@@ -1506,7 +1506,7 @@ class Ui_MainWindow(object):
                                        """)
     
         # Apply to headers (TOP BAR)
-        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Reports_topbar_frame]:
+        for header in [self.donut_chart,self.frame_4,self.app_frame,self.Bill_frame,self.Reports_topbar_frame]:
                 header.setStyleSheet(f"""
                         background-color: {main_bg};
                                      """)

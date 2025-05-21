@@ -1,4 +1,5 @@
 from backend.DB import connectDB
+
 def get_all_patients():
     all_patients = []
 
@@ -26,6 +27,7 @@ def get_all_patients():
     #print("\nAll Patients:", all_patients)
     return all_patients
 
+
 def generate_new_patient_id():
     conn = connectDB()
     cursor = conn.cursor()
@@ -49,3 +51,52 @@ def generate_new_patient_id():
 
     new_patient_id = f'P{new_id_num:05d}'  # Zero-padded to 5 digits
     return new_patient_id
+
+def insert_patient(
+    patient_id,
+    first_name,
+    middle_name,
+    last_name,
+    gender,
+    birth_date,
+    contact_number,
+    email,
+    address
+):
+    conn = connectDB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO Patient (
+                Patient_ID,
+                First_Name,
+                Middle_Name,
+                Last_Name,
+                Gender,
+                Birth_Date,
+                Contact_Number,
+                Email,
+                Address
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            patient_id,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            birth_date,
+            contact_number,
+            email,
+            address
+        ))
+        conn.commit()
+        success = True
+    except Exception as e:
+        print("Insert Patient Error:", e)
+        import traceback
+        traceback.print_exc()
+        success = False
+    finally:
+        cursor.close()
+        conn.close()
+    return success

@@ -1535,7 +1535,7 @@ class Ui_MainWindow(object):
                         """)
                 
         # Apply to Dashboard titles
-        for titles in [self.graph_label, self.label_2, self.label_3, self.label_4, self.label_8, self.label_10, self.label_11]:
+        for titles in [self.graph_label,self.label_2, self.label_3, self.label_4, self.label_8, self.label_10, self.label_11]:
                 titles.setStyleSheet(f"""
                         background: {card_bg};
                         color: {card_text};

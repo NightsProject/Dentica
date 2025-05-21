@@ -423,9 +423,9 @@ class Ui_MainWindow(object):
         self.dash_graph.setLayout(layout)
         labels = ['Scheduled', 'Completed', 'Cancelled']
         values = [15, 50, 10]
-        donut_chart = DonutChart(labels, values)
+        self.donut_chart = DonutChart(labels, values)
         layout.addWidget(self.graph_label)
-        layout.addWidget(donut_chart)
+        layout.addWidget(self.donut_chart)
         
         
         #Total Patient Card
