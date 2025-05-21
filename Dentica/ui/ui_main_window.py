@@ -29,8 +29,6 @@ class Ui_MainWindow(object):
         self.SidebarFrame.setStyleSheet("background-color: #1F1F21 ; border-right: 1px solid #1F1F21 ;")
         self.SidebarFrame.setObjectName("SidebarFrame")
         
-        
-        
         #User card
         self.UserCard = QtWidgets.QFrame(parent=self.SidebarFrame)
         self.UserCard.setGeometry(QtCore.QRect(20, 600, 220, 150))
@@ -687,11 +685,11 @@ class Ui_MainWindow(object):
         layout = QtWidgets.QVBoxLayout(self.frame_3)
         layout.setContentsMargins(12, 12, 12, 12)
 
-        calendar = QCalendarWidget(parent=self.frame_3)
-        calendar.setSelectionMode(QtWidgets.QCalendarWidget.SelectionMode.NoSelection)
-        calendar.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        prev_btn = calendar.findChild(QtWidgets.QToolButton, "qt_calendar_prevmonth")
-        next_btn = calendar.findChild(QtWidgets.QToolButton, "qt_calendar_nextmonth")
+        self.calendar = QCalendarWidget(parent=self.frame_3)
+        self.calendar.setSelectionMode(QtWidgets.QCalendarWidget.SelectionMode.NoSelection)
+        self.calendar.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        prev_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_prevmonth")
+        next_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_nextmonth")
         left = QtGui.QIcon(f"{filepath}Left.svg")
         right = QtGui.QIcon(f"{filepath}Right.svg")
         prev_btn.setIcon(left)
@@ -701,10 +699,10 @@ class Ui_MainWindow(object):
         
         weekend_format = QTextCharFormat()
         weekend_format.setForeground(QColor("#7c94a3"))
-        calendar.setWeekdayTextFormat(Qt.DayOfWeek.Saturday, weekend_format)
-        calendar.setWeekdayTextFormat(Qt.DayOfWeek.Sunday, weekend_format)
-        calendar.setVerticalHeaderFormat(QtWidgets.QCalendarWidget.VerticalHeaderFormat.NoVerticalHeader)
-        calendar.setStyleSheet("""
+        self.calendar.setWeekdayTextFormat(Qt.DayOfWeek.Saturday, weekend_format)
+        self.calendar.setWeekdayTextFormat(Qt.DayOfWeek.Sunday, weekend_format)
+        self.calendar.setVerticalHeaderFormat(QtWidgets.QCalendarWidget.VerticalHeaderFormat.NoVerticalHeader)
+        self.calendar.setStyleSheet("""
         QCalendarWidget {
         background: transparent;
         border: none;
@@ -763,9 +761,9 @@ class Ui_MainWindow(object):
         """)
 
         font = QtGui.QFont("Inter", 9)
-        calendar.setFont(font)
-        calendar.setFixedHeight(300)
-        calendar.setFixedWidth(300) 
+        self.calendar.setFont(font)
+        self.calendar.setFixedHeight(300)
+        self.calendar.setFixedWidth(300) 
         
 
         self.scheduled_label = QtWidgets.QLabel("Scheduled:                                                                 0")
@@ -776,7 +774,7 @@ class Ui_MainWindow(object):
         self.completed_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
         self.cancelled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
 
-        layout.addWidget(calendar)
+        layout.addWidget(self.calendar)
         layout.addWidget(self.scheduled_label)
         layout.addWidget(self.completed_label)
         layout.addWidget(self.cancelled_label)
@@ -1494,7 +1492,8 @@ class Ui_MainWindow(object):
         dark_icon = QtGui.QIcon(f"{filepath}Dark.svg")
         light_icon = QtGui.QIcon(f"{filepath}Light.svg")
         self.apply_theme(light_icon, dark_icon)
-
+        
+        
     def apply_theme(self, light_icon, dark_icon):
         if self.dark_mode:
                 # Dark theme colors
@@ -1511,9 +1510,8 @@ class Ui_MainWindow(object):
                 search_bg = "gray"
                 add_bg = "#0E283F"
                 row_sep = "light gray"
-                self.theme_btn.setIcon(light_icon)
                 
-
+                self.theme_btn.setIcon(light_icon)
         else:
                 # Original/Light color
                 sidebar_bg = "#1F1F21"
@@ -1620,7 +1618,7 @@ class Ui_MainWindow(object):
                         """)
                 
         # Apply to Dashboard titles
-        for titles in [self.graph_label, self.label_2, self.label_3, self.label_4, self.label_8, self.label_10, self.label_11]:
+        for titles in [self.graph_label, self.label_2, self.label_3, self.label_4, self.label_8, self.label_10]:
                 titles.setStyleSheet(f"""
                         background: {card_bg};
                         color: {card_text};
@@ -1701,7 +1699,6 @@ class Ui_MainWindow(object):
                         border-radius: 8px; 
                         color: white;                        
                         """)
-        
         # TABLE FRAMES
         # Apply to Patient table frame
         self.Pat_table_Frame.setStyleSheet(f"""
@@ -1791,7 +1788,167 @@ class Ui_MainWindow(object):
                                 color: {card_text};
                                 border-radius: 8px;
                         }}
-                        """)              
-                                
+                        """)         
+       #Apply to calendar
+        if not self.dark_mode:
+                # Restore frame_3 original style
+                self.frame_3.setStyleSheet("""
+                #frame_3 {
+                background: #1F1F21;
+                border: 1px solid #5e93bf;
+                border-radius: 12px;
+                }
+                """)
 
+                # Restore calendar original styles
+                self.calendar.setStyleSheet("""
+                QCalendarWidget {
+                background: transparent;
+                border: none;
+                }
+
+                QCalendarWidget QWidget#qt_calendar_navigationbar {
+                background: transparent;
+                border: none;
+                }
+
+                QCalendarWidget QWidget#qt_calendar_calendarview {
+                background: transparent;
+                border-radius: 12px;
+                }
+
+                QCalendarWidget QAbstractItemView {
+                background: transparent;
+                selection-background-color: #5e93bf;
+                color: white;
+                gridline-color: #5e93bf;
+                border-radius: 12px;
+                }
+
+                QCalendarWidget QAbstractItemView::item {
+                outline: none;
+                border: none;
+                }
+
+                QCalendarWidget QToolButton {
+                background: transparent;
+                color: white;
+                font-weight: bold;
+                border: none;
+                padding: 5px;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                }
+
+                QCalendarWidget QAbstractItemView:item:selected:!active,
+                QCalendarWidget QAbstractItemView:item:selected:active {
+                background-color: #5e93bf;
+                border-radius: 15px;
+                color: white;
+                }
+
+                QCalendarWidget QAbstractItemView:item:enabled:!selected:!hover {
+                color: white;
+                }
+
+                QCalendarWidget QAbstractItemView:item:enabled:!selected:!hover:nth-child(6),
+                QCalendarWidget QAbstractItemView:item:enabled:!selected:!hover:nth-child(7) {
+                color: #7c94a3;
+                }
+                """)
+
+                weekend_format = QtGui.QTextCharFormat()
+                weekend_format.setForeground(QtGui.QColor("#7c94a3"))
+                self.calendar.setWeekdayTextFormat(Qt.DayOfWeek.Saturday, weekend_format)
+                self.calendar.setWeekdayTextFormat(Qt.DayOfWeek.Sunday, weekend_format)
+
+                font = QtGui.QFont("Inter", 9)
+                self.calendar.setFont(font)
+                self.calendar.setFixedHeight(300)
+                self.calendar.setFixedWidth(300)
+
+                prev_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_prevmonth")
+                next_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_nextmonth")
+                left = QtGui.QIcon(f"{filepath}Left.svg")
+                right = QtGui.QIcon(f"{filepath}Right.svg")
+                prev_btn.setIcon(left)
+                next_btn.setIcon(right)
+                prev_btn.setIconSize(QtCore.QSize(20, 20))
+                next_btn.setIconSize(QtCore.QSize(20, 20))
+
+        else:
+                # Dark mode - you can add calendar styles here if you want to style it differently
+                # Or keep it with dark colors like you did with other cards (optional)
+                self.frame_3.setStyleSheet(f"""
+                background: {card_bg};
+                border: 1px solid {card_bg};  
+                border-radius: 12px;
+                """)
+
+                self.calendar.setStyleSheet(f"""
+                QCalendarWidget {{
+                background: transparent;
+                border: none;
+                }}
+                QCalendarWidget QWidget#qt_calendar_navigationbar {{
+                background: transparent;
+                border: none;
+                }}
+                QCalendarWidget QWidget#qt_calendar_calendarview {{
+                background: transparent;
+                border-radius: 12px;
+                }}
+                QCalendarWidget QAbstractItemView {{
+                background: transparent;
+                selection-background-color: #5e93bf;
+                color: white;
+                gridline-color: #5e93bf;
+                border-radius: 12px;
+                }}
+                QCalendarWidget QAbstractItemView::item {{
+                outline: none;
+                border: none;
+                }}
+                QCalendarWidget QToolButton {{
+                background: transparent;
+                color: white;
+                font-weight: bold;
+                border: none;
+                padding: 5px;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                }}
+                QCalendarWidget QAbstractItemView:item:selected:!active,
+                QCalendarWidget QAbstractItemView:item:selected:active {{
+                background-color: #5e93bf;
+                border-radius: 15px;
+                color: white;
+                }}
+                QCalendarWidget QAbstractItemView:item:enabled:!selected:!hover {{
+                color: white;
+                }}
+                QCalendarWidget QAbstractItemView:item:enabled:!selected:!hover:nth-child(6),
+                QCalendarWidget QAbstractItemView:item:enabled:!selected:!hover:nth-child(7) {{
+                color: #7c94a3;
+                }}
+                """)
+
+                weekend_format = QtGui.QTextCharFormat()
+                weekend_format.setForeground(QtGui.QColor("#7c94a3"))
+                self.calendar.setWeekdayTextFormat(Qt.DayOfWeek.Saturday, weekend_format)
+                self.calendar.setWeekdayTextFormat(Qt.DayOfWeek.Sunday, weekend_format)
+
+                font = QtGui.QFont("Inter", 9)
+                self.calendar.setFont(font)
+                self.calendar.setFixedHeight(300)
+                self.calendar.setFixedWidth(300)
+
+                prev_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_prevmonth")
+                next_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_nextmonth")
+                left = QtGui.QIcon(f"{filepath}Left.svg")
+                right = QtGui.QIcon(f"{filepath}Right.svg")
+                prev_btn.setIcon(left)
+                next_btn.setIcon(right)
+                prev_btn.setIconSize(QtCore.QSize(20, 20))
+                next_btn.setIconSize(QtCore.QSize(20, 20))
         
