@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -229,8 +229,9 @@ class MainController(QMainWindow, Ui_MainWindow):
     def button_clicked(self):
         # Get the button that was clicked
         button = self.sender()
-        name = button.property("Patient ID")
-        QMessageBox.information(self, "Greeting", f"Hello, {name}!")
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
