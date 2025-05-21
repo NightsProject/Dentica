@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QPushButton
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -76,7 +76,7 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #0056b3;
             }
         """)
-        view_btn.clicked.connect(lambda: self.button_clicked())
+        view_btn.clicked.connect(lambda: self.button_clicked(patient_id))
         # Edit Button
         edit_btn = QtWidgets.QPushButton("Edit")
         edit_btn.setMaximumWidth(60)
@@ -229,9 +229,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def button_clicked(self):
         # Get the button that was clicked
         button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
-
+        name = button.property("Patient ID")
+        QMessageBox.information(self, "Greeting", f"Hello, {name}!")
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
@@ -247,7 +246,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             
             appointment_id = appointment[0]
             action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
-            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
+            self.Appointments_table.setCellWidget(row_position, 6, action_widget)
     #Appointments TAB=================end
     
     #Billing TAB=================start

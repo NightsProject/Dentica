@@ -1,8 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout
 from ui.Dialogues.ui_exit_dialog import Exit_App
-from Frontend.Graphs.Appointment_status import DonutChart
 
 filepath = "Dentica/ui/icons/"
 
@@ -360,6 +358,32 @@ class Ui_MainWindow(object):
         self.Dashboard_page = QtWidgets.QWidget()
         self.Dashboard_page.setObjectName("Dashboard_page")
         
+
+        #Dashboard top bar
+        self.frame = QtWidgets.QFrame(parent=self.Dashboard_page)
+        self.frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.frame.setStyleSheet("""
+                #frame { background-color: #B2CDE9; 
+                                 
+                        }
+                                 """)
+        self.frame.setObjectName("frame")
+
+ 
+        
+        
+        self.label = QtWidgets.QLabel(parent=self.frame)
+        self.label.setGeometry(QtCore.QRect(20, 25, 150, 31))
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setPointSize(18)
+        font.setBold(True)
+        self.label.setFont(font)
+        self.label.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        self.label.setObjectName("label")
+
+        self.userbtn.setObjectName("userbtn")
+
         # #User menu drop-down
         # self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
         # self.user_menu.setObjectName("user_menu")
@@ -394,42 +418,9 @@ class Ui_MainWindow(object):
         # self.logout_btn.setGeometry(10, 50, 130, 30)
         # self.logout_btn.setObjectName("logout_btn")
         
-       
-        #Dashboard graph
-        self.dash_graph = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.dash_graph.setGeometry(QtCore.QRect(30, 30, 420, 290))
-        self.dash_graph.setStyleSheet("""
-        #dash_graph {
-                background: #C6D7EC;
-                border: 1px solid #fff;  
-                border-radius: 12px;
-        }
-        """)
-        self.dash_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.dash_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.dash_graph.setObjectName("dash_graph")
-        
-        self.graph_label = QtWidgets.QLabel(parent=self.dash_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(12)
-        font.setBold(True)
-        self.graph_label.setFont(font)
-        self.graph_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        self.graph_label.setText("Appointments Status")
-        
-        layout = QVBoxLayout()
-        self.dash_graph.setLayout(layout)
-        labels = ['Scheduled', 'Completed', 'Cancelled']
-        values = [15, 50, 10]
-        donut_chart = DonutChart(labels, values)
-        layout.addWidget(self.graph_label)
-        layout.addWidget(donut_chart)
-        
-        
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.TotPat_card.setGeometry(QtCore.QRect(490, 30, 200, 130))
+        self.TotPat_card.setGeometry(QtCore.QRect(20, 90, 200, 120))
         self.TotPat_card.setStyleSheet("""
         #TotPat_card {
                 background: #C6D7EC;
@@ -473,7 +464,7 @@ class Ui_MainWindow(object):
 
         #Total Appointments Card
         self.TodApp_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.TodApp_card.setGeometry(QtCore.QRect(725, 30, 200, 130))
+        self.TodApp_card.setGeometry(QtCore.QRect(255, 90, 200, 120))
         self.TodApp_card.setStyleSheet("""
         #TodApp_card {
                 background: #C6D7EC;
@@ -517,7 +508,7 @@ class Ui_MainWindow(object):
 
         #Pending Payment Card
         self.PendPay_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.PendPay_card.setGeometry(QtCore.QRect(490, 190, 200, 130))
+        self.PendPay_card.setGeometry(QtCore.QRect(490, 90, 200, 120))
         self.PendPay_card.setStyleSheet("""
         #PendPay_card {
                 background: #C6D7EC;
@@ -561,7 +552,7 @@ class Ui_MainWindow(object):
 
         #Completed Treatment Card
         self.ComTreat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.ComTreat_card.setGeometry(QtCore.QRect(725, 190, 200, 130))
+        self.ComTreat_card.setGeometry(QtCore.QRect(725, 90, 200, 120))
         self.ComTreat_card.setStyleSheet("""
         #ComTreat_card {
                 background: #C6D7EC;
@@ -605,7 +596,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.frame_2.setGeometry(QtCore.QRect(30, 350, 650, 440))
+        self.frame_2.setGeometry(QtCore.QRect(30, 230, 650, 461))
         self.frame_2.setStyleSheet("""
         #frame_2 {
                 background: #C6D7EC;
@@ -629,7 +620,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 340))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 361))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -671,7 +662,7 @@ class Ui_MainWindow(object):
   
         #Recent Notifications Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)
-        self.frame_3.setGeometry(QtCore.QRect(700, 350, 220, 440))
+        self.frame_3.setGeometry(QtCore.QRect(700, 230, 220, 461))
         self.frame_3.setStyleSheet("""
         #frame_3 {
                 background: #C6D7EC;
@@ -800,12 +791,12 @@ class Ui_MainWindow(object):
         
         #Sizing
         self.Patients_table.setColumnWidth(0, 162)  # Name
-        self.Patients_table.setColumnWidth(1, 67)  # Gender
+        self.Patients_table.setColumnWidth(1, 70)  # Gender
         self.Patients_table.setColumnWidth(2, 70)  # Birthdate
         self.Patients_table.setColumnWidth(3, 115)  # Contact
         self.Patients_table.setColumnWidth(4, 120)  # Email
         self.Patients_table.setColumnWidth(5, 145)  # Address
-        self.Patients_table.setColumnWidth(6, 160)  # Actions
+        self.Patients_table.setColumnWidth(6, 157)  # Actions
 
         #Row height for each patient
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
@@ -912,8 +903,8 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(0, 200)  # Pat. Name
         self.Appointments_table.setColumnWidth(1, 150)  # Date
         self.Appointments_table.setColumnWidth(2, 150)  # Status
-        self.Appointments_table.setColumnWidth(3, 117)  # Treatment
-        self.Appointments_table.setColumnWidth(4, 160)  # Actions
+        self.Appointments_table.setColumnWidth(3, 150)  # Treatment
+        self.Appointments_table.setColumnWidth(4, 170)  # Action
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
 
@@ -1292,6 +1283,7 @@ class Ui_MainWindow(object):
         self.Apntmnt_btn.setText(_translate("MainWindow", "Appointments"))
         self.Bill_btn.setText(_translate("MainWindow", "Billing"))
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
+        self.label.setText(_translate("MainWindow", "Dashboard"))
         self.label_2.setText(_translate("MainWindow", "Total Patient"))
         self.label_5.setText(_translate("MainWindow", "0"))
         self.label_3.setText(_translate("MainWindow", "Today's Appointments"))
@@ -1459,15 +1451,15 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
-        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
+        for frame in [self.frame, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
                 frame.setStyleSheet(f"background-color: {main_bg};")
         
         # Apply to labels in top bars
-        for label in [self.label_12, self.label_13, self.label_14, self.label_15]:
+        for label in [self.label, self.label_12, self.label_13, self.label_14, self.label_15]:
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
         
         # Apply to cards
-        for card in [self.dash_graph, self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
+        for card in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
                         self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
                         self.bill_table_frame, self.Reports_table_frame]:
                 card.setStyleSheet(f"""
