@@ -126,18 +126,18 @@ class MainController(QMainWindow, Ui_MainWindow):
     #====================LOAD DATAS TO UI=============== end
     #=======================================================
     
-    def handle_credentials(self, host, port, user, password, databaseName):
-        print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
+    def handle_credentials(self, host, user, password, databaseName):
+        print(f"Received credentials: host={host}, user={user}, password={password}, database name={databaseName}")
         
         try:
-            connection = connectDBF(host, port, user, password, databaseName)
+            connection = connectDBF(host, user, password, databaseName)
             if not connection:
                 raise Exception("Connection returned None")
             
             print(f"Successfully connected to {databaseName} database")
             
          
-            set_credentials(host,port, user, password, databaseName)
+            set_credentials(host, user, password, databaseName)
             if connection:
                 createAllTables(connection)
 

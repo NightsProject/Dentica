@@ -19,12 +19,12 @@ class Patient_Dialog_Ctr(Add_Patient):
         first_name = self.first_input.text()
         middle_name = self.middle_input.text()
         last_name = self.last_input.text()
+        gender = self.gender_combo.currentText()
         address = self.address_input
         contact = self.contact_input.text()
         email = self.email_input.text()
         
         
-    
         
         
     #TODO make a validation in real time on each input field

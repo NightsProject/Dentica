@@ -39,10 +39,7 @@ class Database_Login(QtWidgets.QDialog):
 
         self.host_input = QtWidgets.QLineEdit(self)
         add_row(2, "Host:", self.host_input)
-
-        self.port_input = QtWidgets.QLineEdit(self)
-        add_row(3, "Port:", self.port_input)
-
+       
         self.dbname_input = QtWidgets.QLineEdit(self)
         add_row(4, "Database Name:", self.dbname_input)
 
@@ -57,6 +54,9 @@ class Database_Login(QtWidgets.QDialog):
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
         self.cancel_btn.clicked.connect(self.reject)
+        
+        
+        
         
 
     def mousePressEvent(self, event):

@@ -3,21 +3,19 @@ from mysql.connector import Error
 
 
 #  store the credentials globally
-def set_credentials(host, port, user, password, database):
-    global HOST, PORT, USER, PASSWORD, DATABASE_NAME
+def set_credentials(host, user, password, database):
+    global HOST, USER, PASSWORD, DATABASE_NAME
     HOST = host
-    PORT = port
     USER = user
     PASSWORD = password
     DATABASE_NAME = database
 
 
 #try to connect to the database once
-def connectDBF(host, port, user, password, databaseName):
+def connectDBF(host, user, password, databaseName):
     try:
         connection = mysql.connector.connect(
             host=host,
-            port=port,
             user=user,
             password=password,
             database=databaseName,
@@ -38,7 +36,6 @@ def connectDB():
     try:
         connection = mysql.connector.connect(
             host=HOST,
-            port=PORT,
             user=USER,
             password=PASSWORD,
             database=DATABASE_NAME,
