@@ -25,6 +25,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         email = self.email_input.text()
         
         
+
         
         
     #TODO make a validation in real time on each input field
