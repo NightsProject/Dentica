@@ -1,5 +1,5 @@
 pyqt6
 mysql-connector-python
-
+matplotlib pyqt6
 
 
