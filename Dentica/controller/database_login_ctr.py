@@ -8,6 +8,7 @@ class Database_Dialog_Ctr(Database_Login):
     def __init__(self):
         super().__init__()
         self.login_btn.clicked.connect(self.on_login_pressed)
+        self.login_btn.clicked.connect(self.reject)
         
     def on_login_pressed(self):
         host = self.host_input.text()

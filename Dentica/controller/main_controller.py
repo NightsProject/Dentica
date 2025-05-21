@@ -13,9 +13,10 @@ from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments
-from backend.patients_comp import get_all_patients
+from backend.patients_comp import get_all_patients, generate_new_patient_id
 from backend.appointments_comp import get_all_appointments_with_treatment_count
 from backend.billing_comp import get_all_billings
+
 
 class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -44,6 +45,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
         patient_popup.exec()
+        
+   
         
     #=========================================================
     #====================LOAD DATAS TO UI=============== start
@@ -129,22 +132,23 @@ class MainController(QMainWindow, Ui_MainWindow):
          
             set_credentials(host,port, user, password, databaseName)
 
-            createAllTables(connection)
+            if connection:
+                createAllTables(connection)
 
-            summary_data = load_summary()
-            self.update_summary(summary_data)
+                summary_data = load_summary()
+                self.update_summary(summary_data)
 
-            todays_appointments_list = get_todays_appointments()
-            self.update_todays_appointments_table(todays_appointments_list)
+                todays_appointments_list = get_todays_appointments()
+                self.update_todays_appointments_table(todays_appointments_list)
 
-            all_patients_list = get_all_patients()
-            self.update_patients_list(all_patients_list)
-            
-            all_appointments_list = get_all_appointments_with_treatment_count()
-            self.update_appointments_list(all_appointments_list)
+                all_patients_list = get_all_patients()
+                self.update_patients_list(all_patients_list)
+                
+                all_appointments_list = get_all_appointments_with_treatment_count()
+                self.update_appointments_list(all_appointments_list)
 
-            all_billings_list = get_all_billings()
-            self.update_billing_list(all_billings_list)
+                all_billings_list = get_all_billings()
+                self.update_billing_list(all_billings_list)
             
             connection.close()
             
