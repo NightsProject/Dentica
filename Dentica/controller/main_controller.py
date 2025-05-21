@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QPushButton
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -90,7 +90,18 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Patients_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(patient[4])))
             self.Patients_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(patient[5])))
             self.Patients_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(patient[6])))
-            # the patient is stored in patient[0]
+            
+            btn = QPushButton("View More")
+            btn.setProperty("Patient ID", patient[0])  # Store the value in the button
+            btn.clicked.connect(self.button_clicked)
+            self.Patients_table.setCellWidget(row_position, 6, btn)
+          
+            
+    def button_clicked(self):
+        # Get the button that was clicked
+        button = self.sender()
+        name = button.property("Patient ID")
+        QMessageBox.information(self, "Greeting", f"Hello, {name}!")
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
@@ -102,7 +113,6 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))
             self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
             self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
-            self.Appointments_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[5])))
             # the appointment is stored in appointment[0]
     #Appointments TAB=================end
     
