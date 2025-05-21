@@ -1648,7 +1648,11 @@ class Ui_MainWindow(object):
                                 color: {table_text};                
                         }}
                         """)                     
-
+        self.Patients_table.setStyleSheet(f"""
+        QTableWidget::item:nth-child(7) {{  /* Column 6 (0-based index) */
+                border: red;
+                background: {card_bg};}}""")
+        
         # Apply to button filter frames
         for fil_bg in [self.horizontalLayoutWidget, self.horizontalLayoutWidget_2]:
                 fil_bg.setStyleSheet(f"""

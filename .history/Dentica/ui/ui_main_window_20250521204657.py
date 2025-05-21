@@ -16,8 +16,7 @@ class Ui_MainWindow(object):
         self._drag_pos = None
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.dark_mode = False 
-        
+
         #Sidebar Frame
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
         self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, 800))
@@ -1269,7 +1268,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.Pages.setCurrentIndex(0)
-        self.set_active_button(self.Dash_btn) 
+        self.set_active_button(self.Dash_btn)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
     def retranslateUi(self, MainWindow):
@@ -1392,6 +1391,9 @@ class Ui_MainWindow(object):
     def set_active_button(self, button):
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
                 btn.setChecked(btn == button)
+    
+    def __init__(self):
+        self.dark_mode = False  
     
     def toggle_theme(self):
         # Switch themes
@@ -1677,5 +1679,4 @@ class Ui_MainWindow(object):
                         }}
                         """)              
                                 
-
         

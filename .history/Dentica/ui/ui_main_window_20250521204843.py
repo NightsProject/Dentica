@@ -17,7 +17,6 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.dark_mode = False 
-        
         #Sidebar Frame
         self.SidebarFrame = QtWidgets.QFrame(parent=self.centralwidget)
         self.SidebarFrame.setGeometry(QtCore.QRect(0, 0, 260, 800))
@@ -1677,5 +1676,4 @@ class Ui_MainWindow(object):
                         }}
                         """)              
                                 
-
         

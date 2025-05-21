@@ -1622,7 +1622,7 @@ class Ui_MainWindow(object):
                         border-radius: 12px;
                         }}
                         """)
-        
+
         # Apply to all tables
         for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
                 tables.setStyleSheet(f"""
@@ -1630,6 +1630,9 @@ class Ui_MainWindow(object):
                                 background-color: {table_bg};
                                 border: none;
                                 gridline-color: transparent;
+                        }}
+                        QTableWidget::item:nth-child(7) {{  /
+                                background: {table_bg};
                         }}
                         QTableWidget::item {{
                                 border-bottom: 1px solid {row_sep};

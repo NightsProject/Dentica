@@ -1623,31 +1623,97 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
-                tables.setStyleSheet(f"""
+        # Apply to Patient table
+        self.Patients_table.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
                                 border: none;
-                                gridline-color: transparent;
                         }}
                         QTableWidget::item {{
                                 border-bottom: 1px solid {row_sep};
                                 color: {table_text};
                         }}
+                        QTableWidget::item:nth-child(7) {{ 
+                                background: {card_bg};
+                        }}
                         QHeaderView::section {{
                                 border: none;
                                 background-color: {table_bg};
                                 color: {table_text};
                         }}
-                        """)             
-                tables.horizontalHeader().setStyleSheet(f"""
+                        """)
+        self.Patients_table.horizontalHeader().setStyleSheet(f"""
                         QHeaderView::section {{
-                                font-family: "Inter"; 
-                                font-size: 14px;        
-                                color: {table_text};                
+                                font-family: "Inter";
+                                font-size: 14px;
+                                color: {table_text};
+                                padding: 5px;
+                                background-color: {table_bg};
+                                border: none;
                         }}
-                        """)                     
+                        """)
+        
+        # Apply to Appointment table
+        self.Appointments_table.setStyleSheet(f"""
+                        QTableWidget {{
+                                background-color: {table_bg};
+                                border: none;
+                        }}
+                        QTableWidget::item {{
+                                border-bottom: 1px solid {row_sep};
+                                color: {table_text};
+                        }}
+                        QTableWidget::item:nth-child(5) {{
+                                background: {card_bg};
+                        }}
+                        QHeaderView::section {{
+                                border: none;
+                                background-color: {table_bg};
+                                color: {table_text};
+                        }}
+                        """)
+        self.Appointments_table.horizontalHeader().setStyleSheet(f"""
+                        QHeaderView::section {{
+                                font-family: "Inter";
+                                font-size: 14px;
+                                color: {table_text};
+                                padding: 5px;
+                                background-color: {table_bg};
+                                border: none;
+                        }}
+                        """)
+        
+        
+        #Apply to Billing table
+        self.Billing_table.setStyleSheet(f"""
+                        QTableWidget {{
+                                background-color: {table_bg};
+                                border: none;
+                        }}
+                        QTableWidget::item {{
+                                border-bottom: 1px solid {row_sep};
+                                color: {table_text};
+                        }}
+                        QTableWidget::item:nth-child(5) {{
+                                background: {card_bg};
+                        }}
+                        QHeaderView::section {{
+                                border: none;
+                                background-color: {table_bg};
+                                color: {table_text};
+                        }}
+                        """)
+        self.Billing_table.horizontalHeader().setStyleSheet(f"""
+                        QHeaderView::section {{
+                                font-family: "Inter";
+                                font-size: 14px;
+                                color: {table_text};
+                                padding: 5px;
+                                background-color: {table_bg};
+                                border: none;
+                        }}
+                        """)
+                   
 
         # Apply to button filter frames
         for fil_bg in [self.horizontalLayoutWidget, self.horizontalLayoutWidget_2]:

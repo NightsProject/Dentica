@@ -1635,6 +1635,12 @@ class Ui_MainWindow(object):
                                 border-bottom: 1px solid {row_sep};
                                 color: {table_text};
                         }}
+                        QTableWidget::item:nth-child(7) {{ 
+                                background: {card_bg};
+                        }}
+                        QTableWidget::item:nth-child(5) {{ 
+                                background: {card_bg};
+                        }}
                         QHeaderView::section {{
                                 border: none;
                                 background-color: {table_bg};
@@ -1645,7 +1651,10 @@ class Ui_MainWindow(object):
                         QHeaderView::section {{
                                 font-family: "Inter"; 
                                 font-size: 14px;        
-                                color: {table_text};                
+                                color: {table_text};
+                                padding: 5px;
+                                background-color: {table_bg};
+                                border: none;                
                         }}
                         """)                     
 
