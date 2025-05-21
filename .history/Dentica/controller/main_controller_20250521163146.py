@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QPushButton
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -76,7 +76,7 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #0056b3;
             }
         """)
-        view_btn.clicked.connect(lambda: self.button_clicked())
+        view_btn.clicked.connect(lambda: self.button_clicked(patient_id))
         # Edit Button
         edit_btn = QtWidgets.QPushButton("Edit")
         edit_btn.setMaximumWidth(60)
@@ -125,9 +125,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         layout.setSpacing(5)
         
         # View More Button
-        view_btn2 = QPushButton("View")
-        view_btn2.setMaximumWidth(60)
-        view_btn2.setStyleSheet("""
+        view_btn = QtWidgets.QPushButton("View")
+        view_btn.setMaximumWidth(60)
+        view_btn.setStyleSheet("""
             QPushButton {
                 background-color: #007bff;
                 color: white;
@@ -140,11 +140,11 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #0056b3;
             }
         """)
-        
+        view_btn.clicked.connect(lambda: self.button_clicked(appointment_id))
         # Edit Button
-        edit_btn2 = QPushButton("Edit")
-        edit_btn2.setMaximumWidth(60)
-        edit_btn2.setStyleSheet("""
+        edit_btn = QtWidgets.QPushButton("Edit")
+        edit_btn.setMaximumWidth(60)
+        edit_btn.setStyleSheet("""
             QPushButton {
                 background-color: #28a745;
                 color: white;
@@ -159,9 +159,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         """)
         
         # Delete Button
-        delete_btn2 = QPushButton("Delete")
-        delete_btn2.setMaximumWidth(60)
-        delete_btn2.setStyleSheet("""
+        delete_btn = QtWidgets.QPushButton("Delete")
+        delete_btn.setMaximumWidth(60)
+        delete_btn.setStyleSheet("""
             QPushButton {
                 background-color: #dc3545;
                 color: white;
@@ -175,9 +175,9 @@ class MainController(QMainWindow, Ui_MainWindow):
             }
         """)
         
-        layout.addWidget(view_btn2)
-        layout.addWidget(edit_btn2)
-        layout.addWidget(delete_btn2)
+        layout.addWidget(view_btn)
+        layout.addWidget(edit_btn)
+        layout.addWidget(delete_btn)
         
         widget.setLayout(layout)
         return widget
@@ -229,9 +229,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def button_clicked(self):
         # Get the button that was clicked
         button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
-
+        name = button.property("Patient ID")
+        QMessageBox.information(self, "Greeting", f"Hello, {name}!")
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
@@ -247,7 +246,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             
             appointment_id = appointment[0]
             action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
-            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
+            self.Appointments_table.setCellWidget(row_position, 6, action_widget)
     #Appointments TAB=================end
     
     #Billing TAB=================start

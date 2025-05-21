@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QPushButton
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
@@ -54,7 +54,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         if confirm_popup.exec():
             MainWindow.close()
             
-    def create_patient_action_buttons(self, patient_id, row):
+    def create_action_buttons(self, patient_id, row):
         widget = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout()
         layout.setContentsMargins(5, 2, 5, 2)
@@ -118,70 +118,6 @@ class MainController(QMainWindow, Ui_MainWindow):
         widget.setLayout(layout)
         return widget
 
-    def create_appointment_action_buttons(self, appointment_id, row):
-        widget = QtWidgets.QWidget()
-        layout = QtWidgets.QHBoxLayout()
-        layout.setContentsMargins(5, 2, 5, 2)
-        layout.setSpacing(5)
-        
-        # View More Button
-        view_btn2 = QPushButton("View")
-        view_btn2.setMaximumWidth(60)
-        view_btn2.setStyleSheet("""
-            QPushButton {
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #0056b3;
-            }
-        """)
-        
-        # Edit Button
-        edit_btn2 = QPushButton("Edit")
-        edit_btn2.setMaximumWidth(60)
-        edit_btn2.setStyleSheet("""
-            QPushButton {
-                background-color: #28a745;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #1e7e34;
-            }
-        """)
-        
-        # Delete Button
-        delete_btn2 = QPushButton("Delete")
-        delete_btn2.setMaximumWidth(60)
-        delete_btn2.setStyleSheet("""
-            QPushButton {
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #c82333;
-            }
-        """)
-        
-        layout.addWidget(view_btn2)
-        layout.addWidget(edit_btn2)
-        layout.addWidget(delete_btn2)
-        
-        widget.setLayout(layout)
-        return widget
-
     #=========================================================
     #====================LOAD DATAS TO UI=============== start
     
@@ -222,16 +158,16 @@ class MainController(QMainWindow, Ui_MainWindow):
             
 
             patient_id = patient[0]
-            action_widget = self.create_patient_action_buttons(patient_id, row_position)
+            action_widget = self.create_action_buttons(patient_id, row_position)
             self.Patients_table.setCellWidget(row_position, 6, action_widget)
 
-
+          
+            
     def button_clicked(self):
         # Get the button that was clicked
         button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
-
+        name = button.property("Patient ID")
+        QMessageBox.information(self, "Greeting", f"Hello, {name}!")
            
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
@@ -244,10 +180,6 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
             self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
             # the appointment is stored in appointment[0]
-            
-            appointment_id = appointment[0]
-            action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
-            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
     #Appointments TAB=================end
     
     #Billing TAB=================start
