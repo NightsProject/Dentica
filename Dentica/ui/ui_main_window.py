@@ -767,9 +767,9 @@ class Ui_MainWindow(object):
         calendar.setFixedWidth(300) 
         
 
-        self.scheduled_label = QtWidgets.QLabel("Scheduled:")
-        self.completed_label = QtWidgets.QLabel("Completed:")
-        self.cancelled_label = QtWidgets.QLabel("Cancelled:")
+        self.scheduled_label = QtWidgets.QLabel("Scheduled:                                                                 0")
+        self.completed_label = QtWidgets.QLabel("Completed:                                                                0")
+        self.cancelled_label = QtWidgets.QLabel("Cancelled:                                                                  0")
 
         self.scheduled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")   
         self.completed_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
