@@ -24,14 +24,11 @@ class Ui_MainWindow(object):
         self.SidebarFrame.setStyleSheet("background-color: #1F1F21 ; border-right: 1px solid #1F1F21 ;")
         self.SidebarFrame.setObjectName("SidebarFrame")
         
-        
-        
         #User card
         self.UserCard = QtWidgets.QFrame(parent=self.SidebarFrame)
         self.UserCard.setGeometry(QtCore.QRect(20, 600, 220, 150))
         self.UserCard.setStyleSheet("background-color: #B2CDE9 ; border-radius: 10px;")
         self.UserCard.setObjectName("UserCard")
-        
         
         #Dentist Profile
         self.Dentica_profile = QtWidgets.QLabel(parent=self.SidebarFrame)
@@ -92,30 +89,12 @@ class Ui_MainWindow(object):
         self.Dentist_title.setText("Doctor of Dental Surgery (DDS)")
         self.Dentist_title.setObjectName("Dentica")
         
-        #Theme button
-        self.theme_btn = QtWidgets.QPushButton(parent=self.UserCard)
-        self.theme_btn.setGeometry(QtCore.QRect(35, 100, 40, 40))
-        self.theme_btn.setIconSize(QtCore.QSize(25, 25))
-        self.theme_btn.setObjectName("theme_btn")
-        dark_icon = QtGui.QIcon(f"{filepath}Dark.svg")
-        self.theme_btn.setIcon(dark_icon)
-        self.theme_btn.setStyleSheet("""
-        QPushButton {
-                border: none;
-                background-color: #37547A;
-                border-radius: 20px;
-        }
-        QPushButton:hover {
-                background-color: #C6D7EC;
-        }
-        """)
-        self.theme_btn.clicked.connect(self.toggle_theme) 
-         
         #User button
         self.userbtn = QtWidgets.QPushButton(parent=self.UserCard)
-        self.userbtn.setGeometry(QtCore.QRect(85, 100, 40, 40)) 
+        self.userbtn.setGeometry(QtCore.QRect(65, 100, 40, 40)) 
         user_icon = QtGui.QIcon(f"{filepath}User.svg")
         self.userbtn.setIcon(user_icon)
+        self.userbtn.setIconSize(QtCore.QSize(25, 25))
         self.userbtn.setIconSize(QtCore.QSize(25, 25))
         self.userbtn.setStyleSheet("""
         QPushButton {
@@ -130,7 +109,7 @@ class Ui_MainWindow(object):
         
         #Exit button
         self.exitbtn = QtWidgets.QPushButton(parent=self.UserCard)
-        self.exitbtn.setGeometry(QtCore.QRect(135, 100, 40, 40)) 
+        self.exitbtn.setGeometry(QtCore.QRect(115, 100, 40, 40)) 
         exit_icon = QtGui.QIcon(f"{filepath}Exit.svg")
         self.exitbtn.setIcon(exit_icon)
         self.exitbtn.setIconSize(QtCore.QSize(25, 25))
@@ -369,7 +348,24 @@ class Ui_MainWindow(object):
                                  """)
         self.frame.setObjectName("frame")
 
- 
+        #Theme button
+        self.theme_btn = QtWidgets.QPushButton(parent=self.frame)
+        self.theme_btn.setGeometry(QtCore.QRect(780, 23, 40, 40)) 
+        #theme_icon = QtGui.QIcon( DECIDE LNG TA UNSAY ICON )  # Theme icon
+        #self.theme_btn.setIcon(theme_icon)
+        self.theme_btn.setIconSize(QtCore.QSize(25, 25))
+        self.theme_btn.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: red;                 #TEMPORARY COLOR
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.theme_btn.setObjectName("theme_btn")
+        self.theme_btn.clicked.connect(self.toggle_theme)
         
         
         self.label = QtWidgets.QLabel(parent=self.frame)
@@ -706,10 +702,45 @@ class Ui_MainWindow(object):
         self.label_12.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_12.setObjectName("label_12")
 
+        #Notification button 2
+        self.not_btn_2 = QtWidgets.QPushButton(parent=self.frame_4)
+        self.not_btn_2.setGeometry(QtCore.QRect(725, 20, 40, 42))
+        not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
+        self.not_btn_2.setIcon(not_icon)
+        self.not_btn_2.setIconSize(QtCore.QSize(25, 25))
+        self.not_btn_2.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.not_btn_2.setObjectName("not_btn_2")
+
+        #User Button 2
+        self.pushButton_3 = QtWidgets.QPushButton(parent=self.frame_4)
+        self.pushButton_3.setGeometry(QtCore.QRect(765, 20, 40, 42))
+        self.pushButton_3.setText("")
+        self.pushButton_3.setIcon(user_icon)
+        self.pushButton_3.setIconSize(QtCore.QSize(25, 25))
+        self.pushButton_3.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.pushButton_3.setObjectName("pushButton_3")
 
         #Search patient
         self.search_patient = QtWidgets.QLineEdit(parent=self.frame_4)
-        self.search_patient.setGeometry(QtCore.QRect(580, 25, 211, 31))
+        self.search_patient.setGeometry(QtCore.QRect(490, 25, 211, 31))
         self.search_patient.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.search_patient.setReadOnly(False)
         self.search_patient.setObjectName("search_patient")
@@ -767,17 +798,15 @@ class Ui_MainWindow(object):
         QTableWidget {
                 background-color: #C6D7EC;
                 border: none;
-                color: #64748B;
                 gridline-color: transparent;
         }
         QTableWidget::item {
-                border-bottom: 1px solid #8DB8E0;
+                border-bottom: 1px solid #e5e7eb;
                 text-align: center;
         }
         QHeaderView::section {
                 border: none;
-                color: #64748B;
-                background: #C6D7EC;
+                background-color: #C6D7EC;
         }
         """)
         self.Patients_table.horizontalHeader().setStyleSheet("""
@@ -823,10 +852,43 @@ class Ui_MainWindow(object):
         self.label_13.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_13.setObjectName("label_13")
 
+        #Notification button 3
+        self.not_btn_3 = QtWidgets.QPushButton(parent=self.app_frame)
+        self.not_btn_3.setGeometry(QtCore.QRect(685, 20, 40, 42))
+        self.not_btn_3.setIcon(not_icon)
+        self.not_btn_3.setIconSize(QtCore.QSize(25, 25))
+        self.not_btn_3.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.not_btn_3.setObjectName("not_btn_3")
+
+        #User button 3
+        self.pushButton_4 = QtWidgets.QPushButton(parent=self.app_frame)
+        self.pushButton_4.setGeometry(QtCore.QRect(725, 20, 40, 42))
+        self.pushButton_4.setIcon(user_icon)
+        self.pushButton_4.setIconSize(QtCore.QSize(25, 25))
+        self.pushButton_4.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.pushButton_4.setObjectName("pushButton_4")
 
         #Search Appointment
         self.Search_app = QtWidgets.QLineEdit(parent=self.app_frame)
-        self.Search_app.setGeometry(QtCore.QRect(540, 25, 211, 31))
+        self.Search_app.setGeometry(QtCore.QRect(450, 25, 211, 31))
         self.Search_app.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.Search_app.setReadOnly(False)
         self.Search_app.setObjectName("Search_app")
@@ -872,12 +934,10 @@ class Ui_MainWindow(object):
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
-                color: #64748B;
         }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
-                color: #64748B;
         }
         """)
         item = QtWidgets.QTableWidgetItem()
@@ -894,17 +954,16 @@ class Ui_MainWindow(object):
         QHeaderView::section {
                 font-family: "Inter"; 
                 font-size: 14px;        
-                color: #64748B;   
-                background-color: #C6D7EC;            
+                color: #64748B;               
         }
         """)
         
         #Appointment table sizing
-        self.Appointments_table.setColumnWidth(0, 105)  # App. ID 
+        self.Appointments_table.setColumnWidth(0, 100)  # App. ID 
         self.Appointments_table.setColumnWidth(1, 204)  # Pat. Name
         self.Appointments_table.setColumnWidth(2, 150)  # Date
         self.Appointments_table.setColumnWidth(3, 200)  # Status
-        self.Appointments_table.setColumnWidth(4, 120)  # Treatment
+        self.Appointments_table.setColumnWidth(4, 125)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
 
@@ -1032,9 +1091,45 @@ class Ui_MainWindow(object):
         self.label_14.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_14.setObjectName("label_14")
 
+        #Notification button 4
+        self.not_btn_4 = QtWidgets.QPushButton(parent=self.Bill_frame)
+        self.not_btn_4.setGeometry(QtCore.QRect(725, 20, 40, 42))
+        self.not_btn_4.setText("")
+        self.not_btn_4.setIcon(not_icon)
+        self.not_btn_4.setIconSize(QtCore.QSize(25, 25))
+        self.not_btn_4.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.not_btn_4.setObjectName("not_btn_4")
+
+        #User button 4
+        self.pushButton_10 = QtWidgets.QPushButton(parent=self.Bill_frame)
+        self.pushButton_10.setGeometry(QtCore.QRect(765, 20, 40, 42))
+        self.pushButton_10.setText("")
+        self.pushButton_10.setIcon(user_icon)
+        self.pushButton_10.setIconSize(QtCore.QSize(25, 25))
+        self.pushButton_10.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.pushButton_10.setObjectName("pushButton_10")
+
         #Search bill
         self.Search_bill = QtWidgets.QLineEdit(parent=self.Bill_frame)
-        self.Search_bill.setGeometry(QtCore.QRect(580, 25, 211, 31))
+        self.Search_bill.setGeometry(QtCore.QRect(490, 25, 211, 31))
         self.Search_bill.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.Search_bill.setReadOnly(False)
         self.Search_bill.setObjectName("Search_bill")
@@ -1079,12 +1174,10 @@ class Ui_MainWindow(object):
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
-                color: #64748B;
         }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
-                color: #64748B;
         }
         """)
         item = QtWidgets.QTableWidgetItem()
@@ -1243,7 +1336,45 @@ class Ui_MainWindow(object):
         self.label_15.setFont(font)
         self.label_15.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
         self.label_15.setObjectName("label_15")
+        
 
+        
+        #Notification button 5
+        self.not_btn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
+        self.not_btn_5.setGeometry(QtCore.QRect(830, 23, 40, 40))
+        not_icon = QtGui.QIcon(f"{filepath}Notification.svg")
+        self.not_btn_5.setIcon(not_icon)
+        self.not_btn_5.setIconSize(QtCore.QSize(25, 25))
+        self.not_btn_5.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.not_btn_5.setObjectName("not_btn_5")
+
+        #User button 5
+        self.userbtn_5 = QtWidgets.QPushButton(parent=self.Reports_topbar_frame)
+        self.userbtn_5.setGeometry(QtCore.QRect(880, 23, 40, 40))
+        user_icon = QtGui.QIcon(f"{filepath}User.svg")
+        self.userbtn_5.setIcon(user_icon)
+        self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
+        self.userbtn_5.setIconSize(QtCore.QSize(25, 25))
+        self.userbtn_5.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background: transparent;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #37547A;
+        }
+        """)
+        self.userbtn.setObjectName("userbtn_5")
         
         #Reports table frame
         self.Reports_table_frame = QtWidgets.QFrame(parent=self.Reports_page)
@@ -1394,16 +1525,14 @@ class Ui_MainWindow(object):
                 btn.setChecked(btn == button)
     
     def __init__(self):
-        self.dark_mode = False  
+        self.dark_mode = False  # Track current theme state
     
     def toggle_theme(self):
         # Switch themes
         self.dark_mode = not self.dark_mode
-        dark_icon = QtGui.QIcon(f"{filepath}Dark.svg")
-        light_icon = QtGui.QIcon(f"{filepath}Light.svg")
-        self.apply_theme(light_icon, dark_icon)
+        self.apply_theme()
 
-    def apply_theme(self, light_icon, dark_icon):
+    def apply_theme(self):
         if self.dark_mode:
                 # Dark theme colors
                 sidebar_bg = "#1F1F21"
@@ -1416,10 +1545,7 @@ class Ui_MainWindow(object):
                 table_bg = "#3D3D3D"
                 table_text = "#FFFFFF"
                 table_header = "#3D3D3D"
-                button = "#1F1F21"
-                self.theme_btn.setIcon(light_icon)
-                
-
+                test = "red"
         else:
                 # Original/Light color
                 sidebar_bg = "#1F1F21"
@@ -1432,9 +1558,7 @@ class Ui_MainWindow(object):
                 table_bg = "#C6D7EC"
                 table_text = "#64748B"
                 table_header = "#C6D7EC"
-                button = "#0E283F"
-                self.theme_btn.setIcon(dark_icon)
-
+                test = "blue"
 
         self.SidebarFrame.setStyleSheet(f"""
                 background-color: {sidebar_bg}; 
@@ -1446,9 +1570,6 @@ class Ui_MainWindow(object):
                 background: {main_bg};
                 color: {main_text};
         """)
-        
-        #Apply to user card
-        self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
         for frame in [self.frame, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
@@ -1504,19 +1625,14 @@ class Ui_MainWindow(object):
         for table in tables:
                 table.horizontalHeader().setStyleSheet(f"""
                         QHeaderView::section {{
-                        background: {table_header};  
-                        font-family: "Inter"; 
-                        font-size: 14px;        
-                        color: {table_text};                    
+                        background: {table_header};                     
                         }}
-                        """) 
+                        """)
                 table.setStyleSheet(f"""
                 QTableWidget {{
                         background-color: {table_bg};
                         border: none;
                         color: {table_text};
-                        gridline-color: transparent;
-
                 }}
                 QTableWidget::item {{
                         border-bottom: 1px solid {button_hover};
@@ -1572,7 +1688,7 @@ class Ui_MainWindow(object):
         add_buttons = [self.add_icon, self.AddApp_btn, self.AddBill_btn]
         for btn in add_buttons:
                 btn.setStyleSheet(f"""
-                background-color: {button};
+                background-color: {sidebar_bg};
                 border-radius: 8px;
                 color: {sidebar_text};
                 """)
