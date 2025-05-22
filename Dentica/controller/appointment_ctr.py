@@ -1,8 +1,12 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QMessageBox
 from ui.Dialogues.ui_appointment_dialog import Add_Appointment
 from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db
 from controller.treatment_ctr import Treatment_Dialog_Ctr
+
+
+
 class Appointment_Dialog_Ctr(Add_Appointment):
     
     appointment_details = pyqtSignal(str, str, str)
@@ -47,6 +51,11 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
 
     def on_add_pressed(self):
+        
+        if not self.treatments:
+            QMessageBox.warning(self, "No Treatments", "You must add at least one treatment before saving the appointment.")
+            return  # 🛑 Stop if no treatments
+
         app_id = self.appointment_input.text()
         pat_id = self.patient_input.text()
         
