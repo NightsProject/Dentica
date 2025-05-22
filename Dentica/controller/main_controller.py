@@ -52,7 +52,178 @@ class MainController(QMainWindow, Ui_MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
+  
+    
+    #=========================================================
+    #====================HANDLE CREDENTIALS================= start
+    # This function is called when the user submits the login form
+    # It receives the credentials and attempts to connect to the database
+    # If successful, it loads the data into the UI
+    # If not, it shows an error message
+    # It also handles the case where the connection is None
+    def handle_credentials(self, host, port, user, password, databaseName):
+        print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
+        
+        try:
+            connection = connectDBF(host, port, user, password, databaseName)
+            if not connection:
+                raise Exception("Connection returned None")
             
+            print(f"Successfully connected to {databaseName} database")
+            
+         
+            set_credentials(host,port, user, password, databaseName)
+            if connection:
+                createAllTables(connection)
+
+                summary_data = load_summary()
+                todays_appointment_status = get_todays_appointment_status_counts()
+                self.update_summary(summary_data, todays_appointment_status)
+
+                todays_appointments_list = get_todays_appointments()
+                self.update_todays_appointments_table(todays_appointments_list)
+
+                all_patients_list = get_all_patients()
+                self.update_patients_list(all_patients_list)
+                
+                all_appointments_list = get_all_appointments_with_treatment_count()
+                self.update_appointments_list(all_appointments_list)
+
+                all_billings_list = get_all_billings()
+                self.update_billing_list(all_billings_list)
+            
+            connection.close()
+            
+        except mysql.connector.InterfaceError as e:
+            print("MySQL Interface Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.DatabaseError as e:
+            print("MySQL Database Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.ProgrammingError as e:
+            print("MySQL Programming Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.OperationalError as e:
+            print("MySQL Operational Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.IntegrityError as e:
+            print("MySQL Integrity Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.DataError as e:
+            print("MySQL Data Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.NotSupportedError as e:
+            print("MySQL Not Supported Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.Error as e:
+            print("MySQL Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except Exception as e:
+            print("Unexpected Error:", e)
+            QMessageBox.critical(None, "Error", str(e))
+    #====================HANDLE CREDENTIALS================= end
+    #===========================================================
+
+
+          
+    
+    #=========================================================
+    #====================LOAD DATAS TO UI=============== start
+    # This function is called to load data into the UI
+    # It receives the data and updates the UI elements accordingly
+    # It updates the summary, today's appointments, patients, appointments, and billing tables
+    # It also handles the case where the connection is None
+    # It uses the functions from the backend to get the data
+    # It also handles the case where the connection is None
+    
+    #DASHBOARD TAB=============== start
+    def update_summary(self, data, status):
+        self.label_5.setText(str(data[0]))
+        self.label_6.setText(str(data[1]))
+        self.label_7.setText(str(data[2]))
+        self.label_9.setText(str(data[3]))
+        
+        #update the chart values
+        
+    #update_todays_appointments_table
+    # This function updates the table with today's appointments
+    # It receives the appointments data and populates the table
+    # It sets the row count to 0 and then inserts rows for each appointment
+    # It sets the items for each column in the row
+    # It uses the appointment data to set the values for each column
+    def update_todays_appointments_table(self, appointments):   
+        
+        self.UpAp_table.setRowCount(0)
+        for appointment in appointments:
+            row_position = self.UpAp_table.rowCount()
+            self.UpAp_table.insertRow(row_position)
+
+            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))  # Appointment ID
+            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
+            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
+            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
+            self.UpAp_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
+    #DASHBOARD TAB================ end
+    
+    #PATIENTS TAB=================start
+    def reload_patient_table(self):
+        all_patients = get_all_patients()
+        self.update_patients_list(all_patients)
+
+    def update_patients_list(self, patients):
+        self.Patients_table.setRowCount(0)
+        for patient in patients:
+            row_position = self.Patients_table.rowCount()
+            self.Patients_table.insertRow(row_position)
+            self.Patients_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(patient[1])))
+            self.Patients_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(patient[2])))
+            self.Patients_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(patient[3])))
+            self.Patients_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(patient[4])))
+            self.Patients_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(patient[5])))
+            self.Patients_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(patient[6])))
+            
+
+            patient_id = patient[0]
+            action_widget = self.create_patient_action_buttons(patient_id, row_position)
+            self.Patients_table.setCellWidget(row_position, 6, action_widget)
+
+           
+    #Appointments TAB=================start
+    def update_appointments_list(self, appointments):
+        self.Appointments_table.setRowCount(0)
+        for appointment in appointments:
+            row_position = self.Appointments_table.rowCount()
+            self.Appointments_table.insertRow(row_position)
+            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))
+            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))
+            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
+            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
+            # the appointment is stored in appointment[0]
+            
+            appointment_id = appointment[0]
+            action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
+            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
+    #Appointments TAB=================end
+    
+    #Billing TAB=================start
+    def update_billing_list(self, billings):
+        self.Billing_table.setRowCount(0)
+        for billing in billings:
+            row_position = self.Billing_table.rowCount()
+            self.Billing_table.insertRow(row_position)
+            self.Billing_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(billing[0])))
+            self.Billing_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(billing[1])))
+            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(billing[2])))
+            self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
+            self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
+            self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
+    #Billing TAB=================end
+           
+    #====================LOAD DATAS TO UI=============== end
+    #=======================================================
+    
+    
+
     #=========================================================
     #====================ACTION BUTTONS================= start
     # This function creates action buttons for each patient/appointment in the table
@@ -239,171 +410,3 @@ class MainController(QMainWindow, Ui_MainWindow):
     #====================ACTION BUTTONS================= end
     #=======================================================
     
-    
-    
-    #=========================================================
-    #====================LOAD DATAS TO UI=============== start
-    # This function is called to load data into the UI
-    # It receives the data and updates the UI elements accordingly
-    # It updates the summary, today's appointments, patients, appointments, and billing tables
-    # It also handles the case where the connection is None
-    # It uses the functions from the backend to get the data
-    # It also handles the case where the connection is None
-    
-    #DASHBOARD TAB=============== start
-    def update_summary(self, data, status):
-        self.label_5.setText(str(data[0]))
-        self.label_6.setText(str(data[1]))
-        self.label_7.setText(str(data[2]))
-        self.label_9.setText(str(data[3]))
-        
-        #update the chart values
-        
-    #update_todays_appointments_table
-    # This function updates the table with today's appointments
-    # It receives the appointments data and populates the table
-    # It sets the row count to 0 and then inserts rows for each appointment
-    # It sets the items for each column in the row
-    # It uses the appointment data to set the values for each column
-    def update_todays_appointments_table(self, appointments):   
-        
-        self.UpAp_table.setRowCount(0)
-        for appointment in appointments:
-            row_position = self.UpAp_table.rowCount()
-            self.UpAp_table.insertRow(row_position)
-
-            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))  # Appointment ID
-            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
-            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
-            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
-            self.UpAp_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
-    #DASHBOARD TAB================ end
-    
-    #PATIENTS TAB=================start
-    def reload_patient_table(self):
-        all_patients = get_all_patients()
-        self.update_patients_list(all_patients)
-
-    def update_patients_list(self, patients):
-        self.Patients_table.setRowCount(0)
-        for patient in patients:
-            row_position = self.Patients_table.rowCount()
-            self.Patients_table.insertRow(row_position)
-            self.Patients_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(patient[1])))
-            self.Patients_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(patient[2])))
-            self.Patients_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(patient[3])))
-            self.Patients_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(patient[4])))
-            self.Patients_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(patient[5])))
-            self.Patients_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(patient[6])))
-            
-
-            patient_id = patient[0]
-            action_widget = self.create_patient_action_buttons(patient_id, row_position)
-            self.Patients_table.setCellWidget(row_position, 6, action_widget)
-
-           
-    #Appointments TAB=================start
-    def update_appointments_list(self, appointments):
-        self.Appointments_table.setRowCount(0)
-        for appointment in appointments:
-            row_position = self.Appointments_table.rowCount()
-            self.Appointments_table.insertRow(row_position)
-            self.Appointments_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))
-            self.Appointments_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))
-            self.Appointments_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))
-            self.Appointments_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))
-            # the appointment is stored in appointment[0]
-            
-            appointment_id = appointment[0]
-            action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
-            self.Appointments_table.setCellWidget(row_position, 4, action_widget)
-    #Appointments TAB=================end
-    
-    #Billing TAB=================start
-    def update_billing_list(self, billings):
-        self.Billing_table.setRowCount(0)
-        for billing in billings:
-            row_position = self.Billing_table.rowCount()
-            self.Billing_table.insertRow(row_position)
-            self.Billing_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(billing[0])))
-            self.Billing_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(billing[1])))
-            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(billing[2])))
-            self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
-            self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
-            self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
-    #Billing TAB=================end
-           
-    #====================LOAD DATAS TO UI=============== end
-    #=======================================================
-    
-    
-    
-    #=========================================================
-    #====================HANDLE CREDENTIALS================= start
-    # This function is called when the user submits the login form
-    # It receives the credentials and attempts to connect to the database
-    # If successful, it loads the data into the UI
-    # If not, it shows an error message
-    # It also handles the case where the connection is None
-    def handle_credentials(self, host, port, user, password, databaseName):
-        print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
-        
-        try:
-            connection = connectDBF(host, port, user, password, databaseName)
-            if not connection:
-                raise Exception("Connection returned None")
-            
-            print(f"Successfully connected to {databaseName} database")
-            
-         
-            set_credentials(host,port, user, password, databaseName)
-            if connection:
-                createAllTables(connection)
-
-                summary_data = load_summary()
-                todays_appointment_status = get_todays_appointment_status_counts()
-                self.update_summary(summary_data, todays_appointment_status)
-
-                todays_appointments_list = get_todays_appointments()
-                self.update_todays_appointments_table(todays_appointments_list)
-
-                all_patients_list = get_all_patients()
-                self.update_patients_list(all_patients_list)
-                
-                all_appointments_list = get_all_appointments_with_treatment_count()
-                self.update_appointments_list(all_appointments_list)
-
-                all_billings_list = get_all_billings()
-                self.update_billing_list(all_billings_list)
-            
-            connection.close()
-            
-        except mysql.connector.InterfaceError as e:
-            print("MySQL Interface Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.DatabaseError as e:
-            print("MySQL Database Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.ProgrammingError as e:
-            print("MySQL Programming Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.OperationalError as e:
-            print("MySQL Operational Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.IntegrityError as e:
-            print("MySQL Integrity Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.DataError as e:
-            print("MySQL Data Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.NotSupportedError as e:
-            print("MySQL Not Supported Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.Error as e:
-            print("MySQL Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except Exception as e:
-            print("Unexpected Error:", e)
-            QMessageBox.critical(None, "Error", str(e))
-    #====================HANDLE CREDENTIALS================= end
-    #===========================================================
