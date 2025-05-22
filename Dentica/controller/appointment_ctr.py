@@ -28,7 +28,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         
         # --- load all patients once ---
        
-        self.all_patients = get_patients_name()
+        
         self.patient_input.setMaxVisibleItems(10)
         self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
         self.patient_input.setEditable(True)
@@ -45,6 +45,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             print("Warning: patient_input.lineEdit() is None. Search functionality may not work.")
 
     def update_patient_search(self, text):
+        self.all_patients = get_patients_name()
         combo = self.patient_input
         edit = self.patient_input_line_edit
 

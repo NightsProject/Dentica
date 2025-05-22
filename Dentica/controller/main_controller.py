@@ -14,8 +14,8 @@ from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
-from backend.patients_comp import get_all_patients, generate_new_patient_id
-from backend.appointments_comp import get_all_appointments_with_treatment_count
+from backend.patients_comp import get_all_patients, perform_patient_deletion
+from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
 
 filepath = "Dentica/ui/icons/"
@@ -349,10 +349,31 @@ class MainController(QMainWindow, Ui_MainWindow):
         patient_id = button.property("Patient ID")
         QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
 
+ 
     def delete_patient(self):
         button = self.sender()
         patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+
+        # Create confirmation dialog
+        reply = QMessageBox.question(
+            self,
+            "Confirm Deletion",
+            f"Are you sure you want to delete the patient with ID: {patient_id} along with all associated records?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            # Proceed with deletion
+            success = perform_patient_deletion(patient_id)
+            if success:
+                QMessageBox.information(self, "Success", "Patient deleted successfully along with all associated records.")
+                self.reload_all_tables()  # Refresh the patient list
+            else:
+                QMessageBox.warning(self, "Failure", "Failed to delete patient.")
+        else:
+            # Deletion canceled
+            print("Deletion canceled.")
 
     # Create action buttons for appointments
     def create_appointment_action_buttons(self, appointment_id, row):
@@ -425,7 +446,29 @@ class MainController(QMainWindow, Ui_MainWindow):
     def delete_appointment(self):
         button = self.sender()
         appointment_id = button.property("Appointment ID")
-        QMessageBox.information(self, "Delete", f"Deleting appointment ID: {appointment_id}")
+
+        # Create confirmation dialog
+        reply = QMessageBox.question(
+            self,
+            "Confirm Deletion",
+            f"Are you sure you want to delete the appointment with ID: {appointment_id} along with the all associated treatments?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            # Proceed with deletion
+            success = perform_appointment_deletion(appointment_id)
+            if success:
+                QMessageBox.information(self, "Success", "Appointment deleted successfully along with the all associated treatments.")
+                self.reload_all_tables()  # Refresh the appointments list
+            else:
+                QMessageBox.warning(self, "Failure", "Failed to delete appointment.")
+                #TODO inform for like cannot delete cause foreign key contraints or treatments exists under the appointment
+        else:
+            # Deletion canceled
+            print("Deletion canceled.")
+
     #====================ACTION BUTTONS================= end
     #=======================================================
     

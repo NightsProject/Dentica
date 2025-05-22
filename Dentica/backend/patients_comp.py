@@ -109,3 +109,59 @@ def insert_patient(
         conn.close()
     return success
 
+# Function to delete a patient from the database and its assiocated datas
+# This function takes a patient ID as a parameter and deletes the corresponding record from the Patient table.
+
+def perform_patient_deletion(patient_id):
+    conn = connectDB()
+    cursor = conn.cursor()
+    try:
+        # Delete all treatments related to appointments of the patient
+        cursor.execute("""
+            DELETE t FROM Treatment t
+            JOIN Appointment a ON t.Appointment_ID = a.Appointment_ID
+            WHERE a.Patient_ID = %s
+        """, (patient_id,))
+
+        # Delete all appointments of the patient
+        cursor.execute("""
+            DELETE FROM Appointment
+            WHERE Patient_ID = %s
+        """, (patient_id,))
+
+        # Delete all bookings related to the patient
+        cursor.execute("""
+            DELETE FROM Books
+            WHERE Patient_ID = %s
+        """, (patient_id,))
+
+        # Delete all cancellations related to the patient
+        cursor.execute("""
+            DELETE FROM Cancel
+            WHERE Patient_ID = %s
+        """, (patient_id,))
+
+        # Delete all payments related to the patient
+        cursor.execute("""
+            DELETE FROM Pays
+            WHERE Patient_ID = %s
+        """, (patient_id,))
+
+        # Finally, delete the patient
+        cursor.execute("""
+            DELETE FROM Patient
+            WHERE Patient_ID = %s
+        """, (patient_id,))
+
+        conn.commit()
+        success = True
+    except Exception as e:
+        print("Delete Patient Error:", e)
+        import traceback
+        traceback.print_exc()
+        conn.rollback()
+        success = False
+    finally:
+        cursor.close()
+        conn.close()
+    return success

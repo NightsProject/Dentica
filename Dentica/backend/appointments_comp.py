@@ -128,4 +128,40 @@ def save_appointment_to_db(appointment_data):
         conn.close()
         
         
+from backend.DB import connectDB
+
+
+
+
+def perform_appointment_deletion(appointment_id):
+    conn = connectDB()
+    cursor = conn.cursor()
+    try:
+        # Delete all treatments related to the appointment first
+        cursor.execute("""
+            DELETE FROM Treatment
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+        
+        # Delete the appointment itself
+        cursor.execute("""
+            DELETE FROM Appointment
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+
+        conn.commit()
+        success = True
+    except Exception as e:
+        print("Delete Appointment Error:", e)
+        import traceback
+        traceback.print_exc()
+        conn.rollback()
+        success = False
+    finally:
+        cursor.close()
+        conn.close()
+    return success
+
+
+
         
