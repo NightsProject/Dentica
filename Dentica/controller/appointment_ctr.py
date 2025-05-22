@@ -81,7 +81,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
 
             
-       
+       #TODO validation for all fields in appointments form
 
         
         

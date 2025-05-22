@@ -28,7 +28,7 @@ class Treatment_Dialog_Ctr(Add_Treatment):
         #ToDO
         #notify in the login panel for succesful or failed connection
         #database created succesfully if not exists
-            
+        #TODO Validation to all fields in treatments form
   
        
             
