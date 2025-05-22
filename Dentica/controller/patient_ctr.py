@@ -109,4 +109,3 @@ class Patient_Dialog_Ctr(Add_Patient):
         
             
         
-    #TODO make a validation in real time on each input field

@@ -1952,3 +1952,5 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
+        #TODO all tables should not be editable
+        #TODO all column in a row should be selectable

@@ -39,7 +39,6 @@ class Add_Appointment(QtWidgets.QDialog):
         add_row(0, "Appointment ID:", self.appointment_input)
 
         self.patient_input = QtWidgets.QLineEdit(self)
-        self.patient_input.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
         add_row(1, "Patient ID:", self.patient_input)
 
         self.AddPatient_btn = QtWidgets.QPushButton("Add Patient", self)
@@ -52,15 +51,22 @@ class Add_Appointment(QtWidgets.QDialog):
         self.schedule_input.setDateTime(QtCore.QDateTime.currentDateTime())
         add_row(2, "Schedule:", self.schedule_input)
 
+        self.status_input = QtWidgets.QComboBox(self)
+        self.status_input.setGeometry(input_x, row_start + 3 * row_height, 160, 22)
+        self.status_input.addItems(["Scheduled", "Completed", "Cancelled"])
+        
+        label = QtWidgets.QLabel("Status:", self)
+        label.setGeometry(label_x, row_start + 3 * row_height, 120, 20)
+        label.setStyleSheet(label_style)
+        
         self.AddTreat_btn = QtWidgets.QPushButton("Add Treatment", self)
         self.AddTreat_btn.setGeometry(400, row_start + 3 * row_height, 120, 30)
         self.AddTreat_btn.setStyleSheet("background-color: #37547A; color: #fff;")
-        self.AddTreat_btn.clicked.connect(self.add_treat_form)
-
+      
         self.Treat_table = QtWidgets.QTableWidget(self)
         self.Treat_table.setGeometry(20, 220, 300, 280)
-        self.Treat_table.setColumnCount(3)
-        self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost"])
+        self.Treat_table.setColumnCount(4)
+        self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost", "Actions"])
         self.Treat_table.setStyleSheet("""
             QTableWidget {
                 background-color: #B2CDE9;
@@ -102,10 +108,6 @@ class Add_Appointment(QtWidgets.QDialog):
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
         patient_popup.exec()
-
-    def add_treat_form(self):
-        treat_popup = Treatment_Dialog_Ctr()
-        treat_popup.exec()
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:

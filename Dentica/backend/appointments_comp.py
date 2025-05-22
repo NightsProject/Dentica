@@ -31,3 +31,57 @@ def get_all_appointments_with_treatment_count():
     
     print(all_appointments)
     return all_appointments
+
+def generate_new_appointment_id():
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT Appointment_ID 
+        FROM Appointment 
+        ORDER BY CAST(SUBSTRING(Appointment_ID, 2) AS UNSIGNED) DESC 
+        LIMIT 1
+    """)
+
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if result:
+        last_id = int(result[0][1:])  # Remove the 'A' and convert the number part
+        new_id_num = last_id + 1
+    else:
+        new_id_num = 1  # Start from 1 if there are no appointments yet
+
+    new_appointment_id = f'A{new_id_num:05d}'  # Zero-padded to 5 digits
+    return new_appointment_id
+
+
+
+
+
+
+def save_appointment_to_db(appointment_data):
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            INSERT INTO Appointment (Appointment_ID, Patient_ID, Schedule, Status)
+            VALUES (%s, %s, %s, %s)
+        """, (appointment_data["Appointment_ID"], appointment_data["Patient_ID"], appointment_data["Schedule"], appointment_data["Status"]))
+
+        for treatment in appointment_data["Treatments"]:
+            cursor.execute("""
+                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (treatment["Appointment_ID"], treatment["Treatment_ID"], treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"]))
+
+        conn.commit()
+    except Exception as e:
+        print(e)
+        #ToDO
+        #error handling
+    finally:
+        cursor.close()
+        conn.close()

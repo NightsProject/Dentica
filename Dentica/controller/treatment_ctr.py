@@ -3,20 +3,27 @@ from ui.Dialogues.ui_treatment_dialog import Add_Treatment
 
 class Treatment_Dialog_Ctr(Add_Treatment):
     
-    credentialsSubmitted = pyqtSignal(str, str, str, str, str)
-
+    treatment_added = pyqtSignal(dict)
+    
     def __init__(self):
         super().__init__()
-        self.add_btn.clicked.connect(self.on_login_pressed)
+        self.cost_input.setText("0.00")
         
-    def on_login_pressed(self):
-        id = self.treat_id_input.text()
-        diagnosis = self.diagnosis_input.text()
-        procedure = self.procedure_input.text()
-        schedule = self.sched_input.dateTime()
-        cost = self.cost_input.text()
-        
-        self.credentialsSubmitted.emit(id, diagnosis, procedure, schedule, cost)
+        self.add_btn.clicked.connect(self.on_add_treatment_clicked)
+        self.cancel_btn.clicked.connect(self.reject)
+
+    def on_add_treatment_clicked(self):
+        treatment_data = {
+            "Treatment_ID": self.treat_id_input.text(),
+            "Diagnosis": self.diagnosis_input.text(),
+            "Cost": float(self.cost_input.text()),
+            "Treatment_Procedure": self.procedure_input.text(),
+            "Treatment_Date_Time": self.sched_input.dateTime().toPyDateTime(),
+            #"Treatment_Status": self.status_combo.currentText()
+        }
+        self.treatment_added.emit(treatment_data)  # 🚀 Emit the signal
+        print("Treatment data emitted:", treatment_data)    
+        self.close()
         
         #ToDO
         #notify in the login panel for succesful or failed connection
