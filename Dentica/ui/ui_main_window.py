@@ -422,8 +422,8 @@ class Ui_MainWindow(object):
         layout = QVBoxLayout()
         self.dash_graph.setLayout(layout)
         labels = ['Scheduled', 'Completed', 'Cancelled']
-        values = [15, 50, 10]
-        donut_chart = DonutChart(labels, values)
+        chart_values = [15, 50, 10]
+        donut_chart = DonutChart(labels, chart_values)
         layout.addWidget(self.graph_label)
         layout.addWidget(donut_chart)
         

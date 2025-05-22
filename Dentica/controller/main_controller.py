@@ -1,7 +1,7 @@
 #format: class
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PyQt6 import QtCore, QtGui, QtWidgets
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
@@ -13,11 +13,12 @@ from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
-from backend.dashboard_comp import load_summary, get_todays_appointments
+from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
 from backend.patients_comp import get_all_patients, generate_new_patient_id
 from backend.appointments_comp import get_all_appointments_with_treatment_count
 from backend.billing_comp import get_all_billings
 
+from Frontend.Graphs.Appointment_status import DonutChart
 filepath = "Dentica/ui/icons/"
 
 
@@ -248,14 +249,22 @@ class MainController(QMainWindow, Ui_MainWindow):
     # It also handles the case where the connection is None
     # It uses the functions from the backend to get the data
     # It also handles the case where the connection is None
+    
     #DASHBOARD TAB=============== start
-    def update_summary(self, data):
+    def update_summary(self, data, status):
         self.label_5.setText(str(data[0]))
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
         self.label_9.setText(str(data[3]))
         
+        #update the chart values
         
+    #update_todays_appointments_table
+    # This function updates the table with today's appointments
+    # It receives the appointments data and populates the table
+    # It sets the row count to 0 and then inserts rows for each appointment
+    # It sets the items for each column in the row
+    # It uses the appointment data to set the values for each column
     def update_todays_appointments_table(self, appointments):   
         
         self.UpAp_table.setRowCount(0)
@@ -352,7 +361,8 @@ class MainController(QMainWindow, Ui_MainWindow):
                 createAllTables(connection)
 
                 summary_data = load_summary()
-                self.update_summary(summary_data)
+                todays_appointment_status = get_todays_appointment_status_counts()
+                self.update_summary(summary_data, todays_appointment_status)
 
                 todays_appointments_list = get_todays_appointments()
                 self.update_todays_appointments_table(todays_appointments_list)
