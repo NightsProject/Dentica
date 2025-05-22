@@ -3,30 +3,33 @@ from mysql.connector import Error
 
 
 #  store the credentials globally
-def set_credentials(host, user, password, database):
-    global HOST, USER, PASSWORD, DATABASE_NAME
+def set_credentials(host, port, user, password, database):
+    global HOST, PORT, USER, PASSWORD, DATABASE_NAME
     HOST = host
+    PORT = port
     USER = user
     PASSWORD = password
     DATABASE_NAME = database
 
 
 #try to connect to the database once
-def connectDBF(host, user, password, databaseName):
+def connectDBF(host, port, user, password, databaseName):
     try:
         connection = mysql.connector.connect(
             host=host,
+            port=port,
             user=user,
             password=password,
-            database=databaseName
+            database=databaseName,
+            use_pure= True
         )
+        print('here')
         if connection.is_connected():
             return connection
     except Error as e:
-        pass
-        #ToDO
-        #error handling
-    
+        print(f"Database connection error: {e}")
+        raise  # Reraise the exception so the caller can handle it properly
+
     return None
     
     
@@ -35,23 +38,20 @@ def connectDB():
     try:
         connection = mysql.connector.connect(
             host=HOST,
+            port=PORT,
             user=USER,
             password=PASSWORD,
-            database=DATABASE_NAME
+            database=DATABASE_NAME,
+            use_pure=True
         )
         if connection.is_connected():
             return connection
     except Error as e:
-        pass
+        print(e)
         #ToDO
         #error handling
     
     return None
-
-
-
-
-
 
 
 def createAllTables(conn):
@@ -142,8 +142,8 @@ def createAllTables(conn):
             Payment_ID VARCHAR(7) NOT NULL,
             Patient_ID VARCHAR(6) NOT NULL,
             Appointment_ID VARCHAR(6) NOT NULL,
-            Amount_Paid DECIMAL(10, 4) NOT NULL,
-            Payment_Method ENUM('Cash', 'Card', 'GCash') NOT NULL,
+            Total_Amount DECIMAL(10, 4) NOT NULL,
+            Payment_Method ENUM('Cash', 'Card', 'GCash', 'None') NOT NULL,
             Payment_Status ENUM('Paid','Unpaid') NOT NULL,
             
             PRIMARY KEY (Payment_ID),
