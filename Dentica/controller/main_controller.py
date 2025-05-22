@@ -47,6 +47,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
+        patient_popup.patient_added.connect(self.reload_patient_table) 
         patient_popup.exec()
         
     def confirm_exit(MainWindow):
@@ -208,6 +209,10 @@ class MainController(QMainWindow, Ui_MainWindow):
     #DASHBOARD TAB================ end
     
     #PATIENTS TAB=================start
+    def reload_patient_table(self):
+        all_patients = get_all_patients()
+        self.update_patients_list(all_patients)
+
     def update_patients_list(self, patients):
         self.Patients_table.setRowCount(0)
         for patient in patients:

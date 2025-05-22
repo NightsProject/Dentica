@@ -2,11 +2,13 @@ from ui.Dialogues.ui_patient_dialog import Add_Patient
 from backend.patients_comp import generate_new_patient_id, insert_patient, get_all_patients
 
 from PyQt6.QtGui import QRegularExpressionValidator
-from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtCore import QRegularExpression, pyqtSignal
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 
+
 class Patient_Dialog_Ctr(Add_Patient):
+    patient_added = pyqtSignal()
     
 
     def __init__(self):
@@ -100,10 +102,9 @@ class Patient_Dialog_Ctr(Add_Patient):
 
         success = insert_patient(patient_id, first_name, middle_name, last_name, gender, birth_date, contact_number, email, address)
         if success:
-            all_patients = get_all_patients()
-            
+            self.patient_added.emit()
             QMessageBox.information(self, "Success", "Patient added successfully!")
-            self.accept()  # Close the dialog
+            self.accept()  
 
         
             
