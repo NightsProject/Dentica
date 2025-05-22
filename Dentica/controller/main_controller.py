@@ -10,7 +10,6 @@ import mysql.connector
 from ui.Dialogues.ui_exit_dialog import Exit_App
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
-from controller.user_login_ctr import User_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
@@ -29,7 +28,6 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
-        # self.settings_btn.clicked.connect(lambda: self.user_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
@@ -39,10 +37,6 @@ class MainController(QMainWindow, Ui_MainWindow):
         login_popup.credentialsSubmitted.connect(self.handle_credentials)
         login_popup.exec()
     
-    def user_login_popup(self):
-        user_popup = User_Dialog_Ctr()
-        user_popup.exec()
-        
     def open_appointment(self):
         app_popup = Appointment_Dialog_Ctr()
         #app_popup.appointment_details.connect()
@@ -58,6 +52,16 @@ class MainController(QMainWindow, Ui_MainWindow):
         if confirm_popup.exec():
             MainWindow.close()
             
+    #=========================================================
+    #====================ACTION BUTTONS================= start
+    # This function creates action buttons for each patient/appointment in the table
+    # It creates a widget with buttons for viewing, editing, and deleting the patient/appointment
+    # It sets the patient ID as a property of each button
+    # This allows the buttons to be connected to their respective functions
+    # It uses a horizontal layout to arrange the buttons
+    # It sets the style of the buttons and the layout
+  
+    # Create action buttons for patients
     def create_patient_action_buttons(self, patient_id, row):
         widget = QtWidgets.QWidget()
 
@@ -136,8 +140,30 @@ class MainController(QMainWindow, Ui_MainWindow):
         layout.addWidget(delete_btn)
         
         widget.setLayout(layout)
+        
+        #set the property of the button to the patient id
+        view_btn.setProperty("Patient ID", patient_id)
+        edit_btn.setProperty("Patient ID", patient_id)
+        delete_btn.setProperty("Patient ID", patient_id)
+        
         return widget
+    
+    def view_patient(self):
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
 
+    def edit_patient(self):
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
+
+    def delete_patient(self):
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+
+    # Create action buttons for appointments
     def create_appointment_action_buttons(self, appointment_id, row):
         widget = QtWidgets.QWidget()
 
@@ -166,7 +192,7 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #8DB8E0;
             }
         """)
-        edit_btn2.clicked.connect(self.edit_patient)
+        edit_btn2.clicked.connect(self.edit_appointment)
         
         # Delete Button
         delete_btn2 = QPushButton()
@@ -187,30 +213,41 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #8DB8E0;
             }
         """)
-
+        delete_btn2.clicked.connect(self.delete_appointment)
+        
         layout.addWidget(edit_btn2)
         layout.addWidget(delete_btn2)
         
         widget.setLayout(layout)
+        
+        #set the property of the button to the appointment id
+        edit_btn2.setProperty("Appointment ID", appointment_id)
+        delete_btn2.setProperty("Appointment ID", appointment_id)
+        
         return widget
 
-    def view_patient(self):
+    def edit_appointment(self):
         button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
-
-    def edit_patient(self):
+        appointment_id = button.property("Appointment ID")
+        QMessageBox.information(self, "Edit", f"Editing appointment ID: {appointment_id}")
+        
+    def delete_appointment(self):
         button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
-
-    def delete_patient(self):
-        button = self.sender()
-        patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+        appointment_id = button.property("Appointment ID")
+        QMessageBox.information(self, "Delete", f"Deleting appointment ID: {appointment_id}")
+    #====================ACTION BUTTONS================= end
+    #=======================================================
+    
+    
+    
     #=========================================================
     #====================LOAD DATAS TO UI=============== start
-    
+    # This function is called to load data into the UI
+    # It receives the data and updates the UI elements accordingly
+    # It updates the summary, today's appointments, patients, appointments, and billing tables
+    # It also handles the case where the connection is None
+    # It uses the functions from the backend to get the data
+    # It also handles the case where the connection is None
     #DASHBOARD TAB=============== start
     def update_summary(self, data):
         self.label_5.setText(str(data[0]))
@@ -285,13 +322,20 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
-        
     #Billing TAB=================end
            
-    
     #====================LOAD DATAS TO UI=============== end
     #=======================================================
     
+    
+    
+    #=========================================================
+    #====================HANDLE CREDENTIALS================= start
+    # This function is called when the user submits the login form
+    # It receives the credentials and attempts to connect to the database
+    # If successful, it loads the data into the UI
+    # If not, it shows an error message
+    # It also handles the case where the connection is None
     def handle_credentials(self, host, port, user, password, databaseName):
         print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
         
@@ -351,3 +395,5 @@ class MainController(QMainWindow, Ui_MainWindow):
         except Exception as e:
             print("Unexpected Error:", e)
             QMessageBox.critical(None, "Error", str(e))
+    #====================HANDLE CREDENTIALS================= end
+    #===========================================================
