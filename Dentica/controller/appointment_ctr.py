@@ -2,10 +2,9 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 from ui.Dialogues.ui_appointment_dialog import Add_Appointment
-from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db
+from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name
 from controller.treatment_ctr import Treatment_Dialog_Ctr
-from PyQt6.QtCore import QDateTime
-
+from PyQt6.QtCore import Qt
 
 class Appointment_Dialog_Ctr(Add_Appointment):
     
@@ -14,6 +13,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
     def __init__(self):
         super().__init__()
        
+        # --- appointment setup ---
         self.AddTreat_btn.clicked.connect(self.on_add_treatment_clicked)
         self.new_appointment_id = generate_new_appointment_id()  
         self.appointment_input.setText(self.new_appointment_id)
@@ -21,22 +21,82 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         
         self.treatments = []
         self.treatment_counter = 1
-        
         self.add_btn.clicked.connect(self.on_add_pressed)
 
-        # Real-time validation connections
-        self.patient_input.textChanged.connect(lambda: self.validate_required(self.patient_input))
+        # --- status validation ---
         self.status_input.currentIndexChanged.connect(self.validate_status)
+        
+        # --- load all patients once ---
        
+        self.all_patients = get_patients_name()
+        self.patient_input.setMaxVisibleItems(10)
+        self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        self.patient_input.setEditable(True)
+        self.patient_input_line_edit = self.patient_input.lineEdit()
+        if self.patient_input_line_edit is not None:
+            self.patient_input_line_edit.setPlaceholderText("Search by name...")
+            self.patient_input_line_edit.setMaxLength(50)
+            self.patient_input_line_edit.setAlignment(Qt.AlignmentFlag.AlignLeft)
+            self.patient_input_line_edit.setFocus()
+            # --- connect search ---
+            self.patient_input_line_edit.textChanged.connect(self.update_patient_search)
+        else:
+            # Defensive fallback if lineEdit is None (should not happen if setEditable(True))
+            print("Warning: patient_input.lineEdit() is None. Search functionality may not work.")
+
+    def update_patient_search(self, text):
+        combo = self.patient_input
+        edit = self.patient_input_line_edit
+
+        if edit is None:
+            # Defensive fallback: do nothing if line edit does not exist
+            return
+
+        # 1) If the box is empty, reset to the placeholder and return
+        if not text.strip():
+            combo.blockSignals(True)
+            combo.clear()
+            combo.setEditable(True)
+            combo.blockSignals(False)
+            return
+
+        # 2) Otherwise do your normal filtering
+        combo.blockSignals(True)
+        edit.blockSignals(True)
+
+        combo.clear()
+        
+
+        filtered = [
+            p for p in self.all_patients
+            if text.lower() in p["Full_Name"].lower()
+        ]
+
+        if filtered:
+            for p in filtered:
+                combo.addItem(p["Full_Name"], p["Patient_ID"])
+            combo.setEditable(True)
+        else:
+            combo.addItem("No matches found", None)
+            combo.setEditable(True)
+
+        # restore what the user typed
+        edit.setText(text)
+
+        combo.blockSignals(False)
+        edit.blockSignals(False)
+
+    def get_selected_patient_id(self):
+        return self.patient_input.currentData()
+
     def get_new_treatment_id(self):
-        treatment_id = self.treatment_counter
-        return treatment_id
+        return self.treatment_counter
 
     def on_add_treatment_clicked(self):
-        self.treatment_form = Treatment_Dialog_Ctr()
-        self.treatment_form.treat_id_input.setText(str(self.get_new_treatment_id()))
-        self.treatment_form.treatment_added.connect(self.handle_treatment_added)  
-        self.treatment_form.exec()
+        form = Treatment_Dialog_Ctr()
+        form.treat_id_input.setText(str(self.get_new_treatment_id()))
+        form.treatment_added.connect(self.handle_treatment_added)
+        form.exec()
 
     def handle_treatment_added(self, data):
         data["Appointment_ID"] = self.new_appointment_id
@@ -51,39 +111,43 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(treatment["Treatment_Procedure"]))
         self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(f"{treatment['Cost']:.2f}"))
 
-    # Validation functions
+    # Validation
 
     def validate_required(self, field):
         if not field.text().strip():
             field.setStyleSheet("border: 2px solid red;")
             return False
-        else:
-            field.setStyleSheet("")
-            return True
+        field.setStyleSheet("")
+        return True
 
     def validate_status(self):
-        if self.status_input.currentIndex() == 0:  # assuming index 0 is a placeholder like "Select Status"
+        if self.status_input.currentIndex() == 0:
             self.status_input.setStyleSheet("border: 2px solid red;")
             return False
-        else:
-            self.status_input.setStyleSheet("")
-            return True
+        self.status_input.setStyleSheet("")
+        return True
 
     def on_add_pressed(self):
-        # Run validations
-        valid_patient = self.validate_required(self.patient_input)
-        valid_status = self.validate_status()
-        
         if not self.treatments:
-            QMessageBox.warning(self, "No Treatments", "You must add at least one treatment before saving the appointment.")
+            QMessageBox.warning(self, "No Treatments",
+                                "You must add at least one treatment before saving the appointment.")
             return
 
+        # validate patient selection and status
+        valid_patient = bool(self.get_selected_patient_id())
+        valid_status = self.validate_status()
         if not (valid_patient and valid_status):
-            QMessageBox.warning(self, "Validation Error", "Please fill all required fields correctly.")
+            QMessageBox.warning(self, "Validation Error",
+                                "Please select a valid patient and status.")
             return
 
         app_id = self.appointment_input.text()
-        pat_id = self.patient_input.text()
+        pat_id = self.get_selected_patient_id()
+        if not pat_id:
+            QMessageBox.warning(self, "Invalid Patient",
+                                "Please select a valid patient from the list.")
+            return
+
         sched = self.schedule_input.dateTime().toPyDateTime()
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
         status = self.status_input.currentText()
@@ -99,7 +163,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         success = save_appointment_to_db(appointment_data)
         if success:
             QMessageBox.information(self, "Success", "Appointment saved successfully.")
-            self.appointment_added.emit()  
-            self.accept()  
+            self.appointment_added.emit()
+            self.accept()
         else:
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
+

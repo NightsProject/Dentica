@@ -1,5 +1,7 @@
 from backend.DB import connectDB
 
+# Function to get all patients from the database
+# This function retrieves all patients from the Patient table and returns them as a list of tuples.
 def get_all_patients():
     all_patients = []
 
@@ -52,6 +54,12 @@ def generate_new_patient_id():
     new_patient_id = f'P{new_id_num:05d}'  # Zero-padded to 5 digits
     return new_patient_id
 
+
+
+## Function to insert a new patient into the database
+# This function takes various patient details as parameters and inserts them into the Patient table.
+# It returns True if the insertion is successful, otherwise it returns False.
+# The function uses a try-except block to handle any exceptions that may occur during the database operation.
 def insert_patient(
     patient_id,
     first_name,
@@ -100,3 +108,4 @@ def insert_patient(
         cursor.close()
         conn.close()
     return success
+

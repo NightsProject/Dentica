@@ -58,6 +58,47 @@ def generate_new_appointment_id():
 
 
 
+# Function to search patients by name
+# This function searches for patients by their first, middle, or last name.
+# It returns a list of dictionaries containing the Patient_ID and Full_Name of matched patients.
+# The search is case-insensitive and uses wildcards to match any part of the name.
+def get_patients_name():
+    matched_patients = []
+
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    query = """
+        SELECT 
+            Patient_ID,
+            CONCAT(First_Name, ' ', Middle_Name, ' ', Last_Name) AS Full_Name
+        FROM Patient
+    """
+    cursor.execute(query)
+
+    result = cursor.fetchall()
+    if result:
+        for row in result:
+            matched_patients.append({
+                "Patient_ID": row[0],
+                "Full_Name": row[1]
+            })
+
+    cursor.close()
+    conn.close()
+
+    return matched_patients
+
+
+
+
+
+
+
+
+
+
+
 
 
 

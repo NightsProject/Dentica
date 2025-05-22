@@ -38,8 +38,12 @@ class Add_Appointment(QtWidgets.QDialog):
         self.appointment_input = QtWidgets.QLineEdit(self)
         add_row(0, "Appointment ID:", self.appointment_input)
 
-        self.patient_input = QtWidgets.QLineEdit(self)
-        add_row(1, "Patient ID:", self.patient_input)
+        self.patient_input = QtWidgets.QComboBox(self)
+        self.patient_input.setEditable(True)
+        self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        add_row(1, "Patient Name:", self.patient_input)
+        self.patient_input.lineEdit().textChanged.connect(self.update_patient_search)
+
 
         self.AddPatient_btn = QtWidgets.QPushButton("Add Patient", self)
         self.AddPatient_btn.setGeometry(400, row_start + 1 * row_height, 120, 30)
