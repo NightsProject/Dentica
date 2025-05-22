@@ -18,12 +18,11 @@ from backend.patients_comp import get_all_patients, generate_new_patient_id
 from backend.appointments_comp import get_all_appointments_with_treatment_count
 from backend.billing_comp import get_all_billings
 
-from Frontend.Graphs.Appointment_status import DonutChart
 filepath = "Dentica/ui/icons/"
 
 
 class MainController(QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self): 
         super().__init__()
         
         self.setupUi(self)
