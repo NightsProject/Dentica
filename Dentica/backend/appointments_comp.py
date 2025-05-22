@@ -73,15 +73,18 @@ def save_appointment_to_db(appointment_data):
 
         for treatment in appointment_data["Treatments"]:
             cursor.execute("""
-                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (treatment["Appointment_ID"], treatment["Treatment_ID"], treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"]))
+                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time, Treatment_Status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (treatment["Appointment_ID"], treatment["Treatment_ID"], treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"], treatment["Treatment_Status"]))
 
         conn.commit()
+        return True
     except Exception as e:
         print(e)
-        #ToDO
-        #error handling
+        return False
     finally:
         cursor.close()
         conn.close()
+        
+        
+        

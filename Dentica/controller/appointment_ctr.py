@@ -9,7 +9,7 @@ from controller.treatment_ctr import Treatment_Dialog_Ctr
 
 class Appointment_Dialog_Ctr(Add_Appointment):
     
-    appointment_details = pyqtSignal(str, str, str)
+    appointment_added = pyqtSignal()
 
 
     def __init__(self):
@@ -72,9 +72,15 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             "Treatments": self.treatments
         }
        
-        #save to database
-        save_appointment_to_db(appointment_data)
-        
+        success = save_appointment_to_db(appointment_data)
+        if success:
+            QMessageBox.information(self, "Success", "Appointment saved successfully.")
+            self.appointment_added.emit()  
+            self.accept()  # Closes the dialog
+        else:
+            QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
+
+            
        
 
         

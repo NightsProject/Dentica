@@ -39,18 +39,19 @@ class MainController(QMainWindow, Ui_MainWindow):
     
     def open_appointment(self):
         app_popup = Appointment_Dialog_Ctr()
-        #app_popup.appointment_details.connect()
+        app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
     
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
-        patient_popup.patient_added.connect(self.reload_patient_table) 
+        patient_popup.patient_added.connect(self.reload_all_tables) 
         patient_popup.exec()
         
     def confirm_exit(MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
+  
   
     
     #=========================================================
@@ -135,6 +136,23 @@ class MainController(QMainWindow, Ui_MainWindow):
     # It uses the functions from the backend to get the data
     # It also handles the case where the connection is None
     
+    def reload_all_tables(self):
+        summary_data = load_summary()
+        todays_appointment_status = get_todays_appointment_status_counts()
+        self.update_summary(summary_data, todays_appointment_status)
+
+        todays_appointments_list = get_todays_appointments()
+        self.update_todays_appointments_table(todays_appointments_list)
+
+        all_patients_list = get_all_patients()
+        self.update_patients_list(all_patients_list)
+                
+        all_appointments_list = get_all_appointments_with_treatment_count()
+        self.update_appointments_list(all_appointments_list)
+
+        all_billings_list = get_all_billings()
+        self.update_billing_list(all_billings_list)
+    
     #DASHBOARD TAB=============== start
     def update_summary(self, data, status):
         self.label_5.setText(str(data[0]))
@@ -157,17 +175,15 @@ class MainController(QMainWindow, Ui_MainWindow):
             row_position = self.UpAp_table.rowCount()
             self.UpAp_table.insertRow(row_position)
 
-            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))  # Appointment ID
-            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
-            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
-            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
-            self.UpAp_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
+            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
+            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
+            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
+            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
+            
+            #appointment_id = appointment[0]
     #DASHBOARD TAB================ end
     
     #PATIENTS TAB=================start
-    def reload_patient_table(self):
-        all_patients = get_all_patients()
-        self.update_patients_list(all_patients)
 
     def update_patients_list(self, patients):
         self.Patients_table.setRowCount(0)

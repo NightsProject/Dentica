@@ -19,7 +19,7 @@ class Treatment_Dialog_Ctr(Add_Treatment):
             "Cost": float(self.cost_input.text()),
             "Treatment_Procedure": self.procedure_input.text(),
             "Treatment_Date_Time": self.sched_input.dateTime().toPyDateTime(),
-            #"Treatment_Status": self.status_combo.currentText()
+            "Treatment_Status": self.treat_status.currentText()
         }
         self.treatment_added.emit(treatment_data)  # 🚀 Emit the signal
         print("Treatment data emitted:", treatment_data)    
