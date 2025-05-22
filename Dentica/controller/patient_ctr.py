@@ -108,4 +108,37 @@ class Patient_Dialog_Ctr(Add_Patient):
 
         
             
+          # Check for validation failures
+        if (
+            not self.first_input.text().strip()
+            or not self.middle_input.text().strip()
+            or not self.last_input.text().strip()
+            or not self.address_input.text().strip()
+            or self.gender_combo.currentIndex() == 0
+            or not self.email_input.hasAcceptableInput()
+            or not self.contact_input.hasAcceptableInput()
+           
+        ):
+            QtWidgets.QMessageBox.warning(self, "Validation Error", "Please fill all required fields correctly.")
+            return  # Stop submission
+
+        # All valid, proceed to collect data
+        patient_id = self.patient_input.text()
+        first_name = self.first_input.text()
+        middle_name = self.middle_input.text()
+        last_name = self.last_input.text()
+        gender = self.gender_combo.currentText()
+        address = self.address_input.text()
+        contact_number = self.contact_input.text()
+        email = self.email_input.text()
+        birth_date = self.birth_input.date().toString("yyyy-MM-dd")
+
+        success = insert_patient(patient_id, first_name, middle_name, last_name, gender, birth_date, contact_number, email, address)
+        if success:
+            self.patient_added.emit()
+            QMessageBox.information(self, "Success", "Patient added successfully!")
+            self.accept()  
+
+        
+            
         

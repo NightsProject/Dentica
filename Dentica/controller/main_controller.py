@@ -74,6 +74,10 @@ class MainController(QMainWindow, Ui_MainWindow):
          
             set_credentials(host,port, user, password, databaseName)
             if connection:
+                
+                QMessageBox.information(self, "Success", f"Successfully connected to {databaseName} Database!")
+           
+                
                 createAllTables(connection)
 
                 summary_data = load_summary()

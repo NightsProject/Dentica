@@ -53,7 +53,7 @@ class Add_Appointment(QtWidgets.QDialog):
 
         self.status_input = QtWidgets.QComboBox(self)
         self.status_input.setGeometry(input_x, row_start + 3 * row_height, 160, 22)
-        self.status_input.addItems(["Scheduled", "Completed", "Cancelled"])
+        self.status_input.addItems(["Select Status", "Scheduled", "Completed", "Cancelled"])
         
         label = QtWidgets.QLabel("Status:", self)
         label.setGeometry(label_x, row_start + 3 * row_height, 120, 20)
