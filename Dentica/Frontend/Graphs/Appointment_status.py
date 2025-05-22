@@ -31,3 +31,20 @@ class DonutChart(QWidget):
 
         ax.legend(wedges, labels, title=None, loc="center left", bbox_to_anchor=(1.05, 0.25), frameon=False)
         self.canvas.draw()
+
+    # def update_dashboard_chart(self, new_values):
+    #     labels = ['Scheduled', 'Completed', 'Cancelled']
+
+    #     # Find the layout set on self.dash_graph
+    #     layout = self.dash_graph.layout()
+
+    #     # Remove the old donut chart (assuming it's the last widget in the layout)
+    #     if layout.count() > 1:
+    #         old_chart = layout.itemAt(1).widget()
+    #         if old_chart:
+    #             layout.removeWidget(old_chart)
+    #             old_chart.deleteLater()  # Free memory
+
+    #     # Add new chart with updated values
+    #     new_chart = DonutChart(labels, new_values)
+    #     layout.addWidget(new_chart)

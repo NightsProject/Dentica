@@ -109,4 +109,35 @@ def get_todays_appointments():
     print(todays_appointments)
     return todays_appointments
 
+from backend.DB import connectDB
+
+
+def get_todays_appointment_status_counts():
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT Status, COUNT(*) 
+        FROM Appointment 
+        WHERE DATE(Schedule) = CURDATE()
+        GROUP BY Status
+    """)
     
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    # Set default values
+    scheduled = 0
+    completed = 0
+    cancelled = 0
+
+    for status, count in results:
+        if status == "Scheduled":
+            scheduled = count
+        elif status == "Completed":
+            completed = count
+        elif status == "Cancelled":
+            cancelled = count
+
+    return [scheduled, completed, cancelled]
