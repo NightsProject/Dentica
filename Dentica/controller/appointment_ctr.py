@@ -69,9 +69,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             if self.patient_input_line_edit is None:
                 return
         
-        # Ensure we have patients data
-        if not hasattr(self, 'all_patients'):
-            self.all_patients = get_patients_name()
+        self.all_patients = get_patients_name()
         
         combo = self.patient_input
         edit = self.patient_input_line_edit

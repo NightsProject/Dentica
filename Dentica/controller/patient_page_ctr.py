@@ -70,6 +70,6 @@ class Patient_Page_Ctr(PatientPage):
             self.load_patient_infos(patient_id)
             self.reload_patient_signal.emit()
 
-        #TODOreload the patient tables
+        
     
    
