@@ -348,6 +348,14 @@ class Ui_MainWindow(object):
         self.verticalLayout.addStretch()
         self.testbutton.setObjectName("testbutton")
         
+        #Test appointment dialogue button
+        self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
+        self.testbutton2.setStyleSheet("color: #fff; border: 1px solid #fff;")
+        self.verticalLayout.addWidget(self.testbutton2)
+        self.verticalLayout.addStretch()
+        self.testbutton2.setObjectName("testbutton2")
+        
+        
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
                 btn.setCheckable(True)
 
@@ -1335,7 +1343,7 @@ class Ui_MainWindow(object):
         self.Pages.addWidget(self.Reports_page)
         
         #Add patient page into pages
-        self.patient_page = PatientPage()
+        self.patient_page = PatientPage(self.Pages)
         self.Pages.addWidget(self.patient_page)
 
         #User popup dialog
