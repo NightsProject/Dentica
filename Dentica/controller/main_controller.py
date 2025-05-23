@@ -16,7 +16,7 @@ from controller.patient_page_ctr import Patient_Page_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
-from backend.patients_comp import get_all_patients, perform_patient_deletion
+from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
