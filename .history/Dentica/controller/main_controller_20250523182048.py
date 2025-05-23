@@ -540,7 +540,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         if not appointment_data:
             QMessageBox.warning(self, "Error", "Could not load appointment data")
             return
-        
+        QMessageBox.information(self, "Edit", f"Editing appointment ID: {appointment_id}")
         app_popup = Appointment_Dialog_Ctr(appointment_data=appointment_data)
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()

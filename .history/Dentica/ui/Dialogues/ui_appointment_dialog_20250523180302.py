@@ -134,9 +134,6 @@ class Add_Appointment(QtWidgets.QDialog):
         self.Treat_table.setRowCount(0)
         for treatment in self.treatments:
             self.update_treatment_table_ui(treatment)
-        if self.treatments:
-            max_id = max(int(t['Treatment_ID']) for t in self.treatments)
-            self.treatment_counter = max_id + 1
 
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()

@@ -101,6 +101,7 @@ def get_appointment_data(appointment_id):
         conn.close()
 
 def update_appointment_in_db(appointment_data):
+    """Update an existing appointment and its treatments"""
     conn = connectDB()
     if not conn:
         return False
