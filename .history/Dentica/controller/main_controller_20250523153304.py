@@ -363,10 +363,20 @@ class MainController(QMainWindow, Ui_MainWindow):
             connection = connectDB()
             if connection:
                 cursor = connection.cursor(dictionary=True)
-                query = ("SELECT Patient_ID, First_Name, Middle_Name, Last_Name, Gender, "
-                        "Birth_Date, Contact_Number, Email, Address "
-                        "FROM Patient WHERE Patient_ID = %s")
-                
+                query = """"
+                SELECT 
+                    Patient_ID,
+                    First_Name,
+                    Middle_Name,
+                    Last_Name,
+                    Gender,
+                    Birth_Date,
+                    Contact_Number,
+                    Email,
+                    Address
+                FROM Patient 
+                WHERE Patient_ID = %s
+            """
                 cursor.execute(query, (patient_id,))
                 result = cursor.fetchone()
                 cursor.close()

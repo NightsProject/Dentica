@@ -54,53 +54,7 @@ def generate_new_patient_id():
     new_patient_id = f'P{new_id_num:05d}'  # Zero-padded to 5 digits
     return new_patient_id
 
-def update_patient(
-    patient_id,
-    first_name,
-    middle_name,
-    last_name,
-    gender,
-    birth_date,
-    contact_number,
-    email,
-    address
-):
-    conn = connectDB()
-    cursor = conn.cursor()
-    try:
-        cursor.execute("""
-            UPDATE Patient SET
-                First_Name = %s,
-                Middle_Name = %s,
-                Last_Name = %s,
-                Gender = %s,
-                Birth_Date = %s,
-                Contact_Number = %s,
-                Email = %s,
-                Address = %s
-            WHERE Patient_ID = %s
-        """, (
-            first_name,
-            middle_name,
-            last_name,
-            gender,
-            birth_date,
-            contact_number,
-            email,
-            address,
-            patient_id
-        ))
-        conn.commit()
-        success = True
-    except Exception as e:
-        print("Update Patient Error:", e)
-        import traceback
-        traceback.print_exc()
-        success = False
-    finally:
-        cursor.close()
-        conn.close()
-    return success
+
 
 ## Function to insert a new patient into the database
 # This function takes various patient details as parameters and inserts them into the Patient table.

@@ -96,13 +96,7 @@ class Add_Patient(QtWidgets.QDialog):
         self.contact_input.setText(patient_data['Contact_Number'])
         self.email_input.setText(patient_data['Email'])
         
-        birth_date = patient_data['Birth_Date']
-        if isinstance(birth_date, str):
-            birth_date = QtCore.QDate.fromString(birth_date, QtCore.Qt.DateFormat.ISODate)
-        elif hasattr(birth_date, 'year'):  
-            birth_date = QtCore.QDate(birth_date.year, birth_date.month, birth_date.day)
-            
-        self.birth_input.setDate(birth_date)
+        birth_date = QtCore.QDate.fromString(patient_data['Birth_Date'], QtCore.Qt.DateFormat.ISODate)
         self.birth_input.setDate(birth_date)
 
     def mousePressEvent(self, event):
