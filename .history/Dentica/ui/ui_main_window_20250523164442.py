@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
 from ui.Dialogues.ui_exit_dialog import Exit_App
-from ui.pagination import TablePagination
+from ui.pagination import PaginationSystem
 from Frontend.Graphs.Appointment_status import DonutChart
 from PyQt6.QtGui import QTextCharFormat, QColor
 
@@ -917,9 +917,6 @@ class Ui_MainWindow(object):
 
         #Row height for each patient
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
-        
-        self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
-        self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
 
         #Appointments Page
         
@@ -1058,8 +1055,6 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(4, 120)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
-        self.appointments_pagination = TablePagination(self.Appointments_table, rows_per_page=10)
-        self.appointments_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
 
 
         #Appointments buttons layout
@@ -1492,6 +1487,7 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
 
+        self.pagination = PaginationSystem(self)
         self.retranslateUi(MainWindow)
         self.Pages.setCurrentIndex(0)
         self.set_active_button(self.Dash_btn) 
@@ -1549,7 +1545,8 @@ class Ui_MainWindow(object):
         item = self.Patients_table.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "Actions"))
         
-        
+        self.pagination.update_pagination(self.Patients_table, "patients")
+
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
         self.Search_app.setPlaceholderText(_translate("MainWindow", "Search appointments..."))

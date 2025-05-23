@@ -919,7 +919,7 @@ class Ui_MainWindow(object):
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
         
         self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
-        self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
+        self.patients_pagination.setup_pagination_controls(self.Pat_table_Frame, y_offset=-30)
 
         #Appointments Page
         
@@ -1058,8 +1058,6 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(4, 120)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
-        self.appointments_pagination = TablePagination(self.Appointments_table, rows_per_page=10)
-        self.appointments_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
 
 
         #Appointments buttons layout
@@ -1493,6 +1491,9 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
+        total_patients = self.Patients_table.rowCount()
+        self.patients_pagination.set_total_rows(total_patients)
+        self.patients_pagination.show_current_page()
         self.Pages.setCurrentIndex(0)
         self.set_active_button(self.Dash_btn) 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

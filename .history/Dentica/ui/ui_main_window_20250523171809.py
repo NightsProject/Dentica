@@ -919,7 +919,7 @@ class Ui_MainWindow(object):
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
         
         self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
-        self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
+        self.patients_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
 
         #Appointments Page
         
