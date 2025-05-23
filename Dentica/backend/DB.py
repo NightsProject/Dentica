@@ -54,11 +54,6 @@ def connectDB():
     return None
 
 
-
-
-
-
-
 def createAllTables(conn):
     cursor = conn.cursor()
     
