@@ -627,7 +627,7 @@ class Ui_MainWindow(object):
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
-        self.UpAp_table.setColumnCount(4)
+        self.UpAp_table.setColumnCount(5)
         self.UpAp_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(0, item)
@@ -637,6 +637,8 @@ class Ui_MainWindow(object):
         self.UpAp_table.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.UpAp_table.setHorizontalHeaderItem(4, item)
         self.UpAp_table.verticalHeader().setVisible(False)
 
         self.UpAp_table.horizontalHeader().setStyleSheet("""
@@ -1515,9 +1517,12 @@ class Ui_MainWindow(object):
         item = self.UpAp_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Time"))
         item = self.UpAp_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Status"))
+        item.setText(_translate("MainWindow", "Treatment Procedure"))
         item = self.UpAp_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Treatment"))
+        item.setText(_translate("MainWindow", "Status"))
+        item = self.UpAp_table.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Actions"))
+        #TODO fix the todays appointments table size
 
         #Patients Tab
         self.label_12.setText(_translate("MainWindow", "Patients"))
@@ -2080,3 +2085,5 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
+        #TODO all tables should not be editable
+        #TODO all column in a row should be selectable

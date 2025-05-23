@@ -14,16 +14,15 @@ from controller.patient_ctr import Patient_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
-from backend.patients_comp import get_all_patients, generate_new_patient_id
-from backend.appointments_comp import get_all_appointments_with_treatment_count
+from backend.patients_comp import get_all_patients, perform_patient_deletion
+from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
 
-from Frontend.Graphs.Appointment_status import DonutChart
 filepath = "Dentica/ui/icons/"
 
 
 class MainController(QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self): 
         super().__init__()
         
         self.setupUi(self)
@@ -40,18 +39,19 @@ class MainController(QMainWindow, Ui_MainWindow):
     
     def open_appointment(self):
         app_popup = Appointment_Dialog_Ctr()
-        #app_popup.appointment_details.connect()
+        app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
     
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
-        patient_popup.patient_added.connect(self.reload_patient_table) 
+        patient_popup.patient_added.connect(self.reload_all_tables) 
         patient_popup.exec()
         
     def confirm_exit(MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
+  
   
     
     #=========================================================
@@ -74,6 +74,10 @@ class MainController(QMainWindow, Ui_MainWindow):
          
             set_credentials(host,port, user, password, databaseName)
             if connection:
+                
+                QMessageBox.information(self, "Success", f"Successfully connected to {databaseName} Database!")
+           
+                
                 createAllTables(connection)
 
                 summary_data = load_summary()
@@ -136,6 +140,23 @@ class MainController(QMainWindow, Ui_MainWindow):
     # It uses the functions from the backend to get the data
     # It also handles the case where the connection is None
     
+    def reload_all_tables(self):
+        summary_data = load_summary()
+        todays_appointment_status = get_todays_appointment_status_counts()
+        self.update_summary(summary_data, todays_appointment_status)
+
+        todays_appointments_list = get_todays_appointments()
+        self.update_todays_appointments_table(todays_appointments_list)
+
+        all_patients_list = get_all_patients()
+        self.update_patients_list(all_patients_list)
+                
+        all_appointments_list = get_all_appointments_with_treatment_count()
+        self.update_appointments_list(all_appointments_list)
+
+        all_billings_list = get_all_billings()
+        self.update_billing_list(all_billings_list)
+    
     #DASHBOARD TAB=============== start
     def update_summary(self, data, status):
         self.label_5.setText(str(data[0]))
@@ -158,17 +179,15 @@ class MainController(QMainWindow, Ui_MainWindow):
             row_position = self.UpAp_table.rowCount()
             self.UpAp_table.insertRow(row_position)
 
-            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[0])))  # Appointment ID
-            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
-            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
-            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
-            self.UpAp_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
+            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
+            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
+            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
+            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
+            
+            #appointment_id = appointment[0]
     #DASHBOARD TAB================ end
     
     #PATIENTS TAB=================start
-    def reload_patient_table(self):
-        all_patients = get_all_patients()
-        self.update_patients_list(all_patients)
 
     def update_patients_list(self, patients):
         self.Patients_table.setRowCount(0)
@@ -330,10 +349,31 @@ class MainController(QMainWindow, Ui_MainWindow):
         patient_id = button.property("Patient ID")
         QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
 
+ 
     def delete_patient(self):
         button = self.sender()
         patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "Delete", f"Deleting patient ID: {patient_id}")
+
+        # Create confirmation dialog
+        reply = QMessageBox.question(
+            self,
+            "Confirm Deletion",
+            f"Are you sure you want to delete the patient with ID: {patient_id} along with all associated records?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            # Proceed with deletion
+            success = perform_patient_deletion(patient_id)
+            if success:
+                QMessageBox.information(self, "Success", "Patient deleted successfully along with all associated records.")
+                self.reload_all_tables()  # Refresh the patient list
+            else:
+                QMessageBox.warning(self, "Failure", "Failed to delete patient.")
+        else:
+            # Deletion canceled
+            print("Deletion canceled.")
 
     # Create action buttons for appointments
     def create_appointment_action_buttons(self, appointment_id, row):
@@ -406,7 +446,29 @@ class MainController(QMainWindow, Ui_MainWindow):
     def delete_appointment(self):
         button = self.sender()
         appointment_id = button.property("Appointment ID")
-        QMessageBox.information(self, "Delete", f"Deleting appointment ID: {appointment_id}")
+
+        # Create confirmation dialog
+        reply = QMessageBox.question(
+            self,
+            "Confirm Deletion",
+            f"Are you sure you want to delete the appointment with ID: {appointment_id} along with the all associated treatments?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            # Proceed with deletion
+            success = perform_appointment_deletion(appointment_id)
+            if success:
+                QMessageBox.information(self, "Success", "Appointment deleted successfully along with the all associated treatments.")
+                self.reload_all_tables()  # Refresh the appointments list
+            else:
+                QMessageBox.warning(self, "Failure", "Failed to delete appointment.")
+                #TODO inform for like cannot delete cause foreign key contraints or treatments exists under the appointment
+        else:
+            # Deletion canceled
+            print("Deletion canceled.")
+
     #====================ACTION BUTTONS================= end
     #=======================================================
     

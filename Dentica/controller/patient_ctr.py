@@ -63,9 +63,6 @@ class Patient_Dialog_Ctr(Add_Patient):
             self.contact_input.setStyleSheet("border: 2px solid red;")
            
 
-
-
-
     def on_add_pressed(self):   
         # Validate all fields
         self.validate_required(self.first_input)
@@ -109,5 +106,4 @@ class Patient_Dialog_Ctr(Add_Patient):
 
         
             
-        
-    #TODO make a validation in real time on each input field
+      
