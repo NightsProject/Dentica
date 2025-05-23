@@ -58,12 +58,6 @@ class Database_Login(QtWidgets.QDialog):
         """)
         self.cancel_btn.clicked.connect(self.reject)
         
-        #for testing
-        self.host_input.setText("localhost")
-        self.port_input.setText("3306")
-        self.dbname_input.setText("denticadb")
-        
-        
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:

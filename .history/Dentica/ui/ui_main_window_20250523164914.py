@@ -4,7 +4,6 @@ from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
 from ui.Dialogues.ui_exit_dialog import Exit_App
 from ui.pagination import TablePagination
 from Frontend.Graphs.Appointment_status import DonutChart
-from ui.Patients_Page import PatientPage
 from PyQt6.QtGui import QTextCharFormat, QColor
 
 
@@ -321,14 +320,7 @@ class Ui_MainWindow(object):
                 }                    
                 """)
         self.verticalLayout.addWidget(self.Rep_btn)
-        
-        #Test patient page button
-        self.testbutton = QtWidgets.QPushButton("View Patient Test Btn")
-        self.testbutton.setStyleSheet("color: #fff; border: 1px solid #fff;")
-        self.verticalLayout.addWidget(self.testbutton)
-        self.testbutton.clicked.connect(lambda: self.Pages.setCurrentIndex(5))
         self.verticalLayout.addStretch()
-        self.testbutton.setObjectName("testbutton")
         
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
                 btn.setCheckable(True)
@@ -350,6 +342,40 @@ class Ui_MainWindow(object):
         self.Pages.setObjectName("Pages")
         self.Dashboard_page = QtWidgets.QWidget()
         self.Dashboard_page.setObjectName("Dashboard_page")
+        
+        # #User menu drop-down
+        # self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
+        # self.user_menu.setObjectName("user_menu")
+        # self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
+        # self.user_menu.setStyleSheet("""
+        # #user_menu{
+        #         background: #1F1F21; 
+        #         border: 1px solid #e5e7eb;
+        #         border-radius: 5px;
+        #         }
+        # QPushButton {
+        #                 text-align: left;
+        #                 background-color: transparent;
+        #                 border: none;
+        #                 color: #fff;
+        #                 font-size: 12px;
+        #         }
+        # QPushButton:hover {
+        #                 background-color: #8DB8E0;
+        #                 color: #fff;
+        #         }
+        # """)
+        # self.user_menu.setVisible(False)
+
+        # #User login
+        # self.settings_btn = QtWidgets.QPushButton("User login", parent=self.user_menu)
+        # self.settings_btn.setGeometry(10, 10, 130, 30)
+        # self.settings_btn.setObjectName("settings_btn")
+
+        # #database login
+        # self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
+        # self.logout_btn.setGeometry(10, 50, 130, 30)
+        # self.logout_btn.setObjectName("logout_btn")
         
        
         #Dashboard graph
@@ -893,7 +919,7 @@ class Ui_MainWindow(object):
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
         
         self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
-        self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
+        self.patients_pagination.setup_pagination_controls(self.Pat_table_Frame, y_offset=-30)
 
         #Appointments Page
         
@@ -1032,8 +1058,6 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(4, 120)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
-        self.appointments_pagination = TablePagination(self.Appointments_table, rows_per_page=10)
-        self.appointments_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
 
 
         #Appointments buttons layout
@@ -1458,10 +1482,6 @@ class Ui_MainWindow(object):
         self.Reports_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.Reports_table_frame.setObjectName("Reports_table_frame")
         self.Pages.addWidget(self.Reports_page)
-        
-        #Add patient page into pages
-        self.patient_page = PatientPage()
-        self.Pages.addWidget(self.patient_page)
 
         #User popup dialog
         MainWindow.setCentralWidget(self.centralwidget)
@@ -1527,7 +1547,8 @@ class Ui_MainWindow(object):
         item = self.Patients_table.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "Actions"))
         
-        
+        self.pagination.update_pagination(self.Patients_table, "patients")
+
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
         self.Search_app.setPlaceholderText(_translate("MainWindow", "Search appointments..."))

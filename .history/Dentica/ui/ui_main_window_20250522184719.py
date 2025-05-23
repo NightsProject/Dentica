@@ -2,9 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
 from ui.Dialogues.ui_exit_dialog import Exit_App
-from ui.pagination import TablePagination
 from Frontend.Graphs.Appointment_status import DonutChart
-from ui.Patients_Page import PatientPage
 from PyQt6.QtGui import QTextCharFormat, QColor
 
 
@@ -321,14 +319,7 @@ class Ui_MainWindow(object):
                 }                    
                 """)
         self.verticalLayout.addWidget(self.Rep_btn)
-        
-        #Test patient page button
-        self.testbutton = QtWidgets.QPushButton("View Patient Test Btn")
-        self.testbutton.setStyleSheet("color: #fff; border: 1px solid #fff;")
-        self.verticalLayout.addWidget(self.testbutton)
-        self.testbutton.clicked.connect(lambda: self.Pages.setCurrentIndex(5))
         self.verticalLayout.addStretch()
-        self.testbutton.setObjectName("testbutton")
         
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
                 btn.setCheckable(True)
@@ -350,6 +341,40 @@ class Ui_MainWindow(object):
         self.Pages.setObjectName("Pages")
         self.Dashboard_page = QtWidgets.QWidget()
         self.Dashboard_page.setObjectName("Dashboard_page")
+        
+        # #User menu drop-down
+        # self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
+        # self.user_menu.setObjectName("user_menu")
+        # self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
+        # self.user_menu.setStyleSheet("""
+        # #user_menu{
+        #         background: #1F1F21; 
+        #         border: 1px solid #e5e7eb;
+        #         border-radius: 5px;
+        #         }
+        # QPushButton {
+        #                 text-align: left;
+        #                 background-color: transparent;
+        #                 border: none;
+        #                 color: #fff;
+        #                 font-size: 12px;
+        #         }
+        # QPushButton:hover {
+        #                 background-color: #8DB8E0;
+        #                 color: #fff;
+        #         }
+        # """)
+        # self.user_menu.setVisible(False)
+
+        # #User login
+        # self.settings_btn = QtWidgets.QPushButton("User login", parent=self.user_menu)
+        # self.settings_btn.setGeometry(10, 10, 130, 30)
+        # self.settings_btn.setObjectName("settings_btn")
+
+        # #database login
+        # self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
+        # self.logout_btn.setGeometry(10, 50, 130, 30)
+        # self.logout_btn.setObjectName("logout_btn")
         
        
         #Dashboard graph
@@ -602,7 +627,7 @@ class Ui_MainWindow(object):
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
-        self.UpAp_table.setColumnCount(5)
+        self.UpAp_table.setColumnCount(4)
         self.UpAp_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(0, item)
@@ -612,8 +637,6 @@ class Ui_MainWindow(object):
         self.UpAp_table.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(3, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.UpAp_table.setHorizontalHeaderItem(4, item)
         self.UpAp_table.verticalHeader().setVisible(False)
 
         self.UpAp_table.horizontalHeader().setStyleSheet("""
@@ -891,9 +914,6 @@ class Ui_MainWindow(object):
 
         #Row height for each patient
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
-        
-        self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
-        self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
 
         #Appointments Page
         
@@ -1032,8 +1052,6 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(4, 120)  # Treatment
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
-        self.appointments_pagination = TablePagination(self.Appointments_table, rows_per_page=10)
-        self.appointments_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
 
 
         #Appointments buttons layout
@@ -1458,10 +1476,6 @@ class Ui_MainWindow(object):
         self.Reports_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.Reports_table_frame.setObjectName("Reports_table_frame")
         self.Pages.addWidget(self.Reports_page)
-        
-        #Add patient page into pages
-        self.patient_page = PatientPage()
-        self.Pages.addWidget(self.patient_page)
 
         #User popup dialog
         MainWindow.setCentralWidget(self.centralwidget)
@@ -1501,12 +1515,9 @@ class Ui_MainWindow(object):
         item = self.UpAp_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Time"))
         item = self.UpAp_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Treatment Procedure"))
-        item = self.UpAp_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Status"))
-        item = self.UpAp_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Actions"))
-        #TODO fix the todays appointments table size
+        item = self.UpAp_table.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Treatment"))
 
         #Patients Tab
         self.label_12.setText(_translate("MainWindow", "Patients"))
@@ -1526,8 +1537,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Address"))
         item = self.Patients_table.horizontalHeaderItem(6)
         item.setText(_translate("MainWindow", "Actions"))
-        
-        
+
         #Appointments Tab
         self.label_13.setText(_translate("MainWindow", "Appointments"))
         self.Search_app.setPlaceholderText(_translate("MainWindow", "Search appointments..."))
@@ -2070,5 +2080,3 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
-        #TODO all tables should not be editable
-        #TODO all column in a row should be selectable
