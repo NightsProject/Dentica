@@ -363,10 +363,20 @@ class MainController(QMainWindow, Ui_MainWindow):
             connection = connectDB()
             if connection:
                 cursor = connection.cursor(dictionary=True)
-                query = ("SELECT Patient_ID, First_Name, Middle_Name, Last_Name, Gender, "
-                        "Birth_Date, Contact_Number, Email, Address "
-                        "FROM Patient WHERE Patient_ID = %s")
-                
+                query = """"
+                SELECT 
+                    Patient_ID,
+                    First_Name,
+                    Middle_Name,
+                    Last_Name,
+                    Gender,
+                    Birth_Date,
+                    Contact_Number,
+                    Email,
+                    Address
+                FROM Patient 
+                WHERE Patient_ID = %s
+            """
                 cursor.execute(query, (patient_id,))
                 result = cursor.fetchone()
                 cursor.close()
@@ -440,26 +450,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         layout = QtWidgets.QHBoxLayout()
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
-        # View More Button
-        view_btn2 = QtWidgets.QPushButton()
-        view_icon = QtGui.QIcon(f"{filepath}View.svg")
-        view_btn2.setIcon(view_icon)
-        view_btn2.setIconSize(QtCore.QSize(20, 20))
-        view_btn2.setMaximumWidth(60)
-        view_btn2.setStyleSheet("""
-            QPushButton {
-                color: white;
-                border: none;
-                background-color: #37547A;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #8DB8E0;
-            }
-        """)
-        view_btn2.clicked.connect(self.view_appointment)
+        
         # Edit Button
         edit_btn2 = QPushButton()
         edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
@@ -501,24 +492,18 @@ class MainController(QMainWindow, Ui_MainWindow):
             }
         """)
         delete_btn2.clicked.connect(self.delete_appointment)
-        layout.addWidget(view_btn2)
+        
         layout.addWidget(edit_btn2)
         layout.addWidget(delete_btn2)
         
         widget.setLayout(layout)
         
         #set the property of the button to the appointment id
-        view_btn2.setProperty("Appointment ID", appointment_id)
         edit_btn2.setProperty("Appointment ID", appointment_id)
         delete_btn2.setProperty("Appointment ID", appointment_id)
         
         return widget
 
-    def view_appointment(self):
-        button = self.sender()
-        appointment_id = button.property("Appointment ID")
-        QMessageBox.information(self, "View", f"Viewing appointment ID: {appointment_id}")
-        
     def edit_appointment(self):
         button = self.sender()
         appointment_id = button.property("Appointment ID")

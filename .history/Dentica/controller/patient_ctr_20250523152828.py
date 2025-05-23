@@ -3,7 +3,6 @@ from backend.patients_comp import generate_new_patient_id, insert_patient, get_a
 
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtCore import QRegularExpression, pyqtSignal
-from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 
