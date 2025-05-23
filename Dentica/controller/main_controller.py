@@ -206,9 +206,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             action_widget = self.create_patient_action_buttons(patient_id, row_position)
             self.Patients_table.setCellWidget(row_position, 6, action_widget)
 
-            total_patients = self.Patients_table.rowCount()
-            self.patients_pagination.set_total_rows(total_patients)
-            self.patients_pagination.show_current_page()
+           
     #Appointments TAB=================start
     def update_appointments_list(self, appointments):
         self.Appointments_table.setRowCount(0)
@@ -224,9 +222,6 @@ class MainController(QMainWindow, Ui_MainWindow):
             appointment_id = appointment[0]
             action_widget = self.create_appointment_action_buttons(appointment_id, row_position)
             self.Appointments_table.setCellWidget(row_position, 4, action_widget)
-            total_appointments = self.Appointments_table.rowCount()
-            self.appointments_pagination.set_total_rows(total_appointments)
-            self.appointments_pagination.show_current_page()
     #Appointments TAB=================end
     
     #Billing TAB=================start
