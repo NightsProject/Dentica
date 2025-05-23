@@ -342,20 +342,12 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.Rep_btn)
         
         #Test patient page button
-        # self.testbutton = QtWidgets.QPushButton("View Patient Test Btn")
-        # self.testbutton.setStyleSheet("color: #fff; border: 1px solid #fff;")
-        # self.verticalLayout.addWidget(self.testbutton)
-        # self.testbutton.clicked.connect(lambda: self.Pages.setCurrentIndex(5))
+        self.testbutton = QtWidgets.QPushButton("View Patient Test Btn")
+        self.testbutton.setStyleSheet("color: #fff; border: 1px solid #fff;")
+        self.verticalLayout.addWidget(self.testbutton)
+        self.testbutton.clicked.connect(lambda: self.Pages.setCurrentIndex(5))
         self.verticalLayout.addStretch()
-        #self.testbutton.setObjectName("testbutton")
-        
-        #Test appointment dialogue button
-        self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
-        self.testbutton2.setStyleSheet("color: #fff; border: 1px solid #fff;")
-        self.verticalLayout.addWidget(self.testbutton2)
-        self.verticalLayout.addStretch()
-        self.testbutton2.setObjectName("testbutton2")
-        
+        self.testbutton.setObjectName("testbutton")
         
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
                 btn.setCheckable(True)
@@ -1208,7 +1200,6 @@ class Ui_MainWindow(object):
 
         self.Billing_pagination = TablePagination(self.Billing_table, rows_per_page=10)
         self.Billing_pagination.setup_pagination_controls(self.Billing_page, y_offset=85)
-        
         #Billing buttons layout
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(parent=self.bill_table_frame)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(20, 10, 461, 41))
@@ -1350,9 +1341,9 @@ class Ui_MainWindow(object):
         self.Reports_table_frame.setObjectName("Reports_table_frame")
         self.Pages.addWidget(self.Reports_page)
         
-        # #Add patient page into pages
-        # self.patient_page = PatientPage()
-        # self.Pages.addWidget(self.patient_page)
+        #Add patient page into pages
+        self.patient_page = PatientPage()
+        self.Pages.addWidget(self.patient_page)
 
         #User popup dialog
         MainWindow.setCentralWidget(self.centralwidget)
