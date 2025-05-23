@@ -364,16 +364,16 @@ class MainController(QMainWindow, Ui_MainWindow):
         button = self.sender()
         patient_id = button.property("Patient ID")
 
-        # Create the patient page once and reuse it every time
-        if not hasattr(self, 'patient_page'):
-            self.patient_page = Patient_Page_Ctr(self.Pages, patient_id)
-            self.Pages.addWidget(self.patient_page)
+        # Create the patient profile page once and reuse it every time
+        if not hasattr(self, 'patient_profile_page'):
+            self.patient_profile_page = Patient_Page_Ctr(self.Pages, patient_id)
+            self.Pages.addWidget(self.patient_profile_page)
 
         # Load the patient info for the selected patient ID
-        self.patient_page.load_patient_infos(patient_id)
-
+        self.patient_profile_page.load_patient_infos(patient_id)
         # Set the current page to the patient page index
-        self.Pages.setCurrentWidget(self.patient_page)
+        self.patient_profile_page.reload_patient_signal.connect(self.reload_all_tables)
+        self.Pages.setCurrentWidget(self.patient_profile_page)
 
     def edit_patient(self):
         button = self.sender()

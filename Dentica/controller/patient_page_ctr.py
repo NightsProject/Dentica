@@ -3,8 +3,11 @@ from backend.patient_page_comp import get_all_patient_records
 from controller.patient_ctr import Patient_Dialog_Ctr
 from PyQt6.QtWidgets import QDialog, QMessageBox
 from backend.patients_comp import get_patient_data
+from PyQt6.QtCore import pyqtSignal
 
 class Patient_Page_Ctr(PatientPage):
+    
+    reload_patient_signal = pyqtSignal()
     
     def __init__(self, stacked_widget, patient_id):
         super().__init__(stacked_widget)
@@ -65,6 +68,8 @@ class Patient_Page_Ctr(PatientPage):
         if patient_popup.exec():
         # After the dialog closes and if accepted, reload the updated data
             self.load_patient_infos(patient_id)
+            self.reload_patient_signal.emit()
 
         #TODOreload the patient tables
-        
+    
+   
