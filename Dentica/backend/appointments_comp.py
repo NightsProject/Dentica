@@ -224,10 +224,6 @@ def save_appointment_to_db(appointment_data):
         cursor.close()
         conn.close()
         
-        
-from backend.DB import connectDB
-
-
 
 
 def perform_appointment_deletion(appointment_id):
