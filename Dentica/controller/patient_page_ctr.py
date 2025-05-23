@@ -1,11 +1,18 @@
 from ui.Patients_Page import PatientPage
 from backend.patient_page_comp import get_all_patient_records
+from controller.patient_ctr import Patient_Dialog_Ctr
+from PyQt6.QtWidgets import QDialog, QMessageBox
+from backend.patients_comp import get_patient_data
 
 class Patient_Page_Ctr(PatientPage):
     
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget, patient_id):
         super().__init__(stacked_widget)
         self.Pages = stacked_widget
+        
+        self.Editpat_btn.setProperty("Patient ID", patient_id)
+        self.Editpat_btn.clicked.connect(self.edit_patient)
+        
     
     def load_patient_infos(self, patient_id):
         data = get_all_patient_records(patient_id)
@@ -45,3 +52,19 @@ class Patient_Page_Ctr(PatientPage):
             self.adval.setText("")
             
         #TODO get the picture and load it to the profile page
+        
+    def edit_patient(self):
+        button = self.sender()
+        patient_id = button.property("Patient ID")
+        patient_data = get_patient_data(patient_id)
+        if not patient_data:
+            QMessageBox.warning(self, "Error", "Could not load patient data")
+            return
+        
+        patient_popup = Patient_Dialog_Ctr(patient_data=patient_data)
+        if patient_popup.exec():
+        # After the dialog closes and if accepted, reload the updated data
+            self.load_patient_infos(patient_id)
+
+        #TODOreload the patient tables
+        
