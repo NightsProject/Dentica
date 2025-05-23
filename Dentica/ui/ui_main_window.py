@@ -1621,7 +1621,7 @@ class Ui_MainWindow(object):
         self.Apntmnt_btn.setText(_translate("MainWindow", "Appointments"))
         self.Bill_btn.setText(_translate("MainWindow", "Billing"))
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
-        self.label_2.setText(_translate("MainWindow", "Total Patients"))
+        self.label_2.setText(_translate("MainWindow", "Todays Patients"))
         self.label_5.setText(_translate("MainWindow", "0"))
         self.label_3.setText(_translate("MainWindow", "Today's Appointments"))
         self.label_6.setText(_translate("MainWindow", "0"))

@@ -171,8 +171,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.label_5.setText(str(data[0]))
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
-        self.label_9.setText(str(data[3]))
-        
+        self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
+
         #update the chart values
         
     #update_todays_appointments_table
