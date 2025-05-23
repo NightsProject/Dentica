@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
-
-
+from PyQt6.QtWidgets import QMessageBox
+import sys
 #  store the credentials globally
 def set_credentials(host, port, user, password, database):
     global HOST, PORT, USER, PASSWORD, DATABASE_NAME
@@ -31,9 +31,9 @@ def connectDBF(host, port, user, password, databaseName):
         raise  # Reraise the exception so the caller can handle it properly
 
     return None
-    
-    
-#try to connect to the database using the saved credentials
+
+
+# Try to connect to the database using the saved credentials
 def connectDB():
     try:
         connection = mysql.connector.connect(
@@ -44,14 +44,18 @@ def connectDB():
             database=DATABASE_NAME,
             use_pure=True
         )
+        
         if connection.is_connected():
             return connection
     except Error as e:
-        print(e)
-        #ToDO
-        #error handling
-    
+        print(f"Error connecting to database: {e}")
+        # Show a warning message box for database connection errors
+        QMessageBox.warning(None, "Database Connection Error", f"Error: {e}")
+    except NameError:
+        QMessageBox.warning(None, "No Database Connection", "Please login to a database first.")
+       
     return None
+
 
 
 def createAllTables(conn):

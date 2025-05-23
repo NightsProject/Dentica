@@ -11,12 +11,14 @@ from ui.Dialogues.ui_exit_dialog import Exit_App
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
+from controller.patient_page_ctr import Patient_Page_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
 from backend.patients_comp import get_all_patients, perform_patient_deletion
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
+
 
 filepath = "Dentica/ui/icons/"
 
@@ -52,7 +54,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         if confirm_popup.exec():
             MainWindow.close()
   
-  
+   
     
     #=========================================================
     #====================HANDLE CREDENTIALS================= start
@@ -339,10 +341,23 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         return widget
     
+    
     def view_patient(self):
         button = self.sender()
         patient_id = button.property("Patient ID")
-        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
+
+        # Create the patient page once and reuse it every time
+        if not hasattr(self, 'patient_page'):
+            self.patient_page = Patient_Page_Ctr()
+            self.Pages.addWidget(self.patient_page)
+
+        # Load the patient info for the selected patient ID
+        self.patient_page.load_patient_infos(patient_id)
+
+        # Set the current page to the patient page index
+        self.Pages.setCurrentWidget(self.patient_page)
+
+        
 
     def edit_patient(self):
         button = self.sender()
