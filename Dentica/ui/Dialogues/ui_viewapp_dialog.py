@@ -47,12 +47,14 @@ class View_Appointment(QtWidgets.QDialog):
 
         self.schedule_input = QtWidgets.QLineEdit(self)
         self.schedule_input.setText("Fetch Schedule")
+        self.schedule_input.setReadOnly(True)
         add_row(2, "Schedule:", self.schedule_input)
 
-        self.status_input = QtWidgets.QComboBox(self)
-        self.status_input.setGeometry(input_x, row_start + 3 * row_height, 160, 22)
-        self.status_input.addItems(["Fetch Status", "Scheduled", "Completed", "Cancelled"])
-        
+        self.status_input = QtWidgets.QLineEdit(self)
+        self.status_input.setText("Fetch Status")
+        self.status_input.setReadOnly(True)
+        add_row(3, "Status:", self.status_input)
+
         label = QtWidgets.QLabel("Status:", self)
         label.setGeometry(label_x, row_start + 3 * row_height, 120, 20)
         label.setStyleSheet(label_style)

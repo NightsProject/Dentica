@@ -40,6 +40,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         if appointment_data:
             self.appointment_id = appointment_data.get('Appointment_ID')  # Needed for updates
             self.add_btn.setText("Update")
+            self.setWindowTitle("Update Appointment")
             try:
                 self.add_btn.clicked.disconnect()
             except TypeError:

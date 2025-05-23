@@ -359,12 +359,12 @@ class Ui_MainWindow(object):
         self.verticalLayout.addStretch()
         #self.testbutton.setObjectName("testbutton")
         
-        #Test appointment dialogue button
-        self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
-        self.testbutton2.setStyleSheet("color: #fff; border: 1px solid #fff;")
-        self.verticalLayout.addWidget(self.testbutton2)
-        self.verticalLayout.addStretch()
-        self.testbutton2.setObjectName("testbutton2")
+        # #Test appointment dialogue button
+        # self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
+        # self.testbutton2.setStyleSheet("color: #fff; border: 1px solid #fff;")
+        # self.verticalLayout.addWidget(self.testbutton2)
+        # self.verticalLayout.addStretch()
+        # self.testbutton2.setObjectName("testbutton2")
         
         
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
