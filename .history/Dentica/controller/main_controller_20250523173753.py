@@ -244,10 +244,6 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
-            
-            total_billing = self.Billing_table.rowCount()
-            self.Billing_pagination.set_total_rows(total_billing)
-            self.Billing_pagination.show_current_page()
     #Billing TAB=================end
            
     #====================LOAD DATAS TO UI=============== end
