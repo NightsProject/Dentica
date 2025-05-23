@@ -363,21 +363,12 @@ class MainController(QMainWindow, Ui_MainWindow):
             connection = connectDB()
             if connection:
                 cursor = connection.cursor(dictionary=True)
-                query = ("SELECT Patient_ID, First_Name, Middle_Name, Last_Name, Gender, "
-                        "Birth_Date, Contact_Number, Email, Address "
-                        "FROM Patient WHERE Patient_ID = %s")
-                
+                query = "SELECT * FROM Patient WHERE Patient_ID = %s"
                 cursor.execute(query, (patient_id,))
                 result = cursor.fetchone()
                 cursor.close()
                 connection.close()
-                
-                if result:
-                    if hasattr(result['Birth_Date'], 'strftime'):
-                        result['Birth_Date'] = result['Birth_Date'].strftime('%Y-%m-%d')
-                    return result
-                return None
-            
+                return result
         except mysql.connector.InterfaceError as e:
             print("MySQL Interface Error:", e)
             QMessageBox.critical(None, "MySQL Connection Error", str(e))

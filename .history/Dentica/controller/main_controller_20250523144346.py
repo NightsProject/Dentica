@@ -12,7 +12,7 @@ from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 
-from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
+from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
 from backend.patients_comp import get_all_patients, perform_patient_deletion
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
@@ -360,24 +360,15 @@ class MainController(QMainWindow, Ui_MainWindow):
         
     def get_patient_data(self, patient_id):
         try:
-            connection = connectDB()
+            connection = connectDBF()
             if connection:
                 cursor = connection.cursor(dictionary=True)
-                query = ("SELECT Patient_ID, First_Name, Middle_Name, Last_Name, Gender, "
-                        "Birth_Date, Contact_Number, Email, Address "
-                        "FROM Patient WHERE Patient_ID = %s")
-                
+                query = "SELECT * FROM Patient WHERE Patient_ID = %s"
                 cursor.execute(query, (patient_id,))
                 result = cursor.fetchone()
                 cursor.close()
                 connection.close()
-                
-                if result:
-                    if hasattr(result['Birth_Date'], 'strftime'):
-                        result['Birth_Date'] = result['Birth_Date'].strftime('%Y-%m-%d')
-                    return result
-                return None
-            
+                return result
         except mysql.connector.InterfaceError as e:
             print("MySQL Interface Error:", e)
             QMessageBox.critical(None, "MySQL Connection Error", str(e))

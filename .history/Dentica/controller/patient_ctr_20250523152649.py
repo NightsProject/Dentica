@@ -3,7 +3,6 @@ from backend.patients_comp import generate_new_patient_id, insert_patient, get_a
 
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtCore import QRegularExpression, pyqtSignal
-from PyQt6 import QtCore
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 
@@ -117,7 +116,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         middle_name = self.middle_input.text()
         last_name = self.last_input.text()
         gender = self.gender_combo.currentText() if self.gender_combo.currentIndex() > 0 else ""
-        birth_date = self.birth_input.date().toString(QtCore.Qt.DateFormat.ISODate)
+        birth_date = self.birth_input.date().toString("yyyy-MM-dd")
         contact_number = self.contact_input.text()
         email = self.email_input.text()
         address = self.address_input.text()
