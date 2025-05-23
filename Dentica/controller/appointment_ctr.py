@@ -5,6 +5,7 @@ from ui.Dialogues.ui_appointment_dialog import Add_Appointment
 from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name,update_appointment_in_db
 from controller.treatment_ctr import Treatment_Dialog_Ctr
 from PyQt6.QtCore import Qt
+from datetime import datetime
 
 class Appointment_Dialog_Ctr(Add_Appointment):
     
@@ -62,7 +63,23 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         # Connect treatment addition and status validation
         self.AddTreat_btn.clicked.connect(self.on_add_treatment_clicked)
         self.status_input.currentIndexChanged.connect(self.validate_status)
+        
+        self.schedule_input.dateTimeChanged.connect(self.sync_treatment_dates)
 
+    # This method is called when the user changes the date/time in the QDateTimeEdit
+    # It prevents the user from changing the date part of the datetime
+    # while allowing them to change the time part
+    def sync_treatment_dates(self):
+        new_date = self.schedule_input.dateTime().toPyDateTime().date()
+
+        for treatment in self.treatments:
+            old_datetime = treatment["Treatment_Date_Time"]
+            if isinstance(old_datetime, str):
+                old_datetime = datetime.strptime(old_datetime, "%Y-%m-%d %H:%M:%S")
+            
+            # Replace only the date, preserve the time
+            updated_datetime = datetime.combine(new_date, old_datetime.time())
+            treatment["Treatment_Date_Time"] = updated_datetime
 
     def update_patient_search(self, text):
         if not hasattr(self, 'patient_input_line_edit') or self.patient_input_line_edit is None:
@@ -114,7 +131,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         return self.treatment_counter
 
     def on_add_treatment_clicked(self):
-        form = Treatment_Dialog_Ctr()
+        appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
+        form = Treatment_Dialog_Ctr(appointment_date)
         form.treat_id_input.setText(str(self.get_new_treatment_id()))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
@@ -123,7 +141,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         data["Appointment_ID"] = self.new_appointment_id
         self.treatment_counter += 1
         self.treatments.append(data)
-        print("testt")
         self.update_treatment_table_ui(data)
     
     def update_treatment_table_ui(self, treatment):
