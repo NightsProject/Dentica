@@ -1,5 +1,5 @@
 from backend.DB import connectDB
-
+from PyQt6.QtWidgets import QMessageBox
 # Function to get all patients from the database
 # This function retrieves all patients from the Patient table and returns them as a list of tuples.
 def get_all_patients():
@@ -211,3 +211,27 @@ def perform_patient_deletion(patient_id):
         cursor.close()
         conn.close()
     return success
+
+ 
+def get_patient_data(patient_id):
+        try:
+            connection = connectDB()
+            if connection:
+                cursor = connection.cursor(dictionary=True)
+                query = ("SELECT Patient_ID, First_Name, Middle_Name, Last_Name, Gender, "
+                        "Birth_Date, Contact_Number, Email, Address "
+                        "FROM Patient WHERE Patient_ID = %s")
+                
+                cursor.execute(query, (patient_id,))
+                result = cursor.fetchone()
+                cursor.close()
+                connection.close()
+                
+                if result:
+                    if hasattr(result['Birth_Date'], 'strftime'):
+                        result['Birth_Date'] = result['Birth_Date'].strftime('%Y-%m-%d')
+                    return result
+                return None
+        except Exception as e:
+            print("Unexpected Error:", e)
+            QMessageBox.critical(None, "Error", str(e))
