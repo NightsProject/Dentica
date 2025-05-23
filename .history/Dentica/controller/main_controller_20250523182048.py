@@ -8,11 +8,9 @@ from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
 
 from ui.Dialogues.ui_exit_dialog import Exit_App
-from ui.Dialogues.ui_viewapp_dialog import View_Appointment
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
-from controller.patient_page_ctr import Patient_Page_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
@@ -20,7 +18,6 @@ from backend.patients_comp import get_all_patients, perform_patient_deletion
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
-
 
 filepath = "Dentica/ui/icons/"
 
@@ -31,7 +28,6 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         self.setupUi(self)
         
-        self.testbutton2.clicked.connect(lambda: self.view_app())
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
@@ -56,12 +52,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
-            
-    def view_app(self):
-        appointment_popup = View_Appointment()
-        appointment_popup.exec()
   
-   
+  
     
     #=========================================================
     #====================HANDLE CREDENTIALS================= start
@@ -191,11 +183,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
             self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
             self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
-            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status 
-            
-            total_today_appointment = self.UpAp_table.rowCount()
-            self.UpAp_pagination.set_total_rows(total_today_appointment)
-            self.UpAp_pagination.show_current_page()    
+            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
             
             #appointment_id = appointment[0]
     #DASHBOARD TAB================ end
@@ -364,26 +352,17 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         return widget
     
-    
     def view_patient(self):
         button = self.sender()
         patient_id = button.property("Patient ID")
-
-        # Create the patient profile page once and reuse it every time
-        if not hasattr(self, 'patient_profile_page'):
-            self.patient_profile_page = Patient_Page_Ctr(self.Pages, patient_id)
-            self.Pages.addWidget(self.patient_profile_page)
-
-        # Load the patient info for the selected patient ID
-        self.patient_profile_page.load_patient_infos(patient_id)
-        # Set the current page to the patient page index
-        self.patient_profile_page.reload_patient_signal.connect(self.reload_all_tables)
-        self.Pages.setCurrentWidget(self.patient_profile_page)
+        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
 
     def edit_patient(self):
         button = self.sender()
         patient_id = button.property("Patient ID")
-        patient_data = get_patient_data(patient_id)
+        QMessageBox.information(self, "Edit", f"Editing patient ID: {patient_id}")
+        
+        patient_data = self.get_patient_data(patient_id)
         if not patient_data:
             QMessageBox.warning(self, "Error", "Could not load patient data")
             return
@@ -392,7 +371,53 @@ class MainController(QMainWindow, Ui_MainWindow):
         patient_popup.patient_added.connect(self.reload_all_tables)
         patient_popup.exec()
         
-   
+    def get_patient_data(self, patient_id):
+        try:
+            connection = connectDB()
+            if connection:
+                cursor = connection.cursor(dictionary=True)
+                query = ("SELECT Patient_ID, First_Name, Middle_Name, Last_Name, Gender, "
+                        "Birth_Date, Contact_Number, Email, Address "
+                        "FROM Patient WHERE Patient_ID = %s")
+                
+                cursor.execute(query, (patient_id,))
+                result = cursor.fetchone()
+                cursor.close()
+                connection.close()
+                
+                if result:
+                    if hasattr(result['Birth_Date'], 'strftime'):
+                        result['Birth_Date'] = result['Birth_Date'].strftime('%Y-%m-%d')
+                    return result
+                return None
+            
+        except mysql.connector.InterfaceError as e:
+            print("MySQL Interface Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.DatabaseError as e:
+            print("MySQL Database Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.ProgrammingError as e:
+            print("MySQL Programming Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.OperationalError as e:
+            print("MySQL Operational Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.IntegrityError as e:
+            print("MySQL Integrity Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.DataError as e:
+            print("MySQL Data Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.NotSupportedError as e:
+            print("MySQL Not Supported Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except mysql.connector.Error as e:
+            print("MySQL Error:", e)
+            QMessageBox.critical(None, "MySQL Connection Error", str(e))
+        except Exception as e:
+            print("Unexpected Error:", e)
+            QMessageBox.critical(None, "Error", str(e))
  
     def delete_patient(self):
         button = self.sender()
@@ -515,7 +540,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         if not appointment_data:
             QMessageBox.warning(self, "Error", "Could not load appointment data")
             return
-        
+        QMessageBox.information(self, "Edit", f"Editing appointment ID: {appointment_id}")
         app_popup = Appointment_Dialog_Ctr(appointment_data=appointment_data)
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()

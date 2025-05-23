@@ -590,9 +590,10 @@ class Ui_MainWindow(object):
         #Todays Appointment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame_2.setGeometry(QtCore.QRect(30, 350, 580, 440))
+        # frame_2 bg = #C6D7EC
         self.frame_2.setStyleSheet("""
         #frame_2 {
-                background: #C6D7EC;
+                background: red;
                 border: 1px solid #fff;
                 border-radius: 12px;
         }
@@ -613,7 +614,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 325))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 320))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -662,7 +663,7 @@ class Ui_MainWindow(object):
         self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
         
         self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=10)
-        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-3)
+        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-10)
   
         # Calendar Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)

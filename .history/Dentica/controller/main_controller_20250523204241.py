@@ -191,11 +191,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
             self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
             self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
-            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status 
-            
-            total_today_appointment = self.UpAp_table.rowCount()
-            self.UpAp_pagination.set_total_rows(total_today_appointment)
-            self.UpAp_pagination.show_current_page()    
+            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status     
             
             #appointment_id = appointment[0]
     #DASHBOARD TAB================ end

@@ -613,7 +613,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 325))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 340))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -660,9 +660,6 @@ class Ui_MainWindow(object):
         self.UpAp_table.setColumnWidth(4, 100)  # Actions
         
         self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
-        
-        self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=10)
-        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-3)
   
         # Calendar Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)
