@@ -590,9 +590,10 @@ class Ui_MainWindow(object):
         #Todays Appointment Frame
         self.frame_2 = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame_2.setGeometry(QtCore.QRect(30, 350, 580, 440))
+        # frame_2 bg = #C6D7EC
         self.frame_2.setStyleSheet("""
         #frame_2 {
-                background: #C6D7EC;
+                background: red;
                 border: 1px solid #fff;
                 border-radius: 12px;
         }
