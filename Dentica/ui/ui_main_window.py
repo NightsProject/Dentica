@@ -347,7 +347,7 @@ class Ui_MainWindow(object):
         # self.verticalLayout.addWidget(self.testbutton)
         # self.testbutton.clicked.connect(lambda: self.Pages.setCurrentIndex(5))
         self.verticalLayout.addStretch()
-        self.testbutton.setObjectName("testbutton")
+        #self.testbutton.setObjectName("testbutton")
         
         #Test appointment dialogue button
         self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
