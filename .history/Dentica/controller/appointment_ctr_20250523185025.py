@@ -2,7 +2,7 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 from ui.Dialogues.ui_appointment_dialog import Add_Appointment
-from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name,update_appointment_in_db
+from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name
 from controller.treatment_ctr import Treatment_Dialog_Ctr
 from PyQt6.QtCore import Qt
 
@@ -246,42 +246,42 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
 
     def on_update_pressed(self):
-        # Validate required fields
-        valid_patient = bool(self.get_selected_patient_id())
-        valid_status = self.validate_status()
-        
-        if not (valid_patient and valid_status):
-            QMessageBox.warning(self, "Validation Error",
-                            "Please select a valid patient and status.")
-            return
-        
-        # Only require treatments if status is not Cancelled
-        if self.status_input.currentText() != "Cancelled" and not self.treatments:
-            QMessageBox.warning(self, "No Treatments",
-                            "You must add at least one treatment for non-cancelled appointments.")
-            return
-        
-        # Prepare appointment data
-        app_id = self.appointment_id
-        pat_id = self.get_selected_patient_id()
-        sched = self.schedule_input.dateTime().toPyDateTime()
-        formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
-        status = self.status_input.currentText()
+            if not self.treatments:
+                QMessageBox.warning(self, "No Treatments",
+                                "You must have at least one treatment before saving the appointment.")
+                return
 
-        appointment_data = {
-            "Appointment_ID": app_id,
-            "Patient_ID": pat_id,
-            "Schedule": formatted_sched,
-            "Status": status,
-            "Treatments": self.treatments
-        }
+            # Validate patient selection and status
+            valid_patient = bool(self.get_selected_patient_id())
+            valid_status = self.validate_status()
+            if not (valid_patient and valid_status):
+                QMessageBox.warning(self, "Validation Error",
+                                "Please select a valid patient and status.")
+                return
 
-        # Update in database
-        success = update_appointment_in_db(appointment_data)
-        if success:
-            QMessageBox.information(self, "Success", "Appointment updated successfully.")
-            self.appointment_added.emit()
-            self.accept()
-        else:
-            QMessageBox.critical(self, "Database Error", 
-                            "Failed to update the appointment. Please try again.")
+            app_id = self.appointment_input.text()
+            pat_id = self.get_selected_patient_id()
+            if not pat_id:
+                QMessageBox.warning(self, "Invalid Patient",
+                                "Please select a valid patient from the list.")
+                return
+
+            sched = self.schedule_input.dateTime().toPyDateTime()
+            formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
+            status = self.status_input.currentText()
+
+            appointment_data = {
+                "Appointment_ID": app_id,
+                "Patient_ID": pat_id,
+                "Schedule": formatted_sched,
+                "Status": status,
+                "Treatments": self.treatments
+            }
+
+            success = update_appointment_in_db(appointment_data)
+            if success:
+                QMessageBox.information(self, "Success", "Appointment updated successfully.")
+                self.appointment_added.emit()
+                self.accept()
+            else:
+                QMessageBox.critical(self, "Database Error", "Failed to update the appointment. Please try again.")
