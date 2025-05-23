@@ -124,12 +124,14 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         data["Appointment_ID"] = self.new_appointment_id
         self.treatment_counter += 1
         self.treatments.append(data)
+        print("testt")
         self.update_treatment_table_ui(data)
     
     def update_treatment_table_ui(self, treatment):
         row = self.Treat_table.rowCount()
         self.Treat_table.insertRow(row)
         
+        print(treatment)
         # Create action buttons
         action_widget = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout()
