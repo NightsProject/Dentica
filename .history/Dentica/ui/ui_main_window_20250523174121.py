@@ -1200,7 +1200,6 @@ class Ui_MainWindow(object):
 
         self.Billing_pagination = TablePagination(self.Billing_table, rows_per_page=10)
         self.Billing_pagination.setup_pagination_controls(self.Billing_page, y_offset=85)
-        
         #Billing buttons layout
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(parent=self.bill_table_frame)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(20, 10, 461, 41))
