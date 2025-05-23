@@ -8,18 +8,15 @@ from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
 
 from ui.Dialogues.ui_exit_dialog import Exit_App
-from ui.Dialogues.ui_viewapp_dialog import View_Appointment
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
-from controller.patient_page_ctr import Patient_Page_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
 from backend.patients_comp import get_all_patients, perform_patient_deletion
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
-
 
 filepath = "Dentica/ui/icons/"
 
@@ -30,7 +27,6 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         self.setupUi(self)
         
-        self.testbutton2.clicked.connect(lambda: self.view_app())
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
@@ -55,12 +51,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
-            
-    def view_app(self):
-        appointment_popup = View_Appointment()
-        appointment_popup.exec()
   
-   
+  
     
     #=========================================================
     #====================HANDLE CREDENTIALS================= start
@@ -252,10 +244,6 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
-            
-            total_billing = self.Billing_table.rowCount()
-            self.Billing_pagination.set_total_rows(total_billing)
-            self.Billing_pagination.show_current_page()
     #Billing TAB=================end
            
     #====================LOAD DATAS TO UI=============== end
@@ -359,23 +347,10 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         return widget
     
-    
     def view_patient(self):
         button = self.sender()
         patient_id = button.property("Patient ID")
-
-        # Create the patient page once and reuse it every time
-        if not hasattr(self, 'patient_page'):
-            self.patient_page = Patient_Page_Ctr()
-            self.Pages.addWidget(self.patient_page)
-
-        # Load the patient info for the selected patient ID
-        self.patient_page.load_patient_infos(patient_id)
-
-        # Set the current page to the patient page index
-        self.Pages.setCurrentWidget(self.patient_page)
-
-        
+        QMessageBox.information(self, "View", f"Viewing patient ID: {patient_id}")
 
     def edit_patient(self):
         button = self.sender()
