@@ -7,7 +7,7 @@ class Add_Patient(QtWidgets.QDialog):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         
         self.setWindowTitle("Add Patient" if not patient_data else "Edit Patient")
-        self.setFixedSize(350, 500)
+        self.setFixedSize(550, 500)
 
         self.setStyleSheet("""
             QDialog {
