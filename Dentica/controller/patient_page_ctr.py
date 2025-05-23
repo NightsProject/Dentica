@@ -3,9 +3,9 @@ from backend.patient_page_comp import get_all_patient_records
 
 class Patient_Page_Ctr(PatientPage):
     
-    def __init__(self):
-        super().__init__()
-    
+    def __init__(self, stacked_widget):
+        super().__init__(stacked_widget)
+        self.Pages = stacked_widget
     
     def load_patient_infos(self, patient_id):
         data = get_all_patient_records(patient_id)

@@ -366,7 +366,7 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         # Create the patient page once and reuse it every time
         if not hasattr(self, 'patient_page'):
-            self.patient_page = Patient_Page_Ctr()
+            self.patient_page = Patient_Page_Ctr(self.Pages)
             self.Pages.addWidget(self.patient_page)
 
         # Load the patient info for the selected patient ID
