@@ -339,11 +339,14 @@ class Ui_MainWindow(object):
                 }                    
                 """)
         self.verticalLayout.addWidget(self.Rep_btn)
+        
         #Test patient page button
-        self.testbutton = QtWidgets.QPushButton("Test")
+        self.testbutton = QtWidgets.QPushButton("View Patient Test Btn")
+        self.testbutton.setStyleSheet("color: #fff; border: 1px solid #fff;")
         self.verticalLayout.addWidget(self.testbutton)
         self.testbutton.clicked.connect(lambda: self.Pages.setCurrentIndex(5))
         self.verticalLayout.addStretch()
+        self.testbutton.setObjectName("testbutton")
         
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
                 btn.setCheckable(True)
