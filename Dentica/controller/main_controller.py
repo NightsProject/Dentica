@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
 
 from ui.Dialogues.ui_exit_dialog import Exit_App
+from ui.Dialogues.ui_viewapp_dialog import View_Appointment
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
@@ -27,6 +28,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         self.setupUi(self)
         
+        self.testbutton2.clicked.connect(lambda: self.view_app())
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
@@ -51,6 +53,10 @@ class MainController(QMainWindow, Ui_MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
+            
+    def view_app(self):
+        appointment_popup = View_Appointment()
+        appointment_popup.exec()
   
   
     

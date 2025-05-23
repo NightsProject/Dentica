@@ -1,19 +1,41 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-
 filepath = "Dentica/ui/icons/"
 
 class PatientPage(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, stacked_widget):
         super().__init__()
+        self.Pages = stacked_widget
+        
+        #Return Button
+        self.return_btn = QtWidgets.QPushButton(self)
+        self.return_btn.setGeometry(QtCore.QRect(20, 15, 40, 40)) 
+        return_icon = QtGui.QIcon(f"{filepath}Return.svg")
+        self.return_btn.setIcon(return_icon)
+        self.return_btn.setIconSize(QtCore.QSize(25, 25))
+        self.return_btn.setStyleSheet("""
+        QPushButton {
+                border: none;
+                background-color: #37547A;
+                border-radius: 20px;
+        }
+        QPushButton:hover {
+                background-color: #C6D7EC;
+        }
+        """)
+        self.return_btn.clicked.connect(lambda: self.Pages.setCurrentIndex(1))
+        
+        #Patient Profile Label
         self.patient = QtWidgets.QLabel("Patient Profile", self)
-        self.patient.setGeometry(QtCore.QRect(20, 25, 200, 20))
+        self.patient.setGeometry(QtCore.QRect(70, 25, 200, 20))
         font = QtGui.QFont()
         font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
         self.patient.setFont(font)
         self.patient.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        
+        
         
         #profile card
         self.profile_card = QtWidgets.QFrame(self)
