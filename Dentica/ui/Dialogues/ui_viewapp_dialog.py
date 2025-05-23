@@ -1,6 +1,5 @@
-from PyQt6 import QtWidgets, QtCore
+from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt
-from controller.treatment_ctr import Treatment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 
 class View_Appointment(QtWidgets.QDialog):
