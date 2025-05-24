@@ -17,7 +17,7 @@ from controller.viewapp_ctr import View_Appointent_Ctr
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
 from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data, search_patients
-from backend.appointments_comp import get_appointment_data
+from backend.appointments_comp import get_appointment_data, search_appointments
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
 from backend.booking_comp import get_all_bookings
@@ -37,7 +37,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
+        
         self.search_patient.textChanged.connect(self.search_patient_data)
+        self.Search_app.textChanged.connect(self.search_appointment_data)
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
@@ -561,4 +563,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def search_patient_data(self, keyword):
         data = search_patients(keyword)
         self.update_patients_list(data)
+        
+    def search_appointment_data(self, keyword):
+        data = search_appointments(keyword)
+        self.update_appointments_list(data)
     

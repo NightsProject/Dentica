@@ -340,4 +340,56 @@ def perform_appointment_deletion(appointment_id):
     return success
 
 
+def search_appointments(keyword):
+    conn   = connectDB()
+    cursor = conn.cursor()
 
+    # prepare the wildcarded keyword
+    kw = keyword.lower()
+    kw_like = f"%{kw}%"
+
+    # aggregate treatments per appointment in a subquery, then filter all fields by LIKE
+    query = """
+    SELECT
+      sub.Appointment_ID,
+      sub.Patient_Full_Name,
+      sub.Schedule,
+      sub.Status,
+      sub.Treatment_Count
+    FROM (
+      SELECT
+        a.Appointment_ID,
+        CONCAT(p.First_Name, ' ',
+               p.Middle_Name, ' ',
+               p.Last_Name)          AS Patient_Full_Name,
+        a.Schedule,
+        a.Status,
+        COUNT(t.Treatment_ID)   AS Treatment_Count
+      FROM Appointment a
+      JOIN Patient p
+        ON a.Patient_ID = p.Patient_ID
+      LEFT JOIN Treatment t
+        ON a.Appointment_ID = t.Appointment_ID
+      GROUP BY
+        a.Appointment_ID,
+        Patient_Full_Name,
+        a.Schedule,
+        a.Status
+    ) AS sub
+    WHERE
+      LOWER(sub.Patient_Full_Name) LIKE %s
+      OR CAST(sub.Schedule AS CHAR)         LIKE %s
+      OR LOWER(sub.Status)                  LIKE %s
+      OR CAST(sub.Treatment_Count AS CHAR)  LIKE %s
+    ORDER BY sub.Schedule
+    """
+
+    params = [kw_like, kw_like, kw_like, kw_like]
+
+    cursor.execute(query, params)
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    # return list of lists: [Appointment_ID, Patient_Full_Name, Schedule, Status, Treatment_Count]
+    return [list(r) for r in rows]
