@@ -297,9 +297,6 @@ def get_quarterly_revenue():
         quarters.append(quarter)
         revenues.append(total)
         
-    print(quarters)
-    print(revenues)
-
     return quarters, revenues
 
 

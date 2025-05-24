@@ -195,9 +195,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
         self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
-        self.scheduled_label.setText(f"Scheduled: {status[0]}")
-        self.completed_label.setText (f"Completed: {status[1]}")
-        self.cancelled_label.setText(f"Cancelled: {status[2]}")
+        self.scheduled_label.setText(f"Scheduled:                                                                 {status[0]}")
+        self.completed_label.setText (f"Completed:                                                                {status[1]}")
+        self.cancelled_label.setText(f"Cancelled:                                                                 {status[2]}")
         
         #update the chart values
         
