@@ -716,20 +716,17 @@ class MainController(QMainWindow, Ui_MainWindow):
         bill_popup = Billing_Dialog_Ctr(billing_id)
         bill_popup.payment_added.connect(self.reload_all_tables)
         bill_popup.exec()
-
-    def create_todApp_action_buttons(self, appointment_id, row):
+    
+    def create_todApp_action_buttons(self, treatment_id, row):
         widget = QtWidgets.QWidget()
-
         widget.setStyleSheet("background: none;")
 
         layout = QtWidgets.QHBoxLayout()
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
-        # done Button
+
+        # Done Button
         done_btn = QtWidgets.QPushButton("Done")
-        #done_icon = QtGui.QIcon(f"ADD ICON")
-        #done_btn.setIcon(done_icon)
-        #done_btn.setIconSize(QtCore.QSize(20, 20))
         done_btn.setMaximumWidth(60)
         done_btn.setStyleSheet("""
             QPushButton {
@@ -744,13 +741,28 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #8DB8E0;
             }
         """)
-        done_btn.clicked.connect(self.done_appointment)
-        
-        # cancel Button
-        cancel_btn = QPushButton("Cancel")
-        #cancel_icon = QtGui.QIcon(f" ADD ICON ")
-        #cancel_btn.setIcon(cancel_icon)
-        #cancel_btn.setIconSize(QtCore.QSize(20, 20))
+        done_btn.clicked.connect(self.done_treatment)
+
+        # In-Progress Button
+        progress_btn = QtWidgets.QPushButton("In-Progress")
+        progress_btn.setMaximumWidth(90)
+        progress_btn.setStyleSheet("""
+            QPushButton {
+                color: white;
+                border: none;
+                background-color: #FF9800;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #FFB74D;
+            }
+        """)
+        progress_btn.clicked.connect(self.progress_treatment)
+
+        # Cancel Button
+        cancel_btn = QtWidgets.QPushButton("Cancel")
         cancel_btn.setMaximumWidth(60)
         cancel_btn.setStyleSheet("""
             QPushButton {
@@ -765,30 +777,45 @@ class MainController(QMainWindow, Ui_MainWindow):
                 background-color: #8DB8E0;
             }
         """)
-        cancel_btn.clicked.connect(self.cancel_appointment)
-        
-        
+        cancel_btn.clicked.connect(self.cancel_treatment)
+
+        layout.addWidget(progress_btn)
         layout.addWidget(done_btn)
         layout.addWidget(cancel_btn)
 
-        
         widget.setLayout(layout)
-        
-        #set the property of the button to the appointment id
-        done_btn.setProperty("Appointment ID", appointment_id)
-        cancel_btn.setProperty("Appointment ID", appointment_id)
-        
+
+        # Set property to Treatment ID
+        done_btn.setProperty("Treatment ID", treatment_id)
+        cancel_btn.setProperty("Treatment ID", treatment_id)
+        progress_btn.setProperty("Treatment ID", treatment_id)
+
         return widget
 
-    def done_appointment(self):
-        print("Done...")
+    # Slot for Done
+    def done_treatment(self):
+        print("Done treatment...")
         button = self.sender()
-        appointment_id = button.property("Appointment ID")
-        
-    def cancel_appointment(self):
-        print("Cancel...")
+        treatment_id = button.property("Treatment ID")
+        print(f"Treatment ID Done: {treatment_id}")
+        # TODO: Add done logic
+
+    # Slot for In-Progress
+    def progress_treatment(self):
+        print("In-Progress treatment...")
         button = self.sender()
-        appointment_id = button.property("Appointment ID")
+        treatment_id = button.property("Treatment ID")
+        print(f"Treatment ID In-Progress: {treatment_id}")
+        # TODO: Add in-progress logic
+
+    # Slot for Cancel
+    def cancel_treatment(self):
+        print("Cancel treatment...")
+        button = self.sender()
+        treatment_id = button.property("Treatment ID")
+        print(f"Treatment ID Cancelled: {treatment_id}")
+        # TODO: Add cancel logic
+
         
     #====================ACTION BUTTONS================= end
     #=======================================================
