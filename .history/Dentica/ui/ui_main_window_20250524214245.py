@@ -2020,7 +2020,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to all search
-        for search in [self.search_patient, self.Search_app, self.Search_bill,self.Search_book]:
+        for search in [self.search_patient, self.Search_app, self.Search_bill]:
                 search.setStyleSheet(f"""
                         background-color: {search_bg}; 
                         border-radius: 8px;        
@@ -2071,8 +2071,9 @@ class Ui_MainWindow(object):
                         }}                                                 
                         """)
 
+        
         # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
+        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
@@ -2124,7 +2125,7 @@ class Ui_MainWindow(object):
                                 border-radius: 8px;
                         }}
                         """)         
-       # Apply to calendar
+       #Apply to calendar
         if not self.dark_mode:
                 # Restore frame_3 original style
                 self.frame_3.setStyleSheet("""

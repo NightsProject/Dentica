@@ -2071,6 +2071,7 @@ class Ui_MainWindow(object):
                         }}                                                 
                         """)
 
+        
         # Apply to all tables
         for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
                 tables.setStyleSheet(f"""
@@ -2124,7 +2125,7 @@ class Ui_MainWindow(object):
                                 border-radius: 8px;
                         }}
                         """)         
-       # Apply to calendar
+       #Apply to calendar
         if not self.dark_mode:
                 # Restore frame_3 original style
                 self.frame_3.setStyleSheet("""

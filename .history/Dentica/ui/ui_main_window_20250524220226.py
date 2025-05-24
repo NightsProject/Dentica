@@ -2287,5 +2287,25 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
+        # Apply to all frames in reports page
+        
+        self.tot_appstat_graph.setStyleSheet(f"""
+                        #tot_appstat_graph {{
+                                background: {card_bg};
+                                border: 1px solid {card_bd};  
+                                border-radius: 12px;
+                                }}
+                                """)   
+        
+        self.graph_label1.setStyleSheet(f"background: {card_bg}; color: {card_text};")
+
+        
+        
+        
+        
+        
+        
+        
+        
         #TODO all tables should not be editable
         #TODO all column in a row should be selectable

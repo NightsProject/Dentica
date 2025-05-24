@@ -1924,13 +1924,13 @@ class Ui_MainWindow(object):
                                        """)
     
         # Apply to headers (TOP BAR)
-        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Book_frame]:
+        for header in [self.frame_4,self.app_frame,self.Bill_frame]:
                 header.setStyleSheet(f"""
                         background-color: {main_bg};
                                      """)
         
         # Apply to header labels (TOP BAR)
-        for title in [self.label_12,self.label_13,self.label_14,self.payment_label]:
+        for title in [self.label_12,self.label_13,self.label_14]:
                 title.setStyleSheet(f"""
                         background-color: {main_bg};
                         color: {main_text};
@@ -2020,7 +2020,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to all search
-        for search in [self.search_patient, self.Search_app, self.Search_bill,self.Search_book]:
+        for search in [self.search_patient, self.Search_app, self.Search_bill]:
                 search.setStyleSheet(f"""
                         background-color: {search_bg}; 
                         border-radius: 8px;        
@@ -2053,7 +2053,7 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Payment table frame
+        # Apply to Billing table frame
         self.bill_table_frame.setStyleSheet(f"""
                 #bill_table_frame {{
                         background: {table_bg};
@@ -2062,17 +2062,17 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Booking table frame
-        self.book_table_frame.setStyleSheet(f"""
-                #book_table_frame {{
+        # Apply to Report table frame
+        self.Reports_table_frame.setStyleSheet(f"""
+                #Reports_table_frame {{
                         background: {table_bg};
-                        border: 1px solid {card_bd};  
-                        border-radius: 12px;      
-                        }}                                                 
+                        border: 1px solid {card_bd};
+                        border-radius: 12px;
+                        }}
                         """)
-
+        
         # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
+        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
@@ -2124,7 +2124,7 @@ class Ui_MainWindow(object):
                                 border-radius: 8px;
                         }}
                         """)         
-       # Apply to calendar
+       #Apply to calendar
         if not self.dark_mode:
                 # Restore frame_3 original style
                 self.frame_3.setStyleSheet("""

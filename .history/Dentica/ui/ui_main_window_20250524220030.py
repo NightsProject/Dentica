@@ -2287,5 +2287,17 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
+        # Apply to all frames in reports page
+        
+ 
+        
+        
+        
+        
+        
+        
+        
+        
+        
         #TODO all tables should not be editable
         #TODO all column in a row should be selectable
