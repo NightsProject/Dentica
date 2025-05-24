@@ -96,7 +96,7 @@ class MainController(QMainWindow, Ui_MainWindow):
                 todays_appointment_status = get_todays_appointment_status_counts()
                 self.update_summary(summary_data, todays_appointment_status)
                 self.appointment_chart = create_appointment_status_chart()
-                self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart, self.app_ot_chart, self.Comm_treat_chart, self.treat_cost_chart = load_graphs()
+                self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart, self.app_ot_chart, self.quarterly_rev_chart, self.Comm_treat_chart, self.treat_cost_chart = load_graphs()
                 
                 if self.appointment_chart:
                         self.today_stat_layout.addWidget(self.appointment_chart)
@@ -116,8 +116,8 @@ class MainController(QMainWindow, Ui_MainWindow):
                 if self.app_ot_chart:
                         self.app_ot_layout.addWidget(self.app_ot_chart)
 
-                # if self.quarterly_rev_chart:
-                #     self.quarterly_rev_layout.addWidget(self.quarterly_rev_chart)
+                if self.quarterly_rev_chart:
+                    self.quarterly_rev_layout.addWidget(self.quarterly_rev_chart)
                 
                 if self.Comm_treat_chart:
                         self.common_treatments_layout.addWidget(self.Comm_treat_chart)
