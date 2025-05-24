@@ -271,6 +271,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
+            self.Billing_table.setItem(row_position, 6, QtWidgets.QTableWidgetItem(str(billing[6])))
             
             billing_id = billing[0]
             action_widget = self.create_billing_action_buttons(billing_id, row_position)
@@ -590,9 +591,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
         # Pay Button
-        pay = QtWidgets.QPushButton("Pay")
+        pay = QtWidgets.QPushButton()
         #pay_icon = QtGui.QIcon(f" ADD LNG OG ICON ")
-        #pay.setIcon(pay_icon)
+        #pay.setIcon(view_icon)
         #pay.setIconSize(QtCore.QSize(20, 20))
         pay.setMaximumWidth(60)
         pay.setStyleSheet("""
@@ -612,9 +613,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         # Edit Button
         edit_bill = QPushButton()
-        edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
-        edit_bill.setIcon(edit_icon)
-        edit_bill.setIconSize(QtCore.QSize(20, 20))
+        #edit_icon = QtGui.QIcon(f" ADD ICON ")
+        #edit_btn.setIcon(edit_icon)
+        #edit_btn.setIconSize(QtCore.QSize(20, 20))
         edit_bill.setMaximumWidth(60)
         edit_bill.setStyleSheet("""
             QPushButton {
@@ -630,27 +631,17 @@ class MainController(QMainWindow, Ui_MainWindow):
             }
         """)
         edit_bill.clicked.connect(self.edit_billing)
-            
-            
-        layout.addWidget(pay)
-        layout.addWidget(edit_bill)
         
-        widget.setLayout(layout)
-        
-        pay.setProperty("Billing_ID", billing_id)
-        edit_bill.setProperty("Billing_ID", billing_id)
-
-        return widget
         
     def pay_billing(self):
         print("Paying...")
         button = self.sender()
-        billing_id = button.property("Billing_ID")
+        billing_id = button.property("Billing_Id")
     
     def edit_billing(self):
         print("Edit bill...")
         button = self.sender()
-        billing_id = button.property("Billing_ID")
+        billing_id = button.property("Billing_Id")
         
     #====================ACTION BUTTONS================= end
     #=======================================================

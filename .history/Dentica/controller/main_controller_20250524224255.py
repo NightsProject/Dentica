@@ -592,7 +592,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         # Pay Button
         pay = QtWidgets.QPushButton("Pay")
         #pay_icon = QtGui.QIcon(f" ADD LNG OG ICON ")
-        #pay.setIcon(pay_icon)
+        #pay.setIcon(view_icon)
         #pay.setIconSize(QtCore.QSize(20, 20))
         pay.setMaximumWidth(60)
         pay.setStyleSheet("""
@@ -615,6 +615,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
         edit_bill.setIcon(edit_icon)
         edit_bill.setIconSize(QtCore.QSize(20, 20))
+        #edit_icon = QtGui.QIcon(f" ADD ICON ")
+        #edit_btn.setIcon(edit_icon)
+        #edit_btn.setIconSize(QtCore.QSize(20, 20))
         edit_bill.setMaximumWidth(60)
         edit_bill.setStyleSheet("""
             QPushButton {
@@ -637,10 +640,11 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         widget.setLayout(layout)
         
+        #set the property of the button to the appointment id
         pay.setProperty("Billing_ID", billing_id)
         edit_bill.setProperty("Billing_ID", billing_id)
 
-        return widget
+        
         
     def pay_billing(self):
         print("Paying...")

@@ -1222,7 +1222,7 @@ class Ui_MainWindow(object):
         """)
  
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 80)  # Bill ID 
+        self.Billing_table.setColumnWidth(0, 90)  # Bill ID 
         self.Billing_table.setColumnWidth(1, 150)  # Pat. Name
         self.Billing_table.setColumnWidth(2, 120)  # App. ID
         self.Billing_table.setColumnWidth(3, 120)  # Total Amount

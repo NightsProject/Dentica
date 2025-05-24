@@ -615,6 +615,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
         edit_bill.setIcon(edit_icon)
         edit_bill.setIconSize(QtCore.QSize(20, 20))
+        #edit_icon = QtGui.QIcon(f" ADD ICON ")
+        #edit_bill.setIcon(edit_icon)
+        #edit_bill.setIconSize(QtCore.QSize(20, 20))
         edit_bill.setMaximumWidth(60)
         edit_bill.setStyleSheet("""
             QPushButton {

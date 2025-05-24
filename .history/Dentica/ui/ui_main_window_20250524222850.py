@@ -1222,13 +1222,13 @@ class Ui_MainWindow(object):
         """)
  
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 80)  # Bill ID 
-        self.Billing_table.setColumnWidth(1, 150)  # Pat. Name
+        self.Billing_table.setColumnWidth(0, 90)  # Bill ID 
+        self.Billing_table.setColumnWidth(1, 206)  # Pat. Name
         self.Billing_table.setColumnWidth(2, 120)  # App. ID
-        self.Billing_table.setColumnWidth(3, 120)  # Total Amount
-        self.Billing_table.setColumnWidth(4, 80)  # Method
+        self.Billing_table.setColumnWidth(3, 150)  # Total Amount
+        self.Billing_table.setColumnWidth(4, 130)  # Method
         self.Billing_table.setColumnWidth(5, 110)  # Status
-        self.Billing_table.setColumnWidth(6, 130) # Action Button
+        self.Billing_table.setColumnWidth(6, 100) # Action Button
 
         
         self.Billing_table.verticalHeader().setDefaultSectionSize(60)
@@ -1385,7 +1385,7 @@ class Ui_MainWindow(object):
 
         #Booking Table
         self.Booking_table = QtWidgets.QTableWidget(parent=self.book_table_frame)
-        self.Booking_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
+        self.Booking_table.setGeometry(QtCore.QRect(20, 20, 600, 615))
         self.Booking_table.setObjectName("Booking_table")
         self.Booking_table.setColumnCount(4)
         self.Booking_table.setRowCount(0)
@@ -1425,11 +1425,11 @@ class Ui_MainWindow(object):
         }
         """)
  
-        # Book Sizing
-        self.Booking_table.setColumnWidth(0, 180)  # Booking ID 
-        self.Booking_table.setColumnWidth(1, 180)  # Pat. ID
-        self.Booking_table.setColumnWidth(2, 300)  # Pat. Name
-        self.Booking_table.setColumnWidth(3, 190)  # Book DateTime
+        # Bill Sizing
+        self.Booking_table.setColumnWidth(0, 90)  # Booking ID 
+        self.Booking_table.setColumnWidth(1, 206)  # Pat. ID
+        self.Booking_table.setColumnWidth(2, 120)  # App. ID
+        self.Booking_table.setColumnWidth(3, 150)  # Book DateTime
 
         
         self.Booking_table.verticalHeader().setDefaultSectionSize(60)
@@ -1795,8 +1795,6 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Method"))
         item = self.Billing_table.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Status"))
-        item = self.Billing_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Actions"))
         self.pushButton_12.setText(_translate("MainWindow", "All"))
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
