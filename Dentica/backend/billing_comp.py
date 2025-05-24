@@ -55,3 +55,60 @@ def generate_new_payment_id():
 
     new_payment_id = f'PY{expected_id:05d}'  # Zero-padded to 5 digits
     return new_payment_id
+
+
+def search_payments(keyword):
+    conn   = connectDB()
+    cursor = conn.cursor()
+
+    kw = keyword.lower()
+    like_kw = f"%{kw}%"
+
+    query = """
+        SELECT
+            pay.Payment_ID,
+            CONCAT(pat.First_Name, ' ',
+                   pat.Middle_Name, ' ',
+                   pat.Last_Name)    AS Patient_Full_Name,
+            pay.Appointment_ID,
+            pay.Total_Amount,
+            pay.Payment_Method,
+            pay.Payment_Status
+        FROM Pays AS pay
+        JOIN Patient AS pat
+          ON pay.Patient_ID = pat.Patient_ID
+        WHERE
+            LOWER(pay.Payment_ID)         LIKE %s
+         OR LOWER(pat.First_Name)       LIKE %s
+         OR LOWER(pat.Middle_Name)      LIKE %s
+         OR LOWER(pat.Last_Name)        LIKE %s
+         OR LOWER(CONCAT(pat.First_Name, ' ',
+                         pat.Middle_Name, ' ',
+                         pat.Last_Name))    LIKE %s
+         OR LOWER(pay.Appointment_ID)   LIKE %s
+         OR CAST(pay.Total_Amount AS CHAR) LIKE %s
+         OR LOWER(pay.Payment_Method)   LIKE %s
+         OR LOWER(pay.Payment_Status)   LIKE %s
+        ORDER BY pay.Payment_ID
+    """
+
+    # include both individual name‐parts and the full name for maximum flexibility
+    params = [
+        like_kw,
+        like_kw,
+        like_kw,
+        like_kw,
+        like_kw,
+        like_kw,
+        like_kw,
+        like_kw,
+        like_kw
+    ]
+
+    cursor.execute(query, params)
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    # Each row: [Payment_ID, Patient_Full_Name, Appointment_ID, Total_Amount, Payment_Method, Payment_Status]
+    return [list(r) for r in rows]

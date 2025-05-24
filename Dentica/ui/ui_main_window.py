@@ -1782,7 +1782,7 @@ class Ui_MainWindow(object):
         item = self.Billing_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Appointment ID"))
         item = self.Billing_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Amount ID"))
+        item.setText(_translate("MainWindow", "Total Amount"))
         item = self.Billing_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Method"))
         item = self.Billing_table.horizontalHeaderItem(5)
