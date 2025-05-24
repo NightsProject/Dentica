@@ -142,7 +142,21 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.treatment_counter += 1
         self.treatments.append(data)
         self.update_treatment_table_ui(data)
-    
+        self.update_total_billing()  # Update total billing after treatment is added
+
+    def update_total_billing(self):
+        total = 0.0
+        for treatment in self.treatments:
+            try:
+                #treatment dict has a 'Cost' field with a string/float
+                cost = float(treatment.get("Cost", 0))
+                total += cost
+            except ValueError:
+                print(f"Invalid cost value in treatment: {treatment}")
+
+        #display the total billing
+        self.total_input.setText(f"₱{total:,.2f}")
+
     def update_treatment_table_ui(self, treatment):
         row = self.Treat_table.rowCount()
         self.Treat_table.insertRow(row)
