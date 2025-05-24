@@ -149,6 +149,7 @@ def createAllTables(conn):
             Total_Amount DECIMAL(10, 4) NOT NULL,
             Payment_Method ENUM('Cash', 'Card', 'GCash', 'None') NOT NULL,
             Payment_Status ENUM('Paid','Unpaid') NOT NULL,
+            Payment_Date DATETIME,
             
             PRIMARY KEY (Payment_ID),
             FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),

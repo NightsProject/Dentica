@@ -14,7 +14,8 @@ def get_all_billings():
             p.Appointment_ID,
             p.Total_Amount,
             p.Payment_Method,
-            p.Payment_Status
+            p.Payment_Status,
+            p.Payment_Date
         FROM Pays p
         JOIN Patient pa ON p.Patient_ID = pa.Patient_ID
         ORDER BY CAST(SUBSTRING(p.Payment_ID, 3) AS UNSIGNED)

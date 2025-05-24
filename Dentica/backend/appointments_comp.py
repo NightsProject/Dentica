@@ -108,7 +108,7 @@ def get_appointment_data(appointment_id):
 
         # Get payment info
         cursor.execute("""
-            SELECT Payment_ID, Total_Amount, Payment_Method, Payment_Status
+            SELECT Payment_ID, Total_Amount, Payment_Method, Payment_Status, Payment_Date
             FROM Pays
             WHERE Appointment_ID = %s
         """, (appointment_id,))
@@ -293,6 +293,7 @@ def save_appointment_to_db(appointment_data):
             appointment_data["Payment"]["Total_Amount"],
             appointment_data["Payment"]["Payment_Method"],
             appointment_data["Payment"]["Payment_Status"]
+            
         ))
 
         conn.commit()

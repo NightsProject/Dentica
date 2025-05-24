@@ -265,13 +265,14 @@ class MainController(QMainWindow, Ui_MainWindow):
         for billing in billings:
             row_position = self.Billing_table.rowCount()
             self.Billing_table.insertRow(row_position)
-            self.Billing_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(billing[0])))
-            self.Billing_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(billing[1])))
-            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(billing[2])))
-            self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[3])))
-            self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[4])))
+            self.Billing_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(billing[1])))
+            self.Billing_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(billing[2])))
+            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(billing[3])))
+            self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[4])))
+            self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[6])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
             
+            #billing_id = billing[0]
             total_billing = self.Billing_table.rowCount()
             self.Billing_pagination.set_total_rows(total_billing)
             self.Billing_pagination.show_current_page()
