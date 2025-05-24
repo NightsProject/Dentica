@@ -25,6 +25,48 @@ from backend.reports_comp import load_graphs, refresh_graphs
 
 
 
+
+"""
+Key Features
+
+    Inheritance:
+        The MainController class inherits from QMainWindow and Ui_MainWindow, allowing it to utilize the main window's features and the UI layout defined in Ui_MainWindow.
+
+    Initialization:
+        The constructor (__init__) initializes the main window and sets up connections between UI elements (buttons, text fields) and their corresponding methods. This includes connecting buttons for user login, adding appointments, adding patients, and exiting the application.
+
+    User Interaction:
+        The class provides methods to open various dialogs for user interactions:
+            open_login_popup: Opens a dialog for database login.
+            open_appointment: Opens a dialog for adding or updating appointments.
+            open_patient: Opens a dialog for adding or updating patient information.
+            confirm_exit: Confirms if the user wants to exit the application.
+
+    Handling Credentials:
+        The handle_credentials method is called when the user submits the login form. It attempts to connect to the database using the provided credentials. If successful, it loads data into the UI, including appointment summaries, patient lists, and charts.
+
+    Data Loading:
+        The reload_all_tables method refreshes all data tables in the UI, including today's appointments, patients, appointments, billings, and bookings. It calls various backend functions to retrieve the necessary data.
+
+    Dashboard Updates:
+        The update_summary method updates the summary section of the dashboard with relevant statistics, such as the number of scheduled, completed, and canceled appointments.
+        The update_todays_appointments_table, update_patients_list, update_appointments_list, and update_billing_list methods populate their respective tables with data retrieved from the backend.
+
+    Action Buttons:
+        The class provides methods to create action buttons for patients and appointments, allowing users to view, edit, or delete records. Each button is connected to its respective method, which handles the action when clicked.
+
+    Search Functionality:
+        The class includes methods for searching patients, appointments, payments, and bookings. These methods call backend search functions and update the corresponding lists in the UI.
+
+    Error Handling:
+        Throughout the class, error handling is implemented using message boxes to inform the user of any issues, such as failed database connections or unsuccessful operations.
+
+"""
+
+
+
+
+
 filepath = "Dentica/ui/icons/"
 
 
