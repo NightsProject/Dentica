@@ -152,26 +152,9 @@ class MainController(QMainWindow, Ui_MainWindow):
     def reload_all_tables(self):
         
         summary_data = load_summary()
-        self.appointment_chart = create_appointment_status_chart()
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)
-        total_status, payment_method, gender_dist, age_dist = load_graphs()
-                
-        if self.appointment_chart:
-            self.today_stat_layout.addWidget(self.appointment_chart)
-                        
-        if total_status:
-            self.tot_appstat_layout.addWidget(total_status)
-                        
-        if payment_method:
-            self.payment_method_layout.addWidget(payment_method)
-                
-        if gender_dist:
-            self.gender_dist_layout.addWidget(gender_dist)
-
-        if age_dist:
-            self.age_dist_layout.addWidget(age_dist)
-
+        
         todays_appointments_list = get_todays_appointments()
         self.update_todays_appointments_table(todays_appointments_list)
 
