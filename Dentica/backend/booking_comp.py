@@ -57,3 +57,41 @@ def generate_new_booking_id():
 
     new_booking_id = f'B{expected_id:05d}'  # Zero-padded to 5 digits
     return new_booking_id
+
+def search_bookings(keyword):
+    conn   = connectDB()
+    cursor = conn.cursor()
+
+    kw = keyword.lower()
+    like_kw = f"%{kw}%"
+
+    query = """
+        SELECT
+            b.Booking_ID,
+            b.Appointment_ID,
+            CONCAT(p.First_Name, ' ',
+                   p.Middle_Name, ' ',
+                   p.Last_Name)       AS Patient_Full_Name,
+            b.Booking_Date_Time
+        FROM Books AS b
+        JOIN Patient AS p
+          ON b.Patient_ID = p.Patient_ID
+        WHERE
+            LOWER(b.Booking_ID)                    LIKE %s
+         OR LOWER(b.Appointment_ID)              LIKE %s
+         OR LOWER(CONCAT(p.First_Name, ' ',
+                         p.Middle_Name, ' ',
+                         p.Last_Name))             LIKE %s
+         OR CAST(b.Booking_Date_Time AS CHAR)    LIKE %s
+        ORDER BY b.Booking_Date_Time
+    """
+
+    params = [like_kw, like_kw, like_kw, like_kw]
+
+    cursor.execute(query, params)
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    # Each row: [Booking_ID, Patient_Full_Name, Appointment_ID, Booking_Date_Time]
+    return [list(r) for r in rows]

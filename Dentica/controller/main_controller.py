@@ -22,7 +22,7 @@ from backend.patients_comp import get_all_patients, perform_patient_deletion, ge
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion, search_appointments
 from backend.billing_comp import get_all_billings, search_payments
-from backend.booking_comp import get_all_bookings
+from backend.booking_comp import get_all_bookings, search_bookings
 from backend.reports_comp import load_graphs
 
 
@@ -44,6 +44,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.search_patient.textChanged.connect(self.search_patient_data)
         self.Search_app.textChanged.connect(self.search_appointment_data)
         self.Search_bill.textChanged.connect(self.search_payment_data)
+        self.Search_book.textChanged.connect(self.search_booking_data)
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
@@ -591,3 +592,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     def search_payment_data(self, keyword):
         data = search_payments(keyword)
         self.update_billing_list(data)
+        
+    def search_booking_data(self, keyword):
+        data = search_bookings(keyword)
+        self.update_bookings_list(data)
