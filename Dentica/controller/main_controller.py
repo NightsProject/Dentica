@@ -20,6 +20,7 @@ from backend.patients_comp import get_all_patients, perform_patient_deletion, ge
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
+from backend.booking_comp import get_all_bookings
 
 
 filepath = "Dentica/ui/icons/"
@@ -98,6 +99,9 @@ class MainController(QMainWindow, Ui_MainWindow):
 
                 all_billings_list = get_all_billings()
                 self.update_billing_list(all_billings_list)
+                
+                all_bookings_list = get_all_bookings()
+                self.update_bookings_list(all_bookings_list)
             
             connection.close()
             
@@ -143,6 +147,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     # It uses the functions from the backend to get the data
     # It also handles the case where the connection is None
     
+    # This function reloads all the tables in the UI
+    # It calls the functions to get the data from the backend
     def reload_all_tables(self):
         summary_data = load_summary()
         todays_appointment_status = get_todays_appointment_status_counts()
@@ -159,6 +165,10 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         all_billings_list = get_all_billings()
         self.update_billing_list(all_billings_list)
+        
+        all_bookings_list = get_all_bookings()
+        self.update_bookings_list(all_bookings_list)
+    #=========================================================
     
     #DASHBOARD TAB=============== start
     def update_summary(self, data, status):
@@ -257,6 +267,20 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_pagination.show_current_page()
     #Billing TAB=================end
            
+    #Bookings TAB=================start
+    def update_bookings_list(self, bookings):
+        self.Booking_table.setRowCount(0)
+        for booking in bookings:
+            row_position = self.Booking_table.rowCount()
+            self.Booking_table.insertRow(row_position)
+            self.Booking_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(booking[0])))
+            self.Booking_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(booking[1])))
+            self.Booking_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(booking[2])))
+            self.Booking_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(booking[3])))
+            
+            total_bookings = self.Booking_table.rowCount()
+            self.Booking_pagination.set_total_rows(total_bookings)
+            self.Booking_pagination.show_current_page()       
     #====================LOAD DATAS TO UI=============== end
     #=======================================================
     

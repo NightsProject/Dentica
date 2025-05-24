@@ -58,7 +58,7 @@ def generate_new_appointment_id():
 
 
 def get_appointment_data(appointment_id):
-    """Get complete appointment data including all treatment fields"""
+    """Get complete appointment data including patient, treatments, booking, and payment"""
     conn = connectDB()
     if not conn:
         return None
@@ -69,7 +69,7 @@ def get_appointment_data(appointment_id):
         # Get appointment and patient details
         cursor.execute("""
             SELECT a.Appointment_ID, a.Patient_ID, a.Schedule, a.Status,
-                   CONCAT(p.First_Name, ' ', p.Last_Name) AS Patient_Name
+                   CONCAT(p.First_Name, ' ', p.Middle_Name, ' ', p.Last_Name) AS Patient_Name
             FROM Appointment a
             JOIN Patient p ON a.Patient_ID = p.Patient_ID
             WHERE a.Appointment_ID = %s
@@ -82,7 +82,7 @@ def get_appointment_data(appointment_id):
         if hasattr(appointment['Schedule'], 'strftime'):
             appointment['Schedule'] = appointment['Schedule'].strftime('%Y-%m-%d %H:%M:%S')
 
-        # Get full treatment details for this appointment
+        # Get treatment records
         cursor.execute("""
             SELECT Treatment_ID, Diagnosis, Cost, Treatment_Procedure, 
                    Treatment_Date_Time, Treatment_Status
@@ -94,27 +94,48 @@ def get_appointment_data(appointment_id):
         for t in treatments:
             if hasattr(t['Treatment_Date_Time'], 'strftime'):
                 t['Treatment_Date_Time'] = t['Treatment_Date_Time'].strftime('%Y-%m-%d %H:%M:%S')
-
         appointment['Treatments'] = treatments or []
+
+        # Get booking info
+        cursor.execute("""
+            SELECT Booking_ID, Booking_Date_Time
+            FROM Books
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+        booking = cursor.fetchone()
+        if booking and hasattr(booking['Booking_Date_Time'], 'strftime'):
+            booking['Booking_Date_Time'] = booking['Booking_Date_Time'].strftime('%Y-%m-%d %H:%M:%S')
+        appointment['Booking'] = booking or {}
+
+        # Get payment info
+        cursor.execute("""
+            SELECT Payment_ID, Total_Amount, Payment_Method, Payment_Status
+            FROM Pays
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+        payment = cursor.fetchone()
+        appointment['Payment'] = payment or {}
 
         return appointment
 
     except Exception as e:
         print("Error getting appointment data:", e)
         return None
+
     finally:
         cursor.close()
         conn.close()
+
 
 
 def update_appointment_in_db(appointment_data):
     conn = connectDB()
     if not conn:
         return False
-        
+
     try:
         cursor = conn.cursor()
-        
+
         # Update appointment
         cursor.execute("""
             UPDATE Appointment SET
@@ -128,33 +149,48 @@ def update_appointment_in_db(appointment_data):
             appointment_data['Status'],
             appointment_data['Appointment_ID']
         ))
-        
+
         # Delete existing treatments
         cursor.execute("""
             DELETE FROM Treatment
             WHERE Appointment_ID = %s
         """, (appointment_data['Appointment_ID'],))
-        
-        # Add new treatments
+
+        # Insert updated treatments
         for treatment in appointment_data['Treatments']:
             cursor.execute("""
                 INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time, Treatment_Status)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (
                 appointment_data['Appointment_ID'], treatment['Treatment_ID'],
-                treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"], treatment["Treatment_Status"]
+                treatment["Diagnosis"], treatment["Cost"],
+                treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"],
+                treatment["Treatment_Status"]
             ))
-        
+
+        # Update payment total_amount
+        if 'Payment' in appointment_data and 'Total_Amount' in appointment_data['Payment']:
+            cursor.execute("""
+                UPDATE Pays SET
+                    Total_Amount = %s
+                WHERE Appointment_ID = %s
+            """, (
+                appointment_data['Payment']['Total_Amount'],
+                appointment_data['Appointment_ID']
+            ))
+
         conn.commit()
         return True
-        
+
     except Exception as e:
         print("Error updating appointment:", e)
         conn.rollback()
         return False
+
     finally:
         cursor.close()
         conn.close()
+
 
 # Function to search patients by name
 # This function searches for patients by their first, middle, or last name.
@@ -199,31 +235,79 @@ def get_patients_name():
 
 
 
-
 def save_appointment_to_db(appointment_data):
     conn = connectDB()
     cursor = conn.cursor()
 
     try:
+        # Insert into Appointment
         cursor.execute("""
             INSERT INTO Appointment (Appointment_ID, Patient_ID, Schedule, Status)
             VALUES (%s, %s, %s, %s)
-        """, (appointment_data["Appointment_ID"], appointment_data["Patient_ID"], appointment_data["Schedule"], appointment_data["Status"]))
+        """, (
+            appointment_data["Appointment_ID"],
+            appointment_data["Patient_ID"],
+            appointment_data["Schedule"],
+            appointment_data["Status"]
+        ))
 
+        # Insert Treatments
         for treatment in appointment_data["Treatments"]:
             cursor.execute("""
-                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time, Treatment_Status)
+                INSERT INTO Treatment (
+                    Appointment_ID, Treatment_ID, Diagnosis, Cost,
+                    Treatment_Procedure, Treatment_Date_Time, Treatment_Status
+                )
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (treatment["Appointment_ID"], treatment["Treatment_ID"], treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"], treatment["Treatment_Status"]))
+            """, (
+                treatment["Appointment_ID"],
+                treatment["Treatment_ID"],
+                treatment["Diagnosis"],
+                treatment["Cost"],
+                treatment["Treatment_Procedure"],
+                treatment["Treatment_Date_Time"],
+                treatment["Treatment_Status"]
+            ))
+
+        # Insert into Books (Booking)
+        cursor.execute("""
+            INSERT INTO Books (Booking_ID, Patient_ID, Appointment_ID, Booking_Date_Time)
+            VALUES (%s, %s, %s, %s)
+        """, (
+            appointment_data["Booking"]["Booking_ID"],
+            appointment_data["Patient_ID"],
+            appointment_data["Appointment_ID"],
+            appointment_data["Booking"]["Booking_Date_Time"]
+        ))
+
+        # Insert into Pays (Payment)
+        cursor.execute("""
+            INSERT INTO Pays (
+                Payment_ID, Patient_ID, Appointment_ID,
+                Total_Amount, Payment_Method, Payment_Status
+            )
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            appointment_data["Payment"]["Payment_ID"],
+            appointment_data["Patient_ID"],
+            appointment_data["Appointment_ID"],
+            appointment_data["Payment"]["Total_Amount"],
+            appointment_data["Payment"]["Payment_Method"],
+            appointment_data["Payment"]["Payment_Status"]
+        ))
 
         conn.commit()
         return True
+
     except Exception as e:
-        print(e)
+        print("Error saving appointment:", e)
+        conn.rollback()
         return False
+
     finally:
         cursor.close()
         conn.close()
+
         
 
 
