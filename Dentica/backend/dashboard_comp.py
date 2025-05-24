@@ -132,7 +132,6 @@ def get_todays_appointments():
     cursor.close()
     conn.close()
     
-    print(todays_appointments)
     return todays_appointments
 
 from backend.DB import connectDB
