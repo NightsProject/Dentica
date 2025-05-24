@@ -21,22 +21,30 @@ class DonutChart1(QWidget):
         ax = self.figure.add_subplot(111)
         ax.clear()
         colors = ['#1d1f27', '#5e93bf', '#99c4e7']
-        wedges, texts, autotexts = ax.pie(
+        wedges, _, autotexts = ax.pie(
             values,
-            labels=labels,
+            labels=None,
             autopct='%1.1f%%',
             startangle=90,
             wedgeprops=dict(width=0.4),
             colors=colors
         )
+
         for autotext in autotexts:
             autotext.set_color('white')
             autotext.set_fontweight('bold')
-            autotext.set_fontsize(10)
-
-            
+            autotext.set_fontsize(9)
             x, y = autotext.get_position()
-            autotext.set_position((x * 1.4, y * 1.4))  
+            autotext.set_position((x * 1.4, y * 1.4))
+
+        ax.legend(
+            wedges,
+            labels,
+            loc='upper left',
+            bbox_to_anchor=(-0.15, 1.15),
+            fontsize=6,
+            frameon=False
+        )
 
         ax.axis('off')
         self.figure.subplots_adjust(right=1.0)

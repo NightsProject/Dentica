@@ -21,8 +21,15 @@ class QuarterlyRevenueLineChart(QWidget):
         ax.set_title("Quarterly Revenue", fontsize=10, fontweight='bold', color='#37547A')
         ax.set_ylabel('Amount Paid', fontsize=9, color='#37547A')
         ax.set_xticks(range(len(quarters)))
-        ax.set_xticklabels(quarters, rotation=45, fontsize=8)
-        ax.tick_params(axis='y', labelsize=8)
+        ax.set_xticklabels(quarters, rotation=45, fontsize=8, color='#37547A')
+        ax.tick_params(axis='y', labelsize=10, labelcolor='white')
+
+        # Bold and white y-tick labels (like pie chart values)
+        for label in ax.get_yticklabels():
+            label.set_fontweight('bold')
+            label.set_color('white')
+            label.set_fontsize(10)
+
         ax.grid(True, linestyle='--', alpha=0.6)
         self.figure.subplots_adjust(left=0.18, bottom=0.25)
         self.canvas.draw()

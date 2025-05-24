@@ -1,5 +1,4 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
-from PyQt6 import QtWidgets
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
@@ -17,21 +16,30 @@ class PaymentMethodPie(QWidget):
     def draw_chart(self, labels, values):
         ax = self.figure.add_subplot(111)
         ax.clear()
-        colors = ['#1d1f27', '#5e93bf', '#99c4e7']  
-        wedges, texts, autotexts = ax.pie(
+        colors = ['#1d1f27', '#5e93bf', '#99c4e7']
+        wedges, _, autotexts = ax.pie(
             values,
-            labels=labels,
+            labels=None,
             autopct='%1.1f%%',
             startangle=90,
             colors=colors
         )
+
         for autotext in autotexts:
             autotext.set_color('white')
             autotext.set_fontweight('bold')
-            autotext.set_fontsize(10)
-            # Optional: move values slightly outward
+            autotext.set_fontsize(9)
             x, y = autotext.get_position()
             autotext.set_position((x * 1.2, y * 1.2))
 
-        ax.axis('equal')  # keep pie circular
+        ax.legend(
+            wedges,
+            labels,
+            loc='upper left',
+            bbox_to_anchor=(-0.15, 1.15),
+            fontsize=6,
+            frameon=False
+        )
+
+        ax.axis('equal')
         self.canvas.draw()
