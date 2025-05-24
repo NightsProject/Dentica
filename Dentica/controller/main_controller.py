@@ -16,14 +16,14 @@ from controller.viewapp_ctr import View_Appointent_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 
-from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts, create_appointment_status_chart
+from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts, create_appointment_status_chart, refresh_appointment_chart
 from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data
 
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
 from backend.booking_comp import get_all_bookings
-from backend.reports_comp import load_graphs
+from backend.reports_comp import load_graphs, refresh_graphs
 
 
 filepath = "Dentica/ui/icons/"
@@ -89,25 +89,26 @@ class MainController(QMainWindow, Ui_MainWindow):
                 createAllTables(connection)
                 
                 summary_data = load_summary()
-                self.appointment_chart = create_appointment_status_chart()
+                
                 todays_appointment_status = get_todays_appointment_status_counts()
                 self.update_summary(summary_data, todays_appointment_status)
-                total_status, payment_method, gender_dist, age_dist = load_graphs()
+                self.appointment_chart = create_appointment_status_chart()
+                self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart = load_graphs()
                 
                 if self.appointment_chart:
                         self.today_stat_layout.addWidget(self.appointment_chart)
                         
-                if total_status:
-                        self.tot_appstat_layout.addWidget(total_status)
+                if self.tot_appstat_chart:
+                        self.tot_appstat_layout.addWidget(self.tot_appstat_chart)
                         
-                if payment_method:
-                        self.payment_method_layout.addWidget(payment_method)
+                if self.payment_method_chart:
+                        self.payment_method_layout.addWidget(self.payment_method_chart)
                 
-                if gender_dist:
-                        self.gender_dist_layout.addWidget(gender_dist)
+                if self.gender_dist_chart:
+                        self.gender_dist_layout.addWidget(self.gender_dist_chart)
 
-                if age_dist:
-                        self.age_dist_layout.addWidget(age_dist)
+                if self.age_dist_chart:
+                        self.age_dist_layout.addWidget(self.age_dist_chart)
 
                 todays_appointments_list = get_todays_appointments()
                 self.update_todays_appointments_table(todays_appointments_list)
@@ -147,13 +148,10 @@ class MainController(QMainWindow, Ui_MainWindow):
     # It calls the functions to get the data from the backend
     def reload_all_tables(self):
         
-        summary_data, chart_widget = load_summary()
+        summary_data = load_summary()
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)
                 
-        if chart_widget:
-            self.today_stat_layout.addWidget(chart_widget)
-
         todays_appointments_list = get_todays_appointments()
         self.update_todays_appointments_table(todays_appointments_list)
 
@@ -169,7 +167,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         all_bookings_list = get_all_bookings()
         self.update_bookings_list(all_bookings_list)
         
-        self.refresh_appointment_chart()
+        refresh_appointment_chart(self)
+        refresh_graphs(self)
     #=========================================================
     
     #DASHBOARD TAB=============== start

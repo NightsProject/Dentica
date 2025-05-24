@@ -12,6 +12,35 @@ def load_graphs():
     
     return total_status, payment_method, gender_dist, age_dist
 
+def refresh_graphs(self):
+    if self.tot_appstat_chart:
+        self.tot_appstat_layout.removeWidget(self.tot_appstat_chart)
+        self.tot_appstat_chart.deleteLater()
+        self.tot_appstat_chart = None
+
+    if self.payment_method_chart:
+        self.payment_method_layout.removeWidget(self.payment_method_chart)
+        self.payment_method_chart.deleteLater()
+        self.payment_method_chart = None
+
+    if self.gender_dist_chart:
+        self.gender_dist_layout.removeWidget(self.gender_dist_chart)
+        self.gender_dist_chart.deleteLater()
+        self.gender_dist_chart = None
+
+    if self.age_dist_chart:
+        self.age_dist_layout.removeWidget(self.age_dist_chart)
+        self.age_dist_chart.deleteLater()
+        self.age_dist_chart = None
+
+    self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart = load_graphs()
+
+    self.tot_appstat_layout.addWidget(self.tot_appstat_chart)
+    self.payment_method_layout.addWidget(self.payment_method_chart)
+    self.gender_dist_layout.addWidget(self.gender_dist_chart)
+    self.age_dist_layout.addWidget(self.age_dist_chart)
+    
+
 def get_total_appointment_status_counts():
     conn = connectDB()
     cursor = conn.cursor()
