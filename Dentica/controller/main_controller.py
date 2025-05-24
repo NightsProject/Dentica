@@ -80,7 +80,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
-        self.AddBill_btn.clicked.connect(lambda:self.open_billing())
+        #self.AddBill_btn.clicked.connect(lambda:self.open_billing())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
         
@@ -98,11 +98,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         app_popup = Appointment_Dialog_Ctr()
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
-    
-    def open_billing(self):
-        bill_popup = Billing_Dialog_Ctr()
-        bill_popup.exec()
-    
+
+        
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
         patient_popup.patient_added.connect(self.reload_all_tables) 
@@ -334,7 +331,8 @@ class MainController(QMainWindow, Ui_MainWindow):
             
 
             billing_id = billing[0]
-            action_widget = self.create_billing_action_buttons(billing_id, row_position)
+            status = billing[5]  # 'Paid' or 'Unpaid'
+            action_widget = self.create_billing_action_buttons(billing_id, row_position, status)
             self.Billing_table.setCellWidget(row_position,6,action_widget)
 
             total_billing = self.Billing_table.rowCount()
@@ -642,78 +640,77 @@ class MainController(QMainWindow, Ui_MainWindow):
             print("Deletion canceled.")
 
 
-    def create_billing_action_buttons(self, billing_id,row):
+    def create_billing_action_buttons(self, billing_id, row, status):
         widget = QtWidgets.QWidget()
-
         widget.setStyleSheet("background: none;")
 
         layout = QtWidgets.QHBoxLayout()
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
-        # Pay Button
-        pay = QtWidgets.QPushButton("Pay")
-        #pay_icon = QtGui.QIcon(f" ADD LNG OG ICON ")
-        #pay.setIcon(pay_icon)
-        #pay.setIconSize(QtCore.QSize(20, 20))
-        pay.setMaximumWidth(60)
-        pay.setStyleSheet("""
-            QPushButton {
-                color: white;
-                border: none;
-                background-color: #37547A;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #8DB8E0;
-            }
-        """)
-        pay.clicked.connect(self.pay_billing)
-        
-        # Edit Button
-        edit_bill = QPushButton()
-        edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
-        edit_bill.setIcon(edit_icon)
-        edit_bill.setIconSize(QtCore.QSize(20, 20))
-        edit_bill.setMaximumWidth(60)
-        edit_bill.setStyleSheet("""
-            QPushButton {
-                color: white;
-                border: none;
-                background-color: #37547A;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #8DB8E0;
-            }
-        """)
-        edit_bill.clicked.connect(self.edit_billing)
-            
-            
-        layout.addWidget(pay)
-        layout.addWidget(edit_bill)
-        
-        widget.setLayout(layout)
-        
-        pay.setProperty("Billing_ID", billing_id)
-        edit_bill.setProperty("Billing_ID", billing_id)
 
+        if status == "Unpaid":
+            # Pay Button
+            pay = QtWidgets.QPushButton("Pay")
+            pay.setMaximumWidth(60)
+            pay.setStyleSheet("""
+                QPushButton {
+                    color: white;
+                    border: none;
+                    background-color: #37547A;
+                    padding: 5px 10px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                }
+                QPushButton:hover {
+                    background-color: #8DB8E0;
+                }
+            """)
+            pay.clicked.connect(self.pay_billing)
+            pay.setProperty("Billing_ID", billing_id)
+            layout.addWidget(pay)
+
+        elif status == "Paid":
+            # Edit Button
+            edit_bill = QtWidgets.QPushButton()
+            edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
+            edit_bill.setIcon(edit_icon)
+            edit_bill.setIconSize(QtCore.QSize(20, 20))
+            edit_bill.setMaximumWidth(60)
+            edit_bill.setStyleSheet("""
+                QPushButton {
+                    color: white;
+                    border: none;
+                    background-color: #37547A;
+                    padding: 5px 10px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                }
+                QPushButton:hover {
+                    background-color: #8DB8E0;
+                }
+            """)
+            edit_bill.clicked.connect(self.edit_billing)
+            edit_bill.setProperty("Billing_ID", billing_id)
+            layout.addWidget(edit_bill)
+
+        widget.setLayout(layout)
         return widget
+
         
     def pay_billing(self):
-        print("Paying...")
         button = self.sender()
         billing_id = button.property("Billing_ID")
-        print(billing_id)
+        bill_popup = Billing_Dialog_Ctr(billing_id)
+        bill_popup.payment_added.connect(self.reload_all_tables)
+        bill_popup.exec()
     
     def edit_billing(self):
-        print("Edit bill...")
         button = self.sender()
         billing_id = button.property("Billing_ID")
-        
+        bill_popup = Billing_Dialog_Ctr(billing_id)
+        bill_popup.payment_added.connect(self.reload_all_tables)
+        bill_popup.exec()
+    
     #====================ACTION BUTTONS================= end
     #=======================================================
     
