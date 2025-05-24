@@ -145,4 +145,3 @@ class Patient_Dialog_Ctr(Add_Patient):
         else:
             QMessageBox.warning(self, "Error", "Failed to update patient.")    
             
-      

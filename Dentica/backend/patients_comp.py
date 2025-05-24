@@ -236,3 +236,41 @@ def get_patient_data(patient_id):
         except Exception as e:
             print("Unexpected Error:", e)
             QMessageBox.critical(None, "Error", str(e))
+      
+            
+def search_patients(keyword):
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    keyword = f"%{keyword}%"
+    cursor.execute("""
+        SELECT 
+            Patient_ID, 
+            CONCAT(First_Name, ' ', Middle_Name, ' ', Last_Name) AS Patient_Full_Name,
+            Gender,
+            Birth_Date,
+            Contact_Number,
+            Email,
+            Address
+        FROM Patient
+        WHERE Patient_ID LIKE %s
+           OR First_Name LIKE %s
+           OR Middle_Name LIKE %s
+           OR Last_Name LIKE %s
+           OR Gender LIKE %s
+           OR Birth_Date LIKE %s
+           OR Contact_Number LIKE %s
+           OR Email LIKE %s
+           OR Address LIKE %s
+    """, (keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword))
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    # Convert each tuple to a list for consistent return type
+    patient_data = [list(row) for row in rows]
+
+    return patient_data
+
