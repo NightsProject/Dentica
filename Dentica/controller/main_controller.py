@@ -701,6 +701,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         print("Paying...")
         button = self.sender()
         billing_id = button.property("Billing_ID")
+        print(billing_id)
     
     def edit_billing(self):
         print("Edit bill...")
