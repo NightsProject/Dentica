@@ -57,104 +57,6 @@ def generate_new_appointment_id():
     return new_appointment_id
 
 
-def get_appointment_data(appointment_id):
-    """Get complete appointment data including all treatment fields"""
-    conn = connectDB()
-    if not conn:
-        return None
-
-    try:
-        cursor = conn.cursor(dictionary=True)
-
-        # Get appointment and patient details
-        cursor.execute("""
-            SELECT a.Appointment_ID, a.Patient_ID, a.Schedule, a.Status,
-                   CONCAT(p.First_Name, ' ', p.Last_Name) AS Patient_Name
-            FROM Appointment a
-            JOIN Patient p ON a.Patient_ID = p.Patient_ID
-            WHERE a.Appointment_ID = %s
-        """, (appointment_id,))
-        appointment = cursor.fetchone()
-
-        if not appointment:
-            return None
-
-        if hasattr(appointment['Schedule'], 'strftime'):
-            appointment['Schedule'] = appointment['Schedule'].strftime('%Y-%m-%d %H:%M:%S')
-
-        # Get full treatment details for this appointment
-        cursor.execute("""
-            SELECT Treatment_ID, Diagnosis, Cost, Treatment_Procedure, 
-                   Treatment_Date_Time, Treatment_Status
-            FROM Treatment
-            WHERE Appointment_ID = %s
-            ORDER BY Treatment_ID ASC
-        """, (appointment_id,))
-        treatments = cursor.fetchall()
-        for t in treatments:
-            if hasattr(t['Treatment_Date_Time'], 'strftime'):
-                t['Treatment_Date_Time'] = t['Treatment_Date_Time'].strftime('%Y-%m-%d %H:%M:%S')
-
-        appointment['Treatments'] = treatments or []
-
-        return appointment
-
-    except Exception as e:
-        print("Error getting appointment data:", e)
-        return None
-    finally:
-        cursor.close()
-        conn.close()
-
-
-def update_appointment_in_db(appointment_data):
-    conn = connectDB()
-    if not conn:
-        return False
-        
-    try:
-        cursor = conn.cursor()
-        
-        # Update appointment
-        cursor.execute("""
-            UPDATE Appointment SET
-                Patient_ID = %s,
-                Schedule = %s,
-                Status = %s
-            WHERE Appointment_ID = %s
-        """, (
-            appointment_data['Patient_ID'],
-            appointment_data['Schedule'],
-            appointment_data['Status'],
-            appointment_data['Appointment_ID']
-        ))
-        
-        # Delete existing treatments
-        cursor.execute("""
-            DELETE FROM Treatment
-            WHERE Appointment_ID = %s
-        """, (appointment_data['Appointment_ID'],))
-        
-        # Add new treatments
-        for treatment in appointment_data['Treatments']:
-            cursor.execute("""
-                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time, Treatment_Status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                appointment_data['Appointment_ID'], treatment['Treatment_ID'],
-                treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"], treatment["Treatment_Status"]
-            ))
-        
-        conn.commit()
-        return True
-        
-    except Exception as e:
-        print("Error updating appointment:", e)
-        conn.rollback()
-        return False
-    finally:
-        cursor.close()
-        conn.close()
 
 # Function to search patients by name
 # This function searches for patients by their first, middle, or last name.
@@ -225,6 +127,10 @@ def save_appointment_to_db(appointment_data):
         cursor.close()
         conn.close()
         
+        
+from backend.DB import connectDB
+
+
 
 
 def perform_appointment_deletion(appointment_id):

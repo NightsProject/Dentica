@@ -3,19 +3,37 @@ from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6 import QtWidgets
 from ui.Dialogues.ui_treatment_dialog import Add_Treatment
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtCore import QDateTime
+from datetime import datetime, date
 
 class Treatment_Dialog_Ctr(Add_Treatment):
     treatment_added = pyqtSignal(dict)
 
-    def __init__(self):
+    def __init__(self, appointment_sched: datetime):
         super().__init__()
         self.cost_input.setText("0.00")
 
-        # Validators
+         # datetime or date input)
+        if isinstance(appointment_sched, datetime):
+            self.original_date = appointment_sched.date()
+            self.sched_input.setDateTime(appointment_sched)
+        elif isinstance(appointment_sched, date):
+            self.original_date = appointment_sched
+            now = datetime.now()
+            # Use appointment date with current time
+            combined = datetime.combine(appointment_sched, now.time())
+            self.sched_input.setDateTime(combined)
+        else:
+            raise TypeError("Expected datetime or date for appointment_sched")
+
+        # Connect validator
         cost_regex = QRegularExpression(r"^(0|[1-9]\d{0,6})(\.\d{1,2})?$")
         self.cost_input.setValidator(QRegularExpressionValidator(cost_regex))
 
-        # Connect real-time validation
+        # Lock the date portion
+        self.sched_input.dateTimeChanged.connect(self._enforce_appointment_date)
+
+        # Field validation
         self.treat_id_input.textChanged.connect(lambda: self.validate_required(self.treat_id_input))
         self.diagnosis_input.textChanged.connect(lambda: self.validate_required(self.diagnosis_input))
         self.procedure_input.textChanged.connect(lambda: self.validate_required(self.procedure_input))
@@ -23,6 +41,19 @@ class Treatment_Dialog_Ctr(Add_Treatment):
 
         self.add_btn.clicked.connect(self.on_add_treatment_clicked)
         self.cancel_btn.clicked.connect(self.reject)
+
+    # This method is called when the user changes the date/time in the QDateTimeEdit
+    # It prevents the user from changing the date part of the datetime
+    # while allowing them to change the time part
+    def _enforce_appointment_date(self, dt: QDateTime):
+        """Prevent user from changing the date part."""
+        # Extract only the time from user selection
+        time = dt.time()
+        # Reset to original date + new time
+        new_dt = QDateTime(self.original_date, time)
+        self.sched_input.blockSignals(True)
+        self.sched_input.setDateTime(new_dt)
+        self.sched_input.blockSignals(False)
 
     def validate_required(self, field):
         if not field.text().strip():

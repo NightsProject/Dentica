@@ -35,24 +35,25 @@ def generate_new_patient_id():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT Patient_ID 
-        FROM Patient 
-        ORDER BY CAST(SUBSTRING(Patient_ID, 2) AS UNSIGNED) DESC 
-        LIMIT 1
+        SELECT CAST(SUBSTRING(Patient_ID, 2) AS UNSIGNED) AS num_id
+        FROM Patient
+        ORDER BY num_id
     """)
 
-    result = cursor.fetchone()
+    existing_ids = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    if result:
-        last_id = int(result[0][1:])  # Remove the 'P' and convert the number part
-        new_id_num = last_id + 1
-    else:
-        new_id_num = 1  # Start from 1 if there are no patients yet
+    # Look for the first missing ID in sequence
+    expected_id = 1
+    for (num_id,) in existing_ids:
+        if num_id != expected_id:
+            break
+        expected_id += 1
 
-    new_patient_id = f'P{new_id_num:05d}'  # Zero-padded to 5 digits
+    new_patient_id = f'P{expected_id:05d}'  # Zero-padded to 5 digits
     return new_patient_id
+
 
 def update_patient(
     patient_id,

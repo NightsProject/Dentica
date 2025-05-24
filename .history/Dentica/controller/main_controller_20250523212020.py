@@ -8,15 +8,15 @@ from PyQt6.QtWidgets import QMessageBox
 import mysql.connector
 
 from ui.Dialogues.ui_exit_dialog import Exit_App
+from ui.Dialogues.ui_viewapp_dialog import View_Appointment
 from controller.database_login_ctr import Database_Dialog_Ctr
 from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 from controller.patient_page_ctr import Patient_Page_Ctr
-from controller.viewapp_ctr import View_Appointent_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts
-from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data
+from backend.patients_comp import get_all_patients, perform_patient_deletion
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
@@ -31,7 +31,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         self.setupUi(self)
         
-    
+        self.testbutton2.clicked.connect(lambda: self.view_app())
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
@@ -56,6 +56,12 @@ class MainController(QMainWindow, Ui_MainWindow):
         confirm_popup = Exit_App()
         if confirm_popup.exec():
             MainWindow.close()
+            
+    def view_app(self):
+        appointment_popup = View_Appointment()
+        appointment_popup.exec()
+  
+   
     
     #=========================================================
     #====================HANDLE CREDENTIALS================= start
@@ -165,8 +171,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.label_5.setText(str(data[0]))
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
-        self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
-
+        self.label_9.setText(str(data[3]))
+        
         #update the chart values
         
     #update_todays_appointments_table
@@ -499,10 +505,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def view_appointment(self):
         button = self.sender()
         appointment_id = button.property("Appointment ID")
-        view_appointment = View_Appointent_Ctr(appointment_id)
-        #view_appointment.view_app_reload.connect(self.reload_all_tables)
-        view_appointment.exec()
-  
+        QMessageBox.information(self, "View", f"Viewing appointment ID: {appointment_id}")
+        
     def edit_appointment(self):
         button = self.sender()
         appointment_id = button.property("Appointment ID")

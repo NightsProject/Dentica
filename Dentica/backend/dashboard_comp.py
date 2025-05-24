@@ -14,13 +14,22 @@ def count_patients():
     patients = 0
     conn = connectDB()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM Patient")
+
+    cursor.execute("""
+        SELECT COUNT(DISTINCT p.Patient_ID)
+        FROM Patient p
+        JOIN Appointment a ON p.Patient_ID = a.Patient_ID
+        WHERE DATE(a.Schedule) = CURDATE()
+    """)
+
     result = cursor.fetchone()
     if result:
         patients = result[0]
+
     cursor.close()
     conn.close()
-    print("Total Patients:", patients)
+
+    print("Patients with appointments today:", patients)
     return str(patients)
 
 
@@ -62,21 +71,37 @@ def pending_payments():
 
 
 def completed_treatments():
-    treatments_completed = 0
     conn = connectDB()
     cursor = conn.cursor()
+
+    # Count completed treatments for today (excluding canceled)
     cursor.execute("""
         SELECT COUNT(*) 
         FROM Treatment 
         WHERE Treatment_Status = 'Completed'
+          AND DATE(Treatment_Date_Time) = CURDATE()
     """)
-    result = cursor.fetchone()
-    if result:
-        treatments_completed = result[0]
+    completed_result = cursor.fetchone()
+    completed_treatments = completed_result[0] if completed_result else 0
+
+    # Count all non-canceled treatments for today
+    cursor.execute("""
+        SELECT COUNT(*) 
+        FROM Treatment 
+        WHERE Treatment_Status != 'Canceled'
+          AND DATE(Treatment_Date_Time) = CURDATE()
+    """)
+    total_result = cursor.fetchone()
+    total_treatments = total_result[0] if total_result else 0
+
     cursor.close()
     conn.close()
-    print("Completed Treatments:", treatments_completed)
-    return str(treatments_completed)
+
+    print("Today's Completed Treatments:", completed_treatments)
+    print("Today's Non-Canceled Treatments:", total_treatments)
+    
+    return [completed_treatments, total_treatments]
+
 
 def get_todays_appointments():
     todays_appointments = []

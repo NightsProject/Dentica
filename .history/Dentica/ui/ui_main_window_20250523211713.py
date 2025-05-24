@@ -2,17 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
 from ui.Dialogues.ui_exit_dialog import Exit_App
-
 from Frontend.Graphs.Appointment_status import DonutChart
-from Frontend.Graphs.Total_Appointment_Status import DonutChart1
-from Frontend.Graphs.Appointment_overtime import AppointmentLineChart
-from Frontend.Graphs.Payment_Method import PaymentMethodPie
-from Frontend.Graphs.Gender_Distribution import GenderDistributionPie
-from Frontend.Graphs.Age_Distribution import PatientAgeDistributionPie
-from Frontend.Graphs.Monthly_Revenue import MonthlyRevenueLineChart
-from Frontend.Graphs.Common_Treatments import CommonTreatmentsBarChart
-from Frontend.Graphs.Treatment_Cost import TreatmentCostsLineChart
-
 from ui.Patients_Page import PatientPage
 from ui.TablePagination import TablePagination
 from PyQt6.QtGui import QTextCharFormat, QColor
@@ -359,12 +349,12 @@ class Ui_MainWindow(object):
         self.verticalLayout.addStretch()
         #self.testbutton.setObjectName("testbutton")
         
-        # #Test appointment dialogue button
-        # self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
-        # self.testbutton2.setStyleSheet("color: #fff; border: 1px solid #fff;")
-        # self.verticalLayout.addWidget(self.testbutton2)
-        # self.verticalLayout.addStretch()
-        # self.testbutton2.setObjectName("testbutton2")
+        #Test appointment dialogue button
+        self.testbutton2 = QtWidgets.QPushButton("View Appointment Test Btn")
+        self.testbutton2.setStyleSheet("color: #fff; border: 1px solid #fff;")
+        self.verticalLayout.addWidget(self.testbutton2)
+        self.verticalLayout.addStretch()
+        self.testbutton2.setObjectName("testbutton2")
         
         
         for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
@@ -623,7 +613,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 325))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 340))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -670,9 +660,6 @@ class Ui_MainWindow(object):
         self.UpAp_table.setColumnWidth(4, 100)  # Actions
         
         self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
-        
-        self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=10)
-        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-3)
   
         # Calendar Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)
@@ -1332,271 +1319,48 @@ class Ui_MainWindow(object):
         self.Pages.addWidget(self.Billing_page)
 
         #Reports Page
+
+        #Reports Top bar frame
         self.Reports_page = QtWidgets.QWidget()
         self.Reports_page.setObjectName("Reports_page")
+        self.Reports_topbar_frame = QtWidgets.QFrame(parent=self.Reports_page)
+        self.Reports_topbar_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.Reports_topbar_frame.setStyleSheet("""
+                #Reports_topbar_frame {background-color: #B2CDE9;
+                }
+                """)
+        self.Reports_topbar_frame.setObjectName("Reports_topbar_frame")
+
+        #Reports
+        self.label_15 = QtWidgets.QLabel(parent=self.Reports_topbar_frame)
+        self.label_15.setGeometry(QtCore.QRect(20, 25, 180, 31))
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setPointSize(18)
+        font.setBold(True)
+        self.label_15.setFont(font)
+        self.label_15.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        self.label_15.setObjectName("label_15")
+
         
-        #Total Appointment Status Graph
-        self.tot_appstat_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.tot_appstat_graph.setGeometry(QtCore.QRect(10, 20, 250, 250))
-        self.tot_appstat_graph.setStyleSheet("""
-        #tot_appstat_graph {
+        #Reports table frame
+        self.Reports_table_frame = QtWidgets.QFrame(parent=self.Reports_page)
+        self.Reports_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
+        self.Reports_table_frame.setStyleSheet("""
+        #Reports_table_frame {
                 background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
-        self.tot_appstat_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.tot_appstat_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.tot_appstat_graph.setObjectName("tot_appstat_graph")
-        
-        self.graph_label1 = QtWidgets.QLabel(parent=self.tot_appstat_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        font.setBold(True)
-        self.graph_label1.setFont(font)
-        self.graph_label1.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        self.graph_label1.setText("Total Appointments Status")
-        
-        layout2 = QVBoxLayout()
-        self.tot_appstat_graph.setLayout(layout2)
-        labels = ['Scheduled', 'Completed', 'Cancelled']
-        chart_values = [15, 50, 10]
-        donut_chart2 = DonutChart1(labels, chart_values)
-        layout2.addWidget(self.graph_label1)
-        layout2.addWidget(donut_chart2)
-        
-        #Payment Method Chart
-        self.payment_method_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.payment_method_graph.setGeometry(QtCore.QRect(270, 20, 250, 250))  
-        self.payment_method_graph.setStyleSheet("""
-        #payment_method_graph {
-                background: #C6D7EC;
-                border: 1px solid #fff;  
-                border-radius: 12px;
-        }
-        """)
-        self.payment_method_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.payment_method_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.payment_method_graph.setObjectName("payment_method_graph")
-
-        self.graph_label2 = QtWidgets.QLabel(parent=self.payment_method_graph)
-        self.graph_label2.setFont(font)
-        self.graph_label2.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        self.graph_label2.setText("Payment Method")
-
-        layout3 = QVBoxLayout()
-        self.payment_method_graph.setLayout(layout3)
-
-        labels2 = ['Cash', 'Card', 'GCash']
-        chart_values2 = [150, 300, 100]  
-
-        payment_method_chart = PaymentMethodPie(labels2, chart_values2)
-        layout3.addWidget(self.graph_label2)
-        layout3.addWidget(payment_method_chart)
-        
-        #Appointments per week Graph
-        self.weekly_apps_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.weekly_apps_graph.setGeometry(QtCore.QRect(530, 20, 400, 250))
-        self.weekly_apps_graph.setStyleSheet("""
-        #weekly_apps_graph {
-                background: #C6D7EC;
-                border: 1px solid #fff;  
-                border-radius: 12px;
-        }
-        """)
-        self.weekly_apps_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.weekly_apps_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.weekly_apps_graph.setObjectName("weekly_apps_graph")
-        
-        self.graph_label2 = QtWidgets.QLabel(parent=self.weekly_apps_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(12)
-        font.setBold(True)
-        self.graph_label2.setFont(font)
-        self.graph_label2.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        self.graph_label2.setText("Appointments per Week")
-        
-        layout3 = QVBoxLayout()
-        self.weekly_apps_graph.setLayout(layout3)
-        x_labels = ['Week 1', 'Week 2', 'Week 3']
-        y_values = [3, 7, 5]
-        line_chart = AppointmentLineChart(x_labels, y_values, title=None)
-        layout3.addWidget(self.graph_label2)
-        layout3.addWidget(line_chart)
-        
-        # Gender Distribution Graph 
-        self.gender_dist_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.gender_dist_graph.setGeometry(QtCore.QRect(10, 280, 250, 250))  
-        self.gender_dist_graph.setStyleSheet("""
-        #gender_dist_graph {
-                background: #C6D7EC;
-                border: 1px solid #fff;  
-                border-radius: 12px;
-        }
-        """)
-        self.gender_dist_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.gender_dist_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.gender_dist_graph.setObjectName("gender_dist_graph")
-
-        self.graph_label3 = QtWidgets.QLabel(parent=self.gender_dist_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        font.setBold(True)
-        self.graph_label3.setFont(font)
-        self.graph_label3.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        self.graph_label3.setText("Gender Distribution")
-
-        layout4 = QVBoxLayout()
-        self.gender_dist_graph.setLayout(layout4)
-
-        gender_labels = ['Male', 'Female', 'Other']
-        gender_values = [60, 35, 5]  
-
-        gender_pie_chart = GenderDistributionPie(gender_labels, gender_values)  
-        layout4.addWidget(self.graph_label3)
-        layout4.addWidget(gender_pie_chart)
-        
-        #Gender Distribution Graph
-        self.payment_method_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.payment_method_graph.setGeometry(QtCore.QRect(270, 280, 250, 250))
-        self.payment_method_graph.setStyleSheet("""
-        #payment_method_graph {
-        background: #C6D7EC;
-        border: 1px solid #fff;
-        border-radius: 12px;
-        }
-        """)
-        self.payment_method_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.payment_method_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.payment_method_graph.setObjectName("payment_method_graph")
-
-        layout_pm = QVBoxLayout()
-        self.payment_method_graph.setLayout(layout_pm)
-
-        label_pm = QtWidgets.QLabel(parent=self.payment_method_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        font.setBold(True)
-        label_pm.setFont(font)
-        label_pm.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        label_pm.setText("Age Distribution")
-
-        layout_pm.addWidget(label_pm)
-
-        labels_age = ['<18', '18–30', '31–50', '51+']
-        values_age = [5, 20, 15, 10]  # example data, replace with your real data
-        age_dist_chart = PatientAgeDistributionPie(labels_age, values_age)
-        layout_pm.addWidget(age_dist_chart)
-
-        #Monthly Revenue Graph
-        self.monthly_rev_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.monthly_rev_graph.setGeometry(QtCore.QRect(530, 280, 400, 250))
-        self.monthly_rev_graph.setStyleSheet("""
-        #monthly_rev_graph {
-        background: #C6D7EC;
-        border: 1px solid #fff;
-        border-radius: 12px;
-        }
-        """)
-        self.monthly_rev_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.monthly_rev_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.monthly_rev_graph.setObjectName("monthly_rev_graph")
-
-        layout_rev = QVBoxLayout()
-        self.monthly_rev_graph.setLayout(layout_rev)
-
-        rev_label = QtWidgets.QLabel(parent=self.monthly_rev_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        font.setBold(True)
-        rev_label.setFont(font)
-        rev_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        rev_label.setText("Monthly Revenue")
-
-        layout_rev.addWidget(rev_label)
-
-        months = ['Jan', 'Feb', 'Mar', 'Apr', 'May']
-        revenues = [3000, 4200, 3900, 4600, 5000]
-
-        revenue_chart = MonthlyRevenueLineChart(months, revenues)
-        layout_rev.addWidget(revenue_chart)
-        
-        
-        #Common Treatments Graph
-        self.common_treatments_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.common_treatments_graph.setGeometry(QtCore.QRect(10, 540, 510, 250))
-        self.common_treatments_graph.setStyleSheet("""
-        #common_treatments_graph {
-        background: #C6D7EC;
-        border: 1px solid #fff;
-        border-radius: 12px;
-        }
-        """)
-        self.common_treatments_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.common_treatments_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.common_treatments_graph.setObjectName("common_treatments_graph")
-
-        layout_ct = QVBoxLayout()
-        self.common_treatments_graph.setLayout(layout_ct)
-
-        ct_label = QtWidgets.QLabel(parent=self.common_treatments_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        font.setBold(True)
-        ct_label.setFont(font)
-        ct_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        ct_label.setText("Common Treatments Performed")
-
-        layout_ct.addWidget(ct_label)
-
-        procedures = ['Cleaning', 'Filling', 'Extraction', 'Whitening']
-        counts = [12, 9, 14, 5]
-
-        ct_chart = CommonTreatmentsBarChart(procedures, counts)
-        layout_ct.addWidget(ct_chart)
-        
-        #Treatment Cost
-        self.treatment_costs_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.treatment_costs_graph.setGeometry(QtCore.QRect(530, 540, 400, 250))  
-        self.treatment_costs_graph.setStyleSheet("""
-        #treatment_costs_graph {
-        background: #C6D7EC;
-        border: 1px solid #fff;
-        border-radius: 12px;
-        }
-        """)
-        self.treatment_costs_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.treatment_costs_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.treatment_costs_graph.setObjectName("treatment_costs_graph")
-
-        layout_tc = QVBoxLayout()
-        self.treatment_costs_graph.setLayout(layout_tc)
-
-        tc_label = QtWidgets.QLabel(parent=self.treatment_costs_graph)
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        font.setBold(True)
-        tc_label.setFont(font)
-        tc_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        tc_label.setText("Treatment Costs Over Time")
-        layout_tc.addWidget(tc_label)
-
-        # Sample data for the line chart
-        import datetime
-        dates = [datetime.date(2024, m, 1) for m in range(1, 7)]
-        costs = [1500, 1700, 1600, 1800, 1750, 1900]
-
-        tc_chart = TreatmentCostsLineChart(dates, costs)
-        layout_tc.addWidget(tc_chart)
-        
+        self.Reports_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.Reports_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.Reports_table_frame.setObjectName("Reports_table_frame")
         self.Pages.addWidget(self.Reports_page)
+        
+        # #Add patient page into pages
+        # self.patient_page = PatientPage()
+        # self.Pages.addWidget(self.patient_page)
 
         #User popup dialog
         MainWindow.setCentralWidget(self.centralwidget)
@@ -1621,7 +1385,7 @@ class Ui_MainWindow(object):
         self.Apntmnt_btn.setText(_translate("MainWindow", "Appointments"))
         self.Bill_btn.setText(_translate("MainWindow", "Billing"))
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
-        self.label_2.setText(_translate("MainWindow", "Todays Patients"))
+        self.label_2.setText(_translate("MainWindow", "Total Patients"))
         self.label_5.setText(_translate("MainWindow", "0"))
         self.label_3.setText(_translate("MainWindow", "Today's Appointments"))
         self.label_6.setText(_translate("MainWindow", "0"))
@@ -1703,6 +1467,8 @@ class Ui_MainWindow(object):
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
         self.pushButton_15.setText(_translate("MainWindow", "Overdue"))
         
+        #Reports Tab
+        self.label_15.setText(_translate("MainWindow", "Reports"))
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:

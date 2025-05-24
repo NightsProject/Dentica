@@ -56,17 +56,16 @@ def generate_new_appointment_id():
     new_appointment_id = f'A{new_id_num:05d}'  # Zero-padded to 5 digits
     return new_appointment_id
 
-
 def get_appointment_data(appointment_id):
-    """Get complete appointment data including all treatment fields"""
+    """Get complete appointment data including treatments"""
     conn = connectDB()
     if not conn:
         return None
-
+        
     try:
         cursor = conn.cursor(dictionary=True)
-
-        # Get appointment and patient details
+        
+        # Get appointment details
         cursor.execute("""
             SELECT a.Appointment_ID, a.Patient_ID, a.Schedule, a.Status,
                    CONCAT(p.First_Name, ' ', p.Last_Name) AS Patient_Name
@@ -75,37 +74,31 @@ def get_appointment_data(appointment_id):
             WHERE a.Appointment_ID = %s
         """, (appointment_id,))
         appointment = cursor.fetchone()
-
+        
         if not appointment:
             return None
-
+        
+        # Convert datetime to string if needed
         if hasattr(appointment['Schedule'], 'strftime'):
             appointment['Schedule'] = appointment['Schedule'].strftime('%Y-%m-%d %H:%M:%S')
-
-        # Get full treatment details for this appointment
+        
+        # Get treatments for this appointment
         cursor.execute("""
-            SELECT Treatment_ID, Diagnosis, Cost, Treatment_Procedure, 
-                   Treatment_Date_Time, Treatment_Status
+            SELECT Treatment_ID, Treatment_Procedure, Cost
             FROM Treatment
             WHERE Appointment_ID = %s
-            ORDER BY Treatment_ID ASC
         """, (appointment_id,))
         treatments = cursor.fetchall()
-        for t in treatments:
-            if hasattr(t['Treatment_Date_Time'], 'strftime'):
-                t['Treatment_Date_Time'] = t['Treatment_Date_Time'].strftime('%Y-%m-%d %H:%M:%S')
-
-        appointment['Treatments'] = treatments or []
-
+        appointment['Treatments'] = treatments
+        
         return appointment
-
+        
     except Exception as e:
         print("Error getting appointment data:", e)
         return None
     finally:
         cursor.close()
         conn.close()
-
 
 def update_appointment_in_db(appointment_data):
     conn = connectDB()
@@ -138,11 +131,17 @@ def update_appointment_in_db(appointment_data):
         # Add new treatments
         for treatment in appointment_data['Treatments']:
             cursor.execute("""
-                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time, Treatment_Status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO Treatment (
+                    Treatment_ID,
+                    Appointment_ID,
+                    Treatment_Procedure,
+                    Cost
+                ) VALUES (%s, %s, %s, %s)
             """, (
-                appointment_data['Appointment_ID'], treatment['Treatment_ID'],
-                treatment["Diagnosis"], treatment["Cost"], treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"], treatment["Treatment_Status"]
+                treatment['Treatment_ID'],
+                appointment_data['Appointment_ID'],
+                treatment['Treatment_Procedure'],
+                treatment['Cost']
             ))
         
         conn.commit()
@@ -225,6 +224,10 @@ def save_appointment_to_db(appointment_data):
         cursor.close()
         conn.close()
         
+        
+from backend.DB import connectDB
+
+
 
 
 def perform_appointment_deletion(appointment_id):

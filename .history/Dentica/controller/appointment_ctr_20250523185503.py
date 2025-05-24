@@ -5,7 +5,6 @@ from ui.Dialogues.ui_appointment_dialog import Add_Appointment
 from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name,update_appointment_in_db
 from controller.treatment_ctr import Treatment_Dialog_Ctr
 from PyQt6.QtCore import Qt
-from datetime import datetime
 
 class Appointment_Dialog_Ctr(Add_Appointment):
     
@@ -15,16 +14,12 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         super().__init__(parent, appointment_data)
         self.appointment_data = appointment_data
         
-       # Setup treatments and counter based on appointment data
         self.treatments = appointment_data.get('Treatments', []) if appointment_data else []
-        self.treatment_counter = len(self.treatments) + 1
-
-        # Setup patient input
-        self.patient_input.setEditable(True)
-        self.patient_input.setMaxVisibleItems(10)
-        self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
-
+        self.treatment_counter = len(self.treatments) + 1 if self.treatments else 1
+        
         self.patient_input_line_edit = self.patient_input.lineEdit()
+        self.setup_patient_input()
+        
         if self.patient_input_line_edit is not None:
             self.patient_input_line_edit.setPlaceholderText("Search by name...")
             self.patient_input_line_edit.setMaxLength(50)
@@ -33,53 +28,54 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             self.patient_input_line_edit.textChanged.connect(self.update_patient_search)
         else:
             print("Warning: Could not get line edit from patient input combo box")
-
-        # Load all patients once
-        self.all_patients = get_patients_name()
-
-        # If editing an existing appointment
-        if appointment_data:
-            self.appointment_id = appointment_data.get('Appointment_ID')  # Needed for updates
-            self.add_btn.setText("Update")
-            self.setWindowTitle("Update Appointment")
-            try:
-                self.add_btn.clicked.disconnect()
-            except TypeError:
-                pass
-            self.add_btn.clicked.connect(self.on_update_pressed)
-
-            self.update_patient_search(appointment_data.get('Patient_Name', ''))
-        else:
-            # Creating a new appointment
-            self.new_appointment_id = generate_new_appointment_id()
+            
+        # --- appointment setup ---
+        if not appointment_data:
+            self.new_appointment_id = generate_new_appointment_id()  
             self.appointment_input.setText(self.new_appointment_id)
             self.add_btn.setText("Add")
-            try:
-                self.add_btn.clicked.disconnect()
-            except TypeError:
-                pass
             self.add_btn.clicked.connect(self.on_add_pressed)
+        else:
+            self.add_btn.setText("Update")
+            self.add_btn.clicked.connect(self.on_update_pressed)
+            
+        if appointment_data:
+            self.all_patients = get_patients_name()
+            self.update_patient_search(appointment_data.get('Patient_Name', ''))
+            self.add_btn.setText("Update")
+            self.add_btn.clicked.connect(self.on_update_pressed)
+        else:
+            self.add_btn.setText("Add")
+            self.add_btn.clicked.connect(self.on_add_pressed)
+            
+        self.status_input.currentIndexChanged.connect(self.validate_status)
 
-        # Connect treatment addition and status validation
         self.AddTreat_btn.clicked.connect(self.on_add_treatment_clicked)
+        
+        self.treatments = []
+        self.treatment_counter = 1
+        self.add_btn.clicked.connect(self.on_add_pressed)
+
+        # --- status validation ---
         self.status_input.currentIndexChanged.connect(self.validate_status)
         
-        self.schedule_input.dateTimeChanged.connect(self.sync_treatment_dates)
-
-    # This method is called when the user changes the date/time in the QDateTimeEdit
-    # It prevents the user from changing the date part of the datetime
-    # while allowing them to change the time part
-    def sync_treatment_dates(self):
-        new_date = self.schedule_input.dateTime().toPyDateTime().date()
-
-        for treatment in self.treatments:
-            old_datetime = treatment["Treatment_Date_Time"]
-            if isinstance(old_datetime, str):
-                old_datetime = datetime.strptime(old_datetime, "%Y-%m-%d %H:%M:%S")
-            
-            # Replace only the date, preserve the time
-            updated_datetime = datetime.combine(new_date, old_datetime.time())
-            treatment["Treatment_Date_Time"] = updated_datetime
+        # --- load all patients once ---
+       
+        
+        self.patient_input.setMaxVisibleItems(10)
+        self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        self.patient_input.setEditable(True)
+        
+        if self.patient_input_line_edit is not None:
+            self.patient_input_line_edit.setPlaceholderText("Search by name...")
+            self.patient_input_line_edit.setMaxLength(50)
+            self.patient_input_line_edit.setAlignment(Qt.AlignmentFlag.AlignLeft)
+            self.patient_input_line_edit.setFocus()
+            # --- connect search ---
+            self.patient_input_line_edit.textChanged.connect(self.update_patient_search)
+        else:
+            # Defensive fallback if lineEdit is None (should not happen if setEditable(True))
+            print("Warning: patient_input.lineEdit() is None. Search functionality may not work.")
 
     def update_patient_search(self, text):
         if not hasattr(self, 'patient_input_line_edit') or self.patient_input_line_edit is None:
@@ -87,7 +83,9 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             if self.patient_input_line_edit is None:
                 return
         
-        self.all_patients = get_patients_name()
+        # Ensure we have patients data
+        if not hasattr(self, 'all_patients'):
+            self.all_patients = get_patients_name()
         
         combo = self.patient_input
         edit = self.patient_input_line_edit
@@ -131,8 +129,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         return self.treatment_counter
 
     def on_add_treatment_clicked(self):
-        appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
-        form = Treatment_Dialog_Ctr(appointment_date)
+        form = Treatment_Dialog_Ctr()
         form.treat_id_input.setText(str(self.get_new_treatment_id()))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
@@ -147,7 +144,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         row = self.Treat_table.rowCount()
         self.Treat_table.insertRow(row)
         
-        print(treatment)
         # Create action buttons
         action_widget = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout()
