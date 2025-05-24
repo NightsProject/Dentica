@@ -430,14 +430,9 @@ class Ui_MainWindow(object):
         self.graph_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.graph_label.setText("Appointments Status")
         
-        layout = QVBoxLayout()
-        self.dash_graph.setLayout(layout)
-        labels = ['Scheduled', 'Completed', 'Cancelled']
-        chart_values = [15, 50, 10]
-        donut_chart = DonutChart(labels, chart_values)
-        layout.addWidget(self.graph_label)
-        layout.addWidget(donut_chart)
-        
+        self.today_stat_layout = QVBoxLayout()
+        self.dash_graph.setLayout(self.today_stat_layout)
+        self.today_stat_layout.addWidget(self.graph_label)
         
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
