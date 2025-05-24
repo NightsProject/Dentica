@@ -13,26 +13,32 @@ def load_summary():
     return data
 
 def count_patients():
-    patients = 0
+    """
+    Returns the number of unique patients who have at least one *scheduled* appointment for today.
+    """
     conn = connectDB()
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT COUNT(DISTINCT p.Patient_ID)
-        FROM Patient p
-        JOIN Appointment a ON p.Patient_ID = a.Patient_ID
-        WHERE DATE(a.Schedule) = CURDATE()
+        SELECT COUNT(*) AS patient_count
+        FROM (
+            SELECT 1
+            FROM Appointment
+            WHERE DATE(Schedule) = CURDATE()
+              AND Status = 'Scheduled'
+            GROUP BY Patient_ID
+        ) AS unique_patients;
     """)
 
     result = cursor.fetchone()
-    if result:
-        patients = result[0]
+    patient_count = result[0] if result else 0
 
     cursor.close()
     conn.close()
 
-    print("Patients with appointments today:", patients)
-    return str(patients)
+    print("Patients with scheduled appointments today:", patient_count)
+    return patient_count
+
 
 
 def todays_appointments():
@@ -75,22 +81,28 @@ def completed_treatments():
     conn = connectDB()
     cursor = conn.cursor()
 
-    # Count completed treatments for today (excluding canceled)
+    # Count completed treatments for today on Scheduled appointments (excluding canceled treatments)
     cursor.execute("""
         SELECT COUNT(*) 
-        FROM Treatment 
-        WHERE Treatment_Status = 'Completed'
-          AND DATE(Treatment_Date_Time) = CURDATE()
+        FROM Treatment t
+        JOIN Appointment a 
+          ON t.Appointment_ID = a.Appointment_ID
+        WHERE t.Treatment_Status = 'Completed'
+          AND DATE(t.Treatment_Date_Time) = CURDATE()
+          AND a.Status = 'Scheduled'
     """)
     completed_result = cursor.fetchone()
     completed_treatments = completed_result[0] if completed_result else 0
 
-    # Count all non-canceled treatments for today
+    # Count all non-canceled treatments for today on Scheduled appointments
     cursor.execute("""
         SELECT COUNT(*) 
-        FROM Treatment 
-        WHERE Treatment_Status != 'Canceled'
-          AND DATE(Treatment_Date_Time) = CURDATE()
+        FROM Treatment t
+        JOIN Appointment a 
+          ON t.Appointment_ID = a.Appointment_ID
+        WHERE t.Treatment_Status != 'Canceled'
+          AND DATE(t.Treatment_Date_Time) = CURDATE()
+          AND a.Status = 'Scheduled'
     """)
     total_result = cursor.fetchone()
     total_treatments = total_result[0] if total_result else 0
@@ -98,8 +110,8 @@ def completed_treatments():
     cursor.close()
     conn.close()
 
-    print("Today's Completed Treatments:", completed_treatments)
-    print("Today's Non-Canceled Treatments:", total_treatments)
+    print("Today's Completed Treatments on Scheduled Appointments:", completed_treatments)
+    print("Today's Non-Canceled Treatments on Scheduled Appointments:", total_treatments)
     
     return [completed_treatments, total_treatments]
 

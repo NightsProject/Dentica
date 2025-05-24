@@ -48,11 +48,12 @@ class Add_Payment(QtWidgets.QDialog):
         self.total_input = QtWidgets.QLineEdit(self)
         add_row(3, "Amount:", self.total_input)
 
-        self.method_input = QtWidgets.QLineEdit(self)
+        self.method_input = QtWidgets.QComboBox(self)
+        self.method_input.addItems(["None", "Cash", "Gcash"])
         add_row(4, "Payment Method:", self.method_input)
         
         self.status_input = QtWidgets.QComboBox(self)
-        self.status_input.addItems(["Select Status", "Paid", "Unpaid"])
+        self.status_input.addItems(["Paid", "Unpaid"])
         
         add_row(5, "Payment Status:", self.status_input)
 
@@ -61,9 +62,11 @@ class Add_Payment(QtWidgets.QDialog):
         self.date_input.setDate(QtCore.QDate.currentDate())
         add_row(6, "Payment Date:", self.date_input)
         
-        self.add_patient = QtWidgets.QPushButton("Add", self)
+
+        self.save = QtWidgets.QPushButton("Save", self)
         self.add_patient.setGeometry(120, 380, 80, 30)
         self.add_patient.setStyleSheet("background-color: #37547A; color: #fff;")
+
 
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
         self.cancel_btn.setGeometry(210, 380, 80, 30)
