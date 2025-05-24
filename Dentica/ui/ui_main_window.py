@@ -1579,7 +1579,7 @@ class Ui_MainWindow(object):
         self.age_dist_chart = None
 
 
-        #Monthly Revenue Graph
+        #Quarterly Revenue Graph
         self.quarterly_rev_graph = QtWidgets.QFrame(parent=self.Reports_page)
         self.quarterly_rev_graph.setGeometry(QtCore.QRect(530, 280, 400, 250))
         self.quarterly_rev_graph.setStyleSheet("""

@@ -96,7 +96,7 @@ class MainController(QMainWindow, Ui_MainWindow):
                 todays_appointment_status = get_todays_appointment_status_counts()
                 self.update_summary(summary_data, todays_appointment_status)
                 self.appointment_chart = create_appointment_status_chart()
-                self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart, self.app_ot_chart, self.Comm_treat_chart, self.treat_cost_chart = load_graphs()
+                self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart, self.app_ot_chart, self.quarterly_rev_chart, self.Comm_treat_chart, self.treat_cost_chart = load_graphs()
                 
                 if self.appointment_chart:
                         self.today_stat_layout.addWidget(self.appointment_chart)
@@ -116,8 +116,8 @@ class MainController(QMainWindow, Ui_MainWindow):
                 if self.app_ot_chart:
                         self.app_ot_layout.addWidget(self.app_ot_chart)
 
-                # if self.quarterly_rev_chart:
-                #     self.quarterly_rev_layout.addWidget(self.quarterly_rev_chart)
+                if self.quarterly_rev_chart:
+                    self.quarterly_rev_layout.addWidget(self.quarterly_rev_chart)
                 
                 if self.Comm_treat_chart:
                         self.common_treatments_layout.addWidget(self.Comm_treat_chart)
@@ -195,9 +195,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
         self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
-        self.scheduled_label.setText(f"Scheduled: {status[0]}")
-        self.completed_label.setText (f"Completed: {status[1]}")
-        self.cancelled_label.setText(f"Cancelled: {status[2]}")
+        self.scheduled_label.setText(f"Scheduled:                                                                 {status[0]}")
+        self.completed_label.setText (f"Completed:                                                                {status[1]}")
+        self.cancelled_label.setText(f"Cancelled:                                                                 {status[2]}")
         
         #update the chart values
         

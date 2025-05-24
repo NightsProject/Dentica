@@ -15,11 +15,11 @@ def load_graphs():
     gender_dist = create_gender_dist_graph()
     age_dist = create_age_dist_graph()
     app_quarterly = create_quarterly_app_graph()
-    # rev_quarterly = create_quarterly_revenue_graph()
+    rev_quarterly = create_quarterly_revenue_graph()
     comm_treat = create_common_treatments_graph()
     treat_cost = create_treatment_costs_over_time_graph()
     
-    return total_status, payment_method, gender_dist, age_dist, app_quarterly, comm_treat, treat_cost
+    return total_status, payment_method, gender_dist, age_dist, app_quarterly,  rev_quarterly,  comm_treat, treat_cost
 
 def refresh_graphs(self):
     if self.tot_appstat_chart:
@@ -47,10 +47,10 @@ def refresh_graphs(self):
          self.app_ot_chart.deleteLater()
          self.app_ot_chart = None
          
-    # if self.quarterly_rev_chart:
-    #      self.quarterly_rev_layout.removeWidget(self.quarterly_rev_chart)
-    #      self.quarterly_rev_chart.deleteLater()
-    #      self.quarterly_rev_chart = None
+    if self.quarterly_rev_chart:
+         self.quarterly_rev_layout.removeWidget(self.quarterly_rev_chart)
+         self.quarterly_rev_chart.deleteLater()
+         self.quarterly_rev_chart = None
     
     if self.Comm_treat_chart:
          self.common_treatments_layout.removeWidget(self.Comm_treat_chart)
@@ -62,14 +62,14 @@ def refresh_graphs(self):
          self.treat_cost_chart.deleteLater()
          self.treat_cost_chart = None
          
-    self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart, self.app_ot_chart, self.Comm_treat_chart, self.treat_cost_chart = load_graphs()
+    self.tot_appstat_chart, self.payment_method_chart, self.gender_dist_chart, self.age_dist_chart, self.app_ot_chart, self.quarterly_rev_chart, self.Comm_treat_chart, self.treat_cost_chart = load_graphs()
 
     self.tot_appstat_layout.addWidget(self.tot_appstat_chart)
     self.payment_method_layout.addWidget(self.payment_method_chart)
     self.gender_dist_layout.addWidget(self.gender_dist_chart)
     self.age_dist_layout.addWidget(self.age_dist_chart)
     self.app_ot_layout.addWidget(self.app_ot_chart)
-    # self.quarterly_rev_layout.addWidget(self.quarterly_rev_chart)
+    self.quarterly_rev_layout.addWidget(self.quarterly_rev_chart)
     self.common_treatments_layout.addWidget(self.Comm_treat_chart)
     self.treat_cost_layout.addWidget(self.treat_cost_chart)
     
@@ -268,39 +268,46 @@ def create_quarterly_app_graph():
         print("Error loading quarterly appointments chart:", e)
         return None
 
-# def get_quarterly_revenue():
-#     conn = connectDB()
-#     cursor = conn.cursor()
+def get_quarterly_revenue():
+    conn = connectDB()
+    cursor = conn.cursor()
 
-#     cursor.execute("""
-#         SELECT
-#             CONCAT(YEAR(Payment_Date), '-Q', QUARTER(Payment_Date)) AS Quarter,
-#             SUM(Amount_Paid) AS Total_Revenue
-#         FROM Pays
-#         GROUP BY YEAR(Payment_Date), QUARTER(Payment_Date)
-#         ORDER BY YEAR(Payment_Date), QUARTER(Payment_Date);
-#     """)
+    cursor.execute("""
+        SELECT
+            Quarter,
+            SUM(Total_Amount) AS Total_Revenue
+        FROM (
+            SELECT 
+                CONCAT(YEAR(Payment_Date), '-Q', QUARTER(Payment_Date)) AS Quarter,
+                Total_Amount
+            FROM Pays
+            WHERE Payment_Status = 'Paid'
+        ) AS sub
+        GROUP BY Quarter
+        ORDER BY Quarter;
+    """)
 
-#     results = cursor.fetchall()
-#     cursor.close()
-#     conn.close()
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
 
-#     quarters = []
-#     revenues = []
-#     for quarter, total in results:
-#         quarters.append(quarter)
-#         revenues.append(total)
+    quarters = []
+    revenues = []
+    for quarter, total in results:
+        quarters.append(quarter)
+        revenues.append(total)
+        
+    return quarters, revenues
 
-#     return quarters, revenues
 
-# def create_quarterly_revenue_graph():
-#     try:
-#         quarters, revenues = get_quarterly_revenue()
-#         chart_widget = QuarterlyRevenueLineChart(quarters, revenues)  
-#         return chart_widget
-#     except Exception as e:
-#         print("Error loading quarterly revenue chart:", e)
-#         return None
+def create_quarterly_revenue_graph():
+    try:
+        quarters, revenues = get_quarterly_revenue()
+        chart_widget = QuarterlyRevenueLineChart(quarters, revenues)  
+        return chart_widget
+    except Exception as e:
+        print("Error loading quarterly revenue chart:", e)
+        return None
 
 def get_common_treatments_count():
     conn = connectDB()
@@ -359,8 +366,6 @@ def get_treatment_costs_per_quarter():
         quarters.append(quarter)
         costs.append(cost)
 
-    print("Quarters:", quarters)
-    print("Costs:", costs)
     return quarters, costs
 
 def create_treatment_costs_over_time_graph():
