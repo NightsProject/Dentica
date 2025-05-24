@@ -13,6 +13,7 @@ from controller.appointment_ctr import Appointment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 from controller.patient_page_ctr import Patient_Page_Ctr
 from controller.viewapp_ctr import View_Appointent_Ctr
+from controller.billing_ctr import Billing_Dialog_Ctr
 
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts, create_appointment_status_chart, refresh_appointment_chart
@@ -79,6 +80,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
+        self.AddBill_btn.clicked.connect(lambda:self.open_billing())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
         
@@ -96,6 +98,10 @@ class MainController(QMainWindow, Ui_MainWindow):
         app_popup = Appointment_Dialog_Ctr()
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
+    
+    def open_billing(self):
+        bill_popup = Billing_Dialog_Ctr()
+        bill_popup.exec()
     
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
