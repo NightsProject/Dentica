@@ -7,7 +7,7 @@ class View_Appointment(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Book Appointment")
-        self.setFixedSize(350, 600)
+        self.setFixedSize(350, 630)
         self.setStyleSheet("""
             QDialog {
                 background-color: #B2CDE9;
@@ -20,12 +20,12 @@ class View_Appointment(QtWidgets.QDialog):
         label_style = "color: #37547A; font-family: Inter; font-size: 14px;"
         input_x = 150
         label_x = 20
-        row_height = 40
+        row_height = 33
         row_start = 60
 
         self.header = QtWidgets.QLabel("Appointment Details", self)
         self.header.setGeometry(20, 20, 300, 25)
-        self.header.setStyleSheet("""color: #fff; font-family: Katarine; font-size: 20px; font-weight: bold;""")
+        self.header.setStyleSheet("color: #fff; font-family: Katarine; font-size: 20px; font-weight: bold;")
 
         def add_row(row, text, widget):
             y = row_start + row * row_height
@@ -44,7 +44,6 @@ class View_Appointment(QtWidgets.QDialog):
         self.patient_input.setReadOnly(True)
         add_row(1, "Patient Name:", self.patient_input)
 
-
         self.schedule_input = QtWidgets.QLineEdit(self)
         self.schedule_input.setText("Fetch Schedule")
         self.schedule_input.setReadOnly(True)
@@ -55,15 +54,26 @@ class View_Appointment(QtWidgets.QDialog):
         self.status_input.setReadOnly(True)
         add_row(3, "Status:", self.status_input)
 
+        self.payment_id = QtWidgets.QLineEdit(self)
+        self.payment_id.setText("Fetch Payment ID")
+        self.payment_id.setReadOnly(True)
+        add_row(4, "Payment ID:", self.payment_id)
+
+        self.payment_stat = QtWidgets.QLineEdit(self)
+        self.payment_stat.setText("Fetch Payment Status")
+        self.payment_stat.setReadOnly(True)
+        add_row(5, "Payment Status:", self.payment_stat)
+
         label = QtWidgets.QLabel("Status:", self)
         label.setGeometry(label_x, row_start + 3 * row_height, 120, 20)
         label.setStyleSheet(label_style)
-           
+
         self.Treat_label = QtWidgets.QLabel("Treatment List", self)
-        self.Treat_label.setGeometry(20, 220, 120, 20)
+        self.Treat_label.setGeometry(20, 270, 120, 20)
         self.Treat_label.setStyleSheet("color: #37547A; font-family: Inter; font-size: 15px;")
+
         self.Treat_table = QtWidgets.QTableWidget(self)
-        self.Treat_table.setGeometry(20, 250, 300, 280)
+        self.Treat_table.setGeometry(20, 300, 310, 210)
         self.Treat_table.setColumnCount(4)
         self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost", "Actions"])
         self.Treat_table.setStyleSheet("""
@@ -76,12 +86,12 @@ class View_Appointment(QtWidgets.QDialog):
                 font-size: 13px;
             }
             QHeaderView::section {
-            background-color: #A0BFD8;
-            color: #37547A;
-            font-weight: bold;
-            border: none;
-            padding: 4px;
-            margin: 0px;
+                background-color: #A0BFD8;
+                color: #37547A;
+                font-weight: bold;
+                border: none;
+                padding: 4px;
+                margin: 0px;
             }
             QTableWidget::item:selected {
                 background-color: #88A9C9;
@@ -91,9 +101,18 @@ class View_Appointment(QtWidgets.QDialog):
         self.Treat_table.setRowCount(0)
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
+        
+        self.Total_cost = QtWidgets.QLabel("Total Cost:", self)
+        self.Total_cost.setGeometry(20, 530, 120, 20)
+        self.Total_cost.setStyleSheet("color: #37547A; font-family: Inter; font-size: 15px;")
+        
+        self.Cost_line = QtWidgets.QLineEdit(self)
+        self.Cost_line.setText("Fetch Total Cost")
+        self.Cost_line.setReadOnly(True)
+        self.Cost_line.setGeometry(150, 530, 160, 22)
 
         self.exit_btn = QtWidgets.QPushButton("Exit", self)
-        self.exit_btn.setGeometry(250, 550, 80, 30)
+        self.exit_btn.setGeometry(250, 580, 80, 30)
         self.exit_btn.setStyleSheet("""
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}

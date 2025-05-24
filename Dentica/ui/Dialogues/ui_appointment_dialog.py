@@ -96,6 +96,17 @@ class Add_Appointment(QtWidgets.QDialog):
         self.Treat_table.setRowCount(0)
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
+        
+        
+        self.total_label = QtWidgets.QLabel("Total Bill:", self)
+        self.total_label.setGeometry(340, 470, 100, 22)
+        self.total_label.setStyleSheet("color: #37547A; font-family: Inter; font-size: 14px;")
+
+        self.total_input = QtWidgets.QLineEdit(self)
+        self.total_input.setGeometry(430, 470, 130, 22)
+        self.total_input.setReadOnly(True)
+        self.total_input.setText("Fetch Total Cost")
+        self.total_input.setStyleSheet("background-color: #fff; color: #37547A;")
 
         self.add_btn = QtWidgets.QPushButton("Add", self)
         self.add_btn.setGeometry(200, 530, 80, 30)
