@@ -154,9 +154,13 @@ class MainController(QMainWindow, Ui_MainWindow):
     # This function reloads all the tables in the UI
     # It calls the functions to get the data from the backend
     def reload_all_tables(self):
-        summary_data = load_summary()
+        
+        summary_data, chart_widget = load_summary()
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)
+                
+        if chart_widget:
+            self.today_stat_layout.addWidget(chart_widget)
 
         todays_appointments_list = get_todays_appointments()
         self.update_todays_appointments_table(todays_appointments_list)
@@ -176,14 +180,14 @@ class MainController(QMainWindow, Ui_MainWindow):
     
     #DASHBOARD TAB=============== start
     def update_summary(self, data, status):
-        today_status = get_todays_appointment_status_counts()
+       
         self.label_5.setText(str(data[0]))
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
         self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
-        self.scheduled_label.setText(f"Scheduled:                                                                 {today_status[0]}")
-        self.completed_label.setText (f"Completed:                                                                {today_status[1]}")
-        self.cancelled_label.setText(f"Cancelled:                                                                  {today_status[2]}")
+        self.scheduled_label.setText(f"Scheduled: {status[0]}")
+        self.completed_label.setText (f"Completed: {status[1]}")
+        self.cancelled_label.setText(f"Cancelled: {status[2]}")
         #update the chart values
         
     #update_todays_appointments_table
