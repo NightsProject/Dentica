@@ -38,12 +38,13 @@ class View_Appointent_Ctr(View_Appointment):
         self.Treat_table.setRowCount(len(treatments))
         for row, treatment in enumerate(treatments):
             self.Treat_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(treatment['Treatment_ID'])))
-            self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(treatment['Treatment_Procedure']))
-            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(f"${treatment['Cost']}"))
+            self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(treatment['Diagnosis']))
+            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(str(treatment['Treatment_Date_Time'])))
+            self.Treat_table.setItem(row, 3, QtWidgets.QTableWidgetItem(treatment['Treatment_Procedure']))
+            self.Treat_table.setItem(row, 4, QtWidgets.QTableWidgetItem(treatment['Treatment_Status']))
+            self.Treat_table.setItem(row, 5, QtWidgets.QTableWidgetItem(f"${treatment['Cost']}"))
 
-            # Optional: Placeholder for "Actions"
-            btn = QtWidgets.QPushButton("View")
-            btn.setStyleSheet("font-size: 12px; padding: 2px;")
-            self.Treat_table.setCellWidget(row, 3, btn)
+            
+
 
             
