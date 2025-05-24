@@ -1229,11 +1229,11 @@ class Ui_MainWindow(object):
         """)
  
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 80)  # Bill ID 
-        self.Billing_table.setColumnWidth(1, 150)  # Pat. Name
-        self.Billing_table.setColumnWidth(2, 120)  # App. ID
-        self.Billing_table.setColumnWidth(3, 120)  # Total Amount
-        self.Billing_table.setColumnWidth(4, 80)  # Method
+        self.Billing_table.setColumnWidth(0, 155)  # Pat. name
+        self.Billing_table.setColumnWidth(1, 105)  # App. ID
+        self.Billing_table.setColumnWidth(2, 120)  # Amount
+        self.Billing_table.setColumnWidth(3, 110)  # method
+        self.Billing_table.setColumnWidth(4, 95)  # Date
         self.Billing_table.setColumnWidth(5, 110)  # Status
         self.Billing_table.setColumnWidth(6, 130) # Action Button
 
@@ -1435,8 +1435,8 @@ class Ui_MainWindow(object):
         # Book Sizing
         self.Booking_table.setColumnWidth(0, 180)  # Booking ID 
         self.Booking_table.setColumnWidth(1, 180)  # Pat. ID
-        self.Booking_table.setColumnWidth(2, 300)  # Pat. Name
-        self.Booking_table.setColumnWidth(3, 190)  # Book DateTime
+        self.Booking_table.setColumnWidth(2, 310)  # Pat. Name
+        self.Booking_table.setColumnWidth(3, 195)  # Book DateTime
 
         
         self.Booking_table.verticalHeader().setDefaultSectionSize(60)
