@@ -1603,7 +1603,7 @@ class Ui_MainWindow(object):
         font.setBold(True)
         rev_label.setFont(font)
         rev_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        rev_label.setText("Monthly Revenue")
+        rev_label.setText("Quarterly Revenue")
 
         self.quarterly_rev_layout.addWidget(rev_label)
         self.quarterly_rev_chart = None

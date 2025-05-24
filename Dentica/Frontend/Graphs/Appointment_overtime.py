@@ -21,7 +21,7 @@ class AppointmentLineChart(QWidget):
         ax.set_facecolor('#C6D7EC')
         ax.set_title(title, fontsize=12)
         ax.set_xlabel("Week")
-        ax.set_ylabel("No. of Appointments")
+        ax.set_ylabel("No. of Appointments", fontsize=7, color='#37547A')
         ax.grid(True, linestyle='--', alpha=0.5)
         ax.tick_params(axis='x', rotation=45)
         self.figure.tight_layout()
