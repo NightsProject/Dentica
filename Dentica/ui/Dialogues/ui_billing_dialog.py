@@ -6,8 +6,8 @@ class Add_Payment(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         
-        self.setWindowTitle("Add Bill")
-        self.setFixedSize(550, 500)
+        self.setWindowTitle("Add Payment")
+        self.setFixedSize(400, 450)
 
         self.setStyleSheet("""
             QDialog {
@@ -62,12 +62,14 @@ class Add_Payment(QtWidgets.QDialog):
         self.date_input.setDate(QtCore.QDate.currentDate())
         add_row(6, "Payment Date:", self.date_input)
         
+
         self.save = QtWidgets.QPushButton("Save", self)
-        self.save.setGeometry(170, 440, 80, 30)
-        self.save.setStyleSheet("background-color: #37547A; color: #fff;")
+        self.add_patient.setGeometry(120, 380, 80, 30)
+        self.add_patient.setStyleSheet("background-color: #37547A; color: #fff;")
+
 
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
-        self.cancel_btn.setGeometry(260, 440, 80, 30)
+        self.cancel_btn.setGeometry(210, 380, 80, 30)
         self.cancel_btn.setStyleSheet("""
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}

@@ -264,9 +264,14 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
             self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status 
             
+            appointment_id = appointment[0]
+            action_widget = self.create_todApp_action_buttons(appointment_id, row_position)
+            self.UpAp_table.setCellWidget(row_position, 4, action_widget)
+            
             total_today_appointment = self.UpAp_table.rowCount()
             self.UpAp_pagination.set_total_rows(total_today_appointment)
-            self.UpAp_pagination.show_current_page()    
+            self.UpAp_pagination.show_current_page()  
+              
             
             #appointment_id = appointment[0]
     #DASHBOARD TAB================ end
@@ -703,6 +708,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         bill_popup = Billing_Dialog_Ctr(billing_id)
         bill_popup.payment_added.connect(self.reload_all_tables)
         bill_popup.exec()
+
     
     def edit_billing(self):
         button = self.sender()
@@ -710,7 +716,80 @@ class MainController(QMainWindow, Ui_MainWindow):
         bill_popup = Billing_Dialog_Ctr(billing_id)
         bill_popup.payment_added.connect(self.reload_all_tables)
         bill_popup.exec()
-    
+
+    def create_todApp_action_buttons(self, appointment_id, row):
+        widget = QtWidgets.QWidget()
+
+        widget.setStyleSheet("background: none;")
+
+        layout = QtWidgets.QHBoxLayout()
+        layout.setContentsMargins(5, 2, 5, 2)
+        layout.setSpacing(5)
+        # done Button
+        done_btn = QtWidgets.QPushButton("Done")
+        #done_icon = QtGui.QIcon(f"ADD ICON")
+        #done_btn.setIcon(done_icon)
+        #done_btn.setIconSize(QtCore.QSize(20, 20))
+        done_btn.setMaximumWidth(60)
+        done_btn.setStyleSheet("""
+            QPushButton {
+                color: white;
+                border: none;
+                background-color: #37547A;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #8DB8E0;
+            }
+        """)
+        done_btn.clicked.connect(self.done_appointment)
+        
+        # cancel Button
+        cancel_btn = QPushButton("Cancel")
+        #cancel_icon = QtGui.QIcon(f" ADD ICON ")
+        #cancel_btn.setIcon(cancel_icon)
+        #cancel_btn.setIconSize(QtCore.QSize(20, 20))
+        cancel_btn.setMaximumWidth(60)
+        cancel_btn.setStyleSheet("""
+            QPushButton {
+                color: white;
+                border: none;
+                background-color: #37547A;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #8DB8E0;
+            }
+        """)
+        cancel_btn.clicked.connect(self.cancel_appointment)
+        
+        
+        layout.addWidget(done_btn)
+        layout.addWidget(cancel_btn)
+
+        
+        widget.setLayout(layout)
+        
+        #set the property of the button to the appointment id
+        done_btn.setProperty("Appointment ID", appointment_id)
+        cancel_btn.setProperty("Appointment ID", appointment_id)
+        
+        return widget
+
+    def done_appointment(self):
+        print("Done...")
+        button = self.sender()
+        appointment_id = button.property("Appointment ID")
+        
+    def cancel_appointment(self):
+        print("Cancel...")
+        button = self.sender()
+        appointment_id = button.property("Appointment ID")
+        
     #====================ACTION BUTTONS================= end
     #=======================================================
     

@@ -682,6 +682,7 @@ class Ui_MainWindow(object):
         self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=10)
         self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-3)
   
+  
         # Calendar Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.frame_3.setGeometry(QtCore.QRect(620, 350, 310, 440))
@@ -902,11 +903,11 @@ class Ui_MainWindow(object):
         """)
         
         #Sizing
-        self.Patients_table.setColumnWidth(0, 162)  # Name
-        self.Patients_table.setColumnWidth(1, 67)  # Gender
+        self.Patients_table.setColumnWidth(0, 170)  # Name
+        self.Patients_table.setColumnWidth(1, 70)  # Gender
         self.Patients_table.setColumnWidth(2, 70)  # Birthdate
-        self.Patients_table.setColumnWidth(3, 115)  # Contact
-        self.Patients_table.setColumnWidth(4, 120)  # Email
+        self.Patients_table.setColumnWidth(3, 120)  # Contact
+        self.Patients_table.setColumnWidth(4, 130)  # Email
         self.Patients_table.setColumnWidth(5, 145)  # Address
         self.Patients_table.setColumnWidth(6, 160)  # Actions
 
@@ -1015,10 +1016,10 @@ class Ui_MainWindow(object):
         """)
         
         #Appointment table sizing
-        self.Appointments_table.setColumnWidth(0, 200)  # Pat. Name
-        self.Appointments_table.setColumnWidth(1, 150)  # Date
-        self.Appointments_table.setColumnWidth(2, 150)  # Status
-        self.Appointments_table.setColumnWidth(3, 117)  # Treatment
+        self.Appointments_table.setColumnWidth(0, 205)  # Pat. Name
+        self.Appointments_table.setColumnWidth(1, 160)  # Date
+        self.Appointments_table.setColumnWidth(2, 160)  # Status
+        self.Appointments_table.setColumnWidth(3, 120)  # Treatment
         self.Appointments_table.setColumnWidth(4, 160)  # Actions
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
@@ -1151,7 +1152,7 @@ class Ui_MainWindow(object):
 
         #Search bill
         self.Search_bill = QtWidgets.QLineEdit(parent=self.Bill_frame)
-        self.Search_bill.setGeometry(QtCore.QRect(570, 25, 241, 31))
+        self.Search_bill.setGeometry(QtCore.QRect(550, 25, 231, 31))
         self.Search_bill.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.Search_bill.setReadOnly(False)
         self.Search_bill.setObjectName("Search_bill")
