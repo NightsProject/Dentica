@@ -1174,7 +1174,7 @@ class Ui_MainWindow(object):
         self.Billing_table = QtWidgets.QTableWidget(parent=self.bill_table_frame)
         self.Billing_table.setGeometry(QtCore.QRect(40, 60, 840, 615))
         self.Billing_table.setObjectName("Billing_table")
-        self.Billing_table.setColumnCount(6)
+        self.Billing_table.setColumnCount(7)
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
@@ -1204,6 +1204,8 @@ class Ui_MainWindow(object):
         self.Billing_table.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.Billing_table.setHorizontalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.Billing_table.setHorizontalHeaderItem(6, item)
         self.Billing_table.horizontalHeader().setStyleSheet("""
         QHeaderView::section {
                 font-family: "Inter"; 
@@ -1213,12 +1215,13 @@ class Ui_MainWindow(object):
         """)
  
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 90)  # Bill ID 
-        self.Billing_table.setColumnWidth(1, 206)  # Pat. Name
+        self.Billing_table.setColumnWidth(0, 80)  # Bill ID 
+        self.Billing_table.setColumnWidth(1, 150)  # Pat. Name
         self.Billing_table.setColumnWidth(2, 120)  # App. ID
-        self.Billing_table.setColumnWidth(3, 150)  # Total Amount
-        self.Billing_table.setColumnWidth(4, 130)  # Method
+        self.Billing_table.setColumnWidth(3, 120)  # Total Amount
+        self.Billing_table.setColumnWidth(4, 80)  # Method
         self.Billing_table.setColumnWidth(5, 110)  # Status
+        self.Billing_table.setColumnWidth(6, 130) # Action Button
 
         
         self.Billing_table.verticalHeader().setDefaultSectionSize(60)
@@ -1375,7 +1378,7 @@ class Ui_MainWindow(object):
 
         #Booking Table
         self.Booking_table = QtWidgets.QTableWidget(parent=self.book_table_frame)
-        self.Booking_table.setGeometry(QtCore.QRect(20, 20, 600, 615))
+        self.Booking_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
         self.Booking_table.setObjectName("Booking_table")
         self.Booking_table.setColumnCount(4)
         self.Booking_table.setRowCount(0)
@@ -1415,11 +1418,11 @@ class Ui_MainWindow(object):
         }
         """)
  
-        # Bill Sizing
-        self.Booking_table.setColumnWidth(0, 90)  # Booking ID 
-        self.Booking_table.setColumnWidth(1, 206)  # Pat. ID
-        self.Booking_table.setColumnWidth(2, 120)  # App. ID
-        self.Booking_table.setColumnWidth(3, 150)  # Book DateTime
+        # Book Sizing
+        self.Booking_table.setColumnWidth(0, 180)  # Booking ID 
+        self.Booking_table.setColumnWidth(1, 180)  # Pat. ID
+        self.Booking_table.setColumnWidth(2, 300)  # Pat. Name
+        self.Booking_table.setColumnWidth(3, 190)  # Book DateTime
 
         
         self.Booking_table.verticalHeader().setDefaultSectionSize(60)
@@ -1769,6 +1772,8 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Payment Date"))
         item = self.Billing_table.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Status"))
+        item = self.Billing_table.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Actions"))
         self.pushButton_12.setText(_translate("MainWindow", "All"))
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
@@ -1852,17 +1857,17 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
-        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
+        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame]:
                 frame.setStyleSheet(f"background-color: {main_bg};")
         
         # Apply to labels in top bars
-        for label in [self.label_12, self.label_13, self.label_14, self.label_15]:
+        for label in [self.label_12, self.label_13, self.label_14]:
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
         
         # Apply to cards
         for card in [self.dash_graph, self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
                         self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
-                        self.bill_table_frame, self.Reports_table_frame]:
+                        self.bill_table_frame]:
                 card.setStyleSheet(f"""
                 background: {card_bg};
                 border: 1px solid {card_bg};  
@@ -1901,13 +1906,13 @@ class Ui_MainWindow(object):
                                        """)
     
         # Apply to headers (TOP BAR)
-        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Reports_topbar_frame]:
+        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Book_frame]:
                 header.setStyleSheet(f"""
                         background-color: {main_bg};
                                      """)
         
         # Apply to header labels (TOP BAR)
-        for title in [self.label_12,self.label_13,self.label_14,self.label_15]:
+        for title in [self.label_12,self.label_13,self.label_14,self.payment_label]:
                 title.setStyleSheet(f"""
                         background-color: {main_bg};
                         color: {main_text};
@@ -1997,7 +2002,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to all search
-        for search in [self.search_patient, self.Search_app, self.Search_bill]:
+        for search in [self.search_patient, self.Search_app, self.Search_bill,self.Search_book]:
                 search.setStyleSheet(f"""
                         background-color: {search_bg}; 
                         border-radius: 8px;        
@@ -2005,7 +2010,7 @@ class Ui_MainWindow(object):
                         """)
 
         # Apply to all add buttons
-        for add_btn in [self.add_icon, self.AddApp_btn, self.AddBill_btn]:
+        for add_btn in [self.add_icon, self.AddApp_btn]:
                 add_btn.setStyleSheet(f"""
                         background-color: {add_bg}; 
                         border-radius: 8px; 
@@ -2030,7 +2035,7 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Billing table frame
+        # Apply to Payment table frame
         self.bill_table_frame.setStyleSheet(f"""
                 #bill_table_frame {{
                         background: {table_bg};
@@ -2039,17 +2044,17 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Report table frame
-        self.Reports_table_frame.setStyleSheet(f"""
-                #Reports_table_frame {{
+        # Apply to Booking table frame
+        self.book_table_frame.setStyleSheet(f"""
+                #book_table_frame {{
                         background: {table_bg};
-                        border: 1px solid {card_bd};
-                        border-radius: 12px;
-                        }}
+                        border: 1px solid {card_bd};  
+                        border-radius: 12px;      
+                        }}                                                 
                         """)
-        
+
         # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
+        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
@@ -2101,7 +2106,7 @@ class Ui_MainWindow(object):
                                 border-radius: 8px;
                         }}
                         """)         
-       #Apply to calendar
+       # Apply to calendar
         if not self.dark_mode:
                 # Restore frame_3 original style
                 self.frame_3.setStyleSheet("""

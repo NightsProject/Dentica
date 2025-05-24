@@ -284,7 +284,11 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[6])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
             
-            #billing_id = billing[0]
+
+            billing_id = billing[0]
+            action_widget = self.create_billing_action_buttons(billing_id, row_position)
+            self.Billing_table.setCellWidget(row_position,6,action_widget)
+
             total_billing = self.Billing_table.rowCount()
             self.Billing_pagination.set_total_rows(total_billing)
             self.Billing_pagination.show_current_page()
@@ -589,6 +593,78 @@ class MainController(QMainWindow, Ui_MainWindow):
             # Deletion canceled
             print("Deletion canceled.")
 
+
+    def create_billing_action_buttons(self, billing_id,row):
+        widget = QtWidgets.QWidget()
+
+        widget.setStyleSheet("background: none;")
+
+        layout = QtWidgets.QHBoxLayout()
+        layout.setContentsMargins(5, 2, 5, 2)
+        layout.setSpacing(5)
+        # Pay Button
+        pay = QtWidgets.QPushButton("Pay")
+        #pay_icon = QtGui.QIcon(f" ADD LNG OG ICON ")
+        #pay.setIcon(pay_icon)
+        #pay.setIconSize(QtCore.QSize(20, 20))
+        pay.setMaximumWidth(60)
+        pay.setStyleSheet("""
+            QPushButton {
+                color: white;
+                border: none;
+                background-color: #37547A;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #8DB8E0;
+            }
+        """)
+        pay.clicked.connect(self.pay_billing)
+        
+        # Edit Button
+        edit_bill = QPushButton()
+        edit_icon = QtGui.QIcon(f"{filepath}Edit.svg")
+        edit_bill.setIcon(edit_icon)
+        edit_bill.setIconSize(QtCore.QSize(20, 20))
+        edit_bill.setMaximumWidth(60)
+        edit_bill.setStyleSheet("""
+            QPushButton {
+                color: white;
+                border: none;
+                background-color: #37547A;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #8DB8E0;
+            }
+        """)
+        edit_bill.clicked.connect(self.edit_billing)
+            
+            
+        layout.addWidget(pay)
+        layout.addWidget(edit_bill)
+        
+        widget.setLayout(layout)
+        
+        pay.setProperty("Billing_ID", billing_id)
+        edit_bill.setProperty("Billing_ID", billing_id)
+
+        return widget
+        
+    def pay_billing(self):
+        print("Paying...")
+        button = self.sender()
+        billing_id = button.property("Billing_ID")
+    
+    def edit_billing(self):
+        print("Edit bill...")
+        button = self.sender()
+        billing_id = button.property("Billing_ID")
+        
     #====================ACTION BUTTONS================= end
     #=======================================================
     
