@@ -158,19 +158,7 @@ class MainController(QMainWindow, Ui_MainWindow):
 
 
         todays_appointment_status = get_todays_appointment_status_counts()
-        self.update_summary(summary_data, todays_appointment_status)
-        total_status, payment_method, gender_dist, age_dist = load_graphs()
-                
-        if self.appointment_chart:
-            self.today_stat_layout.addWidget(self.appointment_chart)
-                        
-        if total_status:
-            self.tot_appstat_layout.addWidget(total_status)
-                        
-        if payment_method:
-            self.payment_method_layout.addWidget(payment_method)
-                
-
+        self.update_summary(summary_data, todays_appointment_status)                
 
         todays_appointments_list = get_todays_appointments()
         self.update_todays_appointments_table(todays_appointments_list)
