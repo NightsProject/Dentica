@@ -3,6 +3,13 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
 from ui.Dialogues.ui_exit_dialog import Exit_App
 
+from Frontend.Graphs.Appointment_status import DonutChart
+from Frontend.Graphs.Total_Appointment_Status import DonutChart1
+from Frontend.Graphs.Appointment_overtime import AppointmentLineChart
+from Frontend.Graphs.Payment_Method import PaymentMethodPie
+from Frontend.Graphs.Gender_Distribution import GenderDistributionPie
+from Frontend.Graphs.Age_Distribution import PatientAgeDistributionPie
+from Frontend.Graphs.Monthly_Revenue import MonthlyRevenueLineChart
 from Frontend.Graphs.Common_Treatments import CommonTreatmentsBarChart
 from Frontend.Graphs.Treatment_Cost import TreatmentCostsLineChart
 
@@ -1174,7 +1181,7 @@ class Ui_MainWindow(object):
         self.Billing_table = QtWidgets.QTableWidget(parent=self.bill_table_frame)
         self.Billing_table.setGeometry(QtCore.QRect(40, 60, 840, 615))
         self.Billing_table.setObjectName("Billing_table")
-        self.Billing_table.setColumnCount(7)
+        self.Billing_table.setColumnCount(6)
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
@@ -1204,8 +1211,6 @@ class Ui_MainWindow(object):
         self.Billing_table.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.Billing_table.setHorizontalHeaderItem(5, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.Billing_table.setHorizontalHeaderItem(6, item)
         self.Billing_table.horizontalHeader().setStyleSheet("""
         QHeaderView::section {
                 font-family: "Inter"; 
@@ -1215,13 +1220,12 @@ class Ui_MainWindow(object):
         """)
  
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 80)  # Bill ID 
-        self.Billing_table.setColumnWidth(1, 150)  # Pat. Name
+        self.Billing_table.setColumnWidth(0, 90)  # Bill ID 
+        self.Billing_table.setColumnWidth(1, 206)  # Pat. Name
         self.Billing_table.setColumnWidth(2, 120)  # App. ID
-        self.Billing_table.setColumnWidth(3, 120)  # Total Amount
-        self.Billing_table.setColumnWidth(4, 80)  # Method
+        self.Billing_table.setColumnWidth(3, 150)  # Total Amount
+        self.Billing_table.setColumnWidth(4, 130)  # Method
         self.Billing_table.setColumnWidth(5, 110)  # Status
-        self.Billing_table.setColumnWidth(6, 130) # Action Button
 
         
         self.Billing_table.verticalHeader().setDefaultSectionSize(60)
@@ -1378,7 +1382,7 @@ class Ui_MainWindow(object):
 
         #Booking Table
         self.Booking_table = QtWidgets.QTableWidget(parent=self.book_table_frame)
-        self.Booking_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
+        self.Booking_table.setGeometry(QtCore.QRect(20, 20, 600, 615))
         self.Booking_table.setObjectName("Booking_table")
         self.Booking_table.setColumnCount(4)
         self.Booking_table.setRowCount(0)
@@ -1418,11 +1422,11 @@ class Ui_MainWindow(object):
         }
         """)
  
-        # Book Sizing
-        self.Booking_table.setColumnWidth(0, 180)  # Booking ID 
-        self.Booking_table.setColumnWidth(1, 180)  # Pat. ID
-        self.Booking_table.setColumnWidth(2, 300)  # Pat. Name
-        self.Booking_table.setColumnWidth(3, 190)  # Book DateTime
+        # Bill Sizing
+        self.Booking_table.setColumnWidth(0, 90)  # Booking ID 
+        self.Booking_table.setColumnWidth(1, 206)  # Pat. ID
+        self.Booking_table.setColumnWidth(2, 120)  # App. ID
+        self.Booking_table.setColumnWidth(3, 150)  # Book DateTime
 
         
         self.Booking_table.verticalHeader().setDefaultSectionSize(60)
@@ -1511,13 +1515,15 @@ class Ui_MainWindow(object):
         font.setBold(True)
         self.graph_label2.setFont(font)
         self.graph_label2.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        self.graph_label2.setText("Appointments per Quarter")
+        self.graph_label2.setText("Appointments per Week")
         
-        self.app_ot_layout = QVBoxLayout()
-        self.weekly_apps_graph.setLayout(self.app_ot_layout)
-        self.app_ot_layout.addWidget(self.graph_label2)
-        
-        self.app_ot_chart = None
+        layout3 = QVBoxLayout()
+        self.weekly_apps_graph.setLayout(layout3)
+        x_labels = ['Week 1', 'Week 2', 'Week 3']
+        y_values = [3, 7, 5]
+        line_chart = AppointmentLineChart(x_labels, y_values, title=None)
+        layout3.addWidget(self.graph_label2)
+        layout3.addWidget(line_chart)
         
         # Gender Distribution Graph 
         self.gender_dist_graph = QtWidgets.QFrame(parent=self.Reports_page)
@@ -1580,23 +1586,23 @@ class Ui_MainWindow(object):
 
 
         #Monthly Revenue Graph
-        self.quarterly_rev_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.quarterly_rev_graph.setGeometry(QtCore.QRect(530, 280, 400, 250))
-        self.quarterly_rev_graph.setStyleSheet("""
-        #quarterly_rev_graph {
+        self.monthly_rev_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.monthly_rev_graph.setGeometry(QtCore.QRect(530, 280, 400, 250))
+        self.monthly_rev_graph.setStyleSheet("""
+        #monthly_rev_graph {
         background: #C6D7EC;
         border: 1px solid #fff;
         border-radius: 12px;
         }
         """)
-        self.quarterly_rev_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.quarterly_rev_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.quarterly_rev_graph.setObjectName("quarterly_rev_graph")
+        self.monthly_rev_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.monthly_rev_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.monthly_rev_graph.setObjectName("monthly_rev_graph")
 
-        self.quarterly_rev_layout = QVBoxLayout()
-        self.quarterly_rev_graph.setLayout(self.quarterly_rev_layout)
+        layout_rev = QVBoxLayout()
+        self.monthly_rev_graph.setLayout(layout_rev)
 
-        rev_label = QtWidgets.QLabel(parent=self.quarterly_rev_graph)
+        rev_label = QtWidgets.QLabel(parent=self.monthly_rev_graph)
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(10)
@@ -1605,8 +1611,13 @@ class Ui_MainWindow(object):
         rev_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
         rev_label.setText("Monthly Revenue")
 
-        self.quarterly_rev_layout.addWidget(rev_label)
-        self.quarterly_rev_chart = None
+        layout_rev.addWidget(rev_label)
+
+        months = ['Jan', 'Feb', 'Mar', 'Apr', 'May']
+        revenues = [3000, 4200, 3900, 4600, 5000]
+
+        revenue_chart = MonthlyRevenueLineChart(months, revenues)
+        layout_rev.addWidget(revenue_chart)
         
         
         #Common Treatments Graph
@@ -1623,8 +1634,8 @@ class Ui_MainWindow(object):
         self.common_treatments_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.common_treatments_graph.setObjectName("common_treatments_graph")
 
-        self.common_treatments_layout = QVBoxLayout()
-        self.common_treatments_graph.setLayout(self.common_treatments_layout)
+        layout_ct = QVBoxLayout()
+        self.common_treatments_graph.setLayout(layout_ct)
 
         ct_label = QtWidgets.QLabel(parent=self.common_treatments_graph)
         font = QtGui.QFont()
@@ -1635,9 +1646,13 @@ class Ui_MainWindow(object):
         ct_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
         ct_label.setText("Common Treatments Performed")
 
-        self.common_treatments_layout.addWidget(ct_label)
-        self.Comm_treat_chart = None
+        layout_ct.addWidget(ct_label)
 
+        procedures = ['Cleaning', 'Filling', 'Extraction', 'Whitening']
+        counts = [12, 9, 14, 5]
+
+        ct_chart = CommonTreatmentsBarChart(procedures, counts)
+        layout_ct.addWidget(ct_chart)
         
         #Treatment Cost
         self.treatment_costs_graph = QtWidgets.QFrame(parent=self.Reports_page)
@@ -1653,8 +1668,8 @@ class Ui_MainWindow(object):
         self.treatment_costs_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.treatment_costs_graph.setObjectName("treatment_costs_graph")
 
-        self.treat_cost_layout = QVBoxLayout()
-        self.treatment_costs_graph.setLayout(self.treat_cost_layout)
+        layout_tc = QVBoxLayout()
+        self.treatment_costs_graph.setLayout(layout_tc)
 
         tc_label = QtWidgets.QLabel(parent=self.treatment_costs_graph)
         font = QtGui.QFont()
@@ -1664,10 +1679,15 @@ class Ui_MainWindow(object):
         tc_label.setFont(font)
         tc_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
         tc_label.setText("Treatment Costs Over Time")
-        self.treat_cost_layout.addWidget(tc_label)
+        layout_tc.addWidget(tc_label)
 
-        
-        self.treat_cost_chart = None
+        # Sample data for the line chart
+        import datetime
+        dates = [datetime.date(2024, m, 1) for m in range(1, 7)]
+        costs = [1500, 1700, 1600, 1800, 1750, 1900]
+
+        tc_chart = TreatmentCostsLineChart(dates, costs)
+        layout_tc.addWidget(tc_chart)
         
         self.Pages.addWidget(self.Reports_page)
 
@@ -1761,19 +1781,17 @@ class Ui_MainWindow(object):
         self.label_14.setText(_translate("MainWindow", "Payment"))
         self.Search_bill.setPlaceholderText(_translate("MainWindow", "Search invoices..."))
         item = self.Billing_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Patient Name"))
+        item.setText(_translate("MainWindow", "Payment ID"))
         item = self.Billing_table.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Appointment ID"))
+        item.setText(_translate("MainWindow", "Patient Name"))
         item = self.Billing_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Total Amount"))
+        item.setText(_translate("MainWindow", "Appointment ID"))
         item = self.Billing_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Method"))
+        item.setText(_translate("MainWindow", "Total Amount"))
         item = self.Billing_table.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Payment Date"))
+        item.setText(_translate("MainWindow", "Method"))
         item = self.Billing_table.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Status"))
-        item = self.Billing_table.horizontalHeaderItem(6)
-        item.setText(_translate("MainWindow", "Actions"))
         self.pushButton_12.setText(_translate("MainWindow", "All"))
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
         self.pushButton_14.setText(_translate("MainWindow", "Pending"))
@@ -1857,11 +1875,11 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
-        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame]:
+        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
                 frame.setStyleSheet(f"background-color: {main_bg};")
         
         # Apply to labels in top bars
-        for label in [self.label_12, self.label_13, self.label_14]:
+        for label in [self.label_12, self.label_13, self.label_14, self.label_15]:
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
         
         # Apply to cards
@@ -1906,13 +1924,13 @@ class Ui_MainWindow(object):
                                        """)
     
         # Apply to headers (TOP BAR)
-        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Book_frame]:
+        for header in [self.frame_4,self.app_frame,self.Bill_frame]:
                 header.setStyleSheet(f"""
                         background-color: {main_bg};
                                      """)
         
         # Apply to header labels (TOP BAR)
-        for title in [self.label_12,self.label_13,self.label_14,self.payment_label]:
+        for title in [self.label_12,self.label_13,self.label_14]:
                 title.setStyleSheet(f"""
                         background-color: {main_bg};
                         color: {main_text};
@@ -2002,7 +2020,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to all search
-        for search in [self.search_patient, self.Search_app, self.Search_bill,self.Search_book]:
+        for search in [self.search_patient, self.Search_app, self.Search_bill]:
                 search.setStyleSheet(f"""
                         background-color: {search_bg}; 
                         border-radius: 8px;        
@@ -2010,7 +2028,7 @@ class Ui_MainWindow(object):
                         """)
 
         # Apply to all add buttons
-        for add_btn in [self.add_icon, self.AddApp_btn]:
+        for add_btn in [self.add_icon, self.AddApp_btn, self.AddBill_btn]:
                 add_btn.setStyleSheet(f"""
                         background-color: {add_bg}; 
                         border-radius: 8px; 
@@ -2035,7 +2053,7 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Payment table frame
+        # Apply to Billing table frame
         self.bill_table_frame.setStyleSheet(f"""
                 #bill_table_frame {{
                         background: {table_bg};
@@ -2044,17 +2062,17 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Booking table frame
-        self.book_table_frame.setStyleSheet(f"""
-                #book_table_frame {{
+        # Apply to Report table frame
+        self.Reports_table_frame.setStyleSheet(f"""
+                #Reports_table_frame {{
                         background: {table_bg};
-                        border: 1px solid {card_bd};  
-                        border-radius: 12px;      
-                        }}                                                 
+                        border: 1px solid {card_bd};
+                        border-radius: 12px;
+                        }}
                         """)
-
+        
         # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
+        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
@@ -2106,7 +2124,7 @@ class Ui_MainWindow(object):
                                 border-radius: 8px;
                         }}
                         """)         
-       # Apply to calendar
+       #Apply to calendar
         if not self.dark_mode:
                 # Restore frame_3 original style
                 self.frame_3.setStyleSheet("""
