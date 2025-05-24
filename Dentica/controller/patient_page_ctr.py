@@ -7,8 +7,6 @@ from backend.patients_comp import get_patient_data
 from PyQt6.QtCore import pyqtSignal
 import os
 
-filepath = "Dentica/ui/icons/"
-
 class Patient_Page_Ctr(PatientPage):
     reload_patient_signal = pyqtSignal()
     
