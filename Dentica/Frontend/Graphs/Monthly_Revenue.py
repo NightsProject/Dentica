@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
-class MonthlyRevenueLineChart(QWidget):
+class QuarterlyRevenueLineChart(QWidget):
     def __init__(self, months, revenues, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)

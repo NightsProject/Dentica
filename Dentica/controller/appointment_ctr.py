@@ -299,6 +299,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         total_amount = self.total_input.text().replace('₱', '').replace(',', '')
         payment_method = "None"
         payment_status = "Unpaid"
+       
         
         booking_data = {
             "Booking_ID": booking_id,
@@ -312,7 +313,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             "Booking_ID": booking_id,
             "Total_Amount": total_amount,
             "Payment_Method": payment_method,
-            "Payment_Status": payment_status
+            "Payment_Status": payment_status,
+            
         }
         
         appointment_data = {
