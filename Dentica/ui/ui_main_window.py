@@ -635,8 +635,8 @@ class Ui_MainWindow(object):
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
-        background-color: #C6D7EC;
-        border: none;
+                background-color: #C6D7EC;
+                border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -901,14 +901,15 @@ class Ui_MainWindow(object):
                 background: #C6D7EC;                
         }
         """)
-        
+        self.Patients_table.verticalHeader().setVisible(False)
+
         #Sizing
-        self.Patients_table.setColumnWidth(0, 170)  # Name
+        self.Patients_table.setColumnWidth(0, 175)  # Name
         self.Patients_table.setColumnWidth(1, 70)  # Gender
-        self.Patients_table.setColumnWidth(2, 70)  # Birthdate
+        self.Patients_table.setColumnWidth(2, 75)  # Birthdate
         self.Patients_table.setColumnWidth(3, 120)  # Contact
         self.Patients_table.setColumnWidth(4, 130)  # Email
-        self.Patients_table.setColumnWidth(5, 145)  # Address
+        self.Patients_table.setColumnWidth(5, 150)  # Address
         self.Patients_table.setColumnWidth(6, 160)  # Actions
 
         #Row height for each patient
@@ -1014,10 +1015,11 @@ class Ui_MainWindow(object):
                 background-color: #C6D7EC;            
         }
         """)
-        
+        self.Appointments_table.verticalHeader().setVisible(False)
+
         #Appointment table sizing
-        self.Appointments_table.setColumnWidth(0, 205)  # Pat. Name
-        self.Appointments_table.setColumnWidth(1, 160)  # Date
+        self.Appointments_table.setColumnWidth(0, 215)  # Pat. Name
+        self.Appointments_table.setColumnWidth(1, 165)  # Date
         self.Appointments_table.setColumnWidth(2, 160)  # Status
         self.Appointments_table.setColumnWidth(3, 120)  # Treatment
         self.Appointments_table.setColumnWidth(4, 160)  # Actions
@@ -1227,13 +1229,14 @@ class Ui_MainWindow(object):
                 color: #64748B;                
         }
         """)
- 
+        self.Billing_table.verticalHeader().setVisible(False)
+
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 155)  # Pat. name
+        self.Billing_table.setColumnWidth(0, 160)  # Pat. name
         self.Billing_table.setColumnWidth(1, 105)  # App. ID
         self.Billing_table.setColumnWidth(2, 120)  # Amount
         self.Billing_table.setColumnWidth(3, 110)  # method
-        self.Billing_table.setColumnWidth(4, 95)  # Date
+        self.Billing_table.setColumnWidth(4, 105)  # Date
         self.Billing_table.setColumnWidth(5, 110)  # Status
         self.Billing_table.setColumnWidth(6, 130) # Action Button
 
@@ -1431,12 +1434,13 @@ class Ui_MainWindow(object):
                 color: #64748B;                
         }
         """)
- 
+        self.Booking_table.verticalHeader().setVisible(False)
+
         # Book Sizing
-        self.Booking_table.setColumnWidth(0, 180)  # Booking ID 
-        self.Booking_table.setColumnWidth(1, 180)  # Pat. ID
+        self.Booking_table.setColumnWidth(0, 185)  # Booking ID 
+        self.Booking_table.setColumnWidth(1, 185)  # Pat. ID
         self.Booking_table.setColumnWidth(2, 310)  # Pat. Name
-        self.Booking_table.setColumnWidth(3, 195)  # Book DateTime
+        self.Booking_table.setColumnWidth(3, 200)  # Book DateTime
 
         
         self.Booking_table.verticalHeader().setDefaultSectionSize(60)
