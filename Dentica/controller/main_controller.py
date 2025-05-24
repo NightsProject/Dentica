@@ -14,7 +14,8 @@ from controller.patient_ctr import Patient_Dialog_Ctr
 from controller.patient_page_ctr import Patient_Page_Ctr
 from controller.viewapp_ctr import View_Appointent_Ctr
 
-from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
+from backend.DB import connectDBF, set_credentials, createAllTables
+
 
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts, create_appointment_status_chart, refresh_appointment_chart
 from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data
@@ -24,6 +25,7 @@ from backend.appointments_comp import get_all_appointments_with_treatment_count,
 from backend.billing_comp import get_all_billings
 from backend.booking_comp import get_all_bookings
 from backend.reports_comp import load_graphs, refresh_graphs
+
 
 
 filepath = "Dentica/ui/icons/"
@@ -40,7 +42,11 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
+        
         self.search_patient.textChanged.connect(self.search_patient_data)
+        self.Search_app.textChanged.connect(self.search_appointment_data)
+        self.Search_bill.textChanged.connect(self.search_payment_data)
+        self.Search_book.textChanged.connect(self.search_booking_data)
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
@@ -149,9 +155,22 @@ class MainController(QMainWindow, Ui_MainWindow):
     def reload_all_tables(self):
         
         summary_data = load_summary()
+
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)
+        total_status, payment_method, gender_dist, age_dist = load_graphs()
                 
+        if self.appointment_chart:
+            self.today_stat_layout.addWidget(self.appointment_chart)
+                        
+        if total_status:
+            self.tot_appstat_layout.addWidget(total_status)
+                        
+        if payment_method:
+            self.payment_method_layout.addWidget(payment_method)
+                
+
+
         todays_appointments_list = get_todays_appointments()
         self.update_todays_appointments_table(todays_appointments_list)
 
@@ -579,4 +598,15 @@ class MainController(QMainWindow, Ui_MainWindow):
     def search_patient_data(self, keyword):
         data = search_patients(keyword)
         self.update_patients_list(data)
+        
+    def search_appointment_data(self, keyword):
+        data = search_appointments(keyword)
+        self.update_appointments_list(data)
     
+    def search_payment_data(self, keyword):
+        data = search_payments(keyword)
+        self.update_billing_list(data)
+        
+    def search_booking_data(self, keyword):
+        data = search_bookings(keyword)
+        self.update_bookings_list(data)
