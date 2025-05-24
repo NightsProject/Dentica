@@ -10,6 +10,46 @@ from PyQt6.QtCore import Qt
 from datetime import datetime
 from backend.treatment_comp import delete_treatment_by_id
 
+
+"""
+        
+    Key Features
+
+    Signal Emission:
+        appointment_added: A custom signal that is emitted when an appointment is successfully added or updated. This allows other parts of the application to react to this event.
+
+    Initialization:
+        The constructor (__init__) initializes the dialog, sets up the appointment data, and configures the UI components based on whether the dialog is for creating a new appointment or updating an existing one.
+        It generates a new appointment ID if creating a new appointment and sets up the patient input field.
+
+    Treatment Management:
+        The class maintains a list of treatments associated with the appointment. It allows adding new treatments, updating the treatment list, and deleting treatments.
+        The sync_treatment_dates method ensures that when the appointment date is changed, the corresponding treatment dates are updated while preserving the time.
+
+    Patient Search:
+        The update_patient_search method filters the list of patients based on the input text, allowing users to search for patients by name. It updates the patient input combo box with matching results.
+
+    Adding Treatments:
+        The on_add_treatment_clicked method opens a dialog for adding a new treatment. When a treatment is added, it updates the treatment list and the total billing amount.
+
+    Billing Calculation:
+        The update_total_billing method calculates the total cost of all treatments and updates the billing display in the UI.
+
+    UI Updates:
+        The update_treatment_table_ui method updates the treatment table in the UI with the newly added treatment, including a delete button for each treatment.
+        The remove_treatment method allows users to delete a treatment from the list and the UI, confirming the action with a message box.
+
+    Validation:
+        The class includes validation methods (validate_required and validate_status) to ensure that required fields are filled out correctly before saving or updating an appointment.
+
+    Saving and Updating Appointments:
+        The on_add_pressed method handles the logic for saving a new appointment, including gathering all necessary data, generating booking and payment details, and saving to the database.
+        The on_update_pressed method handles updating an existing appointment, including validating inputs and deleting treatments marked for deletion.
+        
+"""
+
+
+
 class Appointment_Dialog_Ctr(Add_Appointment):
     
     appointment_added = pyqtSignal()
@@ -388,3 +428,10 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         else:
             QMessageBox.critical(self, "Database Error", 
                             "Failed to update the appointment. Please try again.")
+            
+            
+            
+            
+            
+            
+ 
