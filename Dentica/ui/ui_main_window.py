@@ -1467,6 +1467,8 @@ class Ui_MainWindow(object):
         self.tot_appstat_graph.setLayout(self.tot_appstat_layout)
         self.tot_appstat_layout.addWidget(self.graph_label1)
         
+        self.tot_appstat_chart = None
+        
         #Payment Method Chart
         self.payment_method_graph = QtWidgets.QFrame(parent=self.Reports_page)
         self.payment_method_graph.setGeometry(QtCore.QRect(270, 20, 250, 250))  
@@ -1490,6 +1492,7 @@ class Ui_MainWindow(object):
         self.payment_method_graph.setLayout(self.payment_method_layout)
 
         self.payment_method_layout.addWidget(self.graph_label2)
+        self.payment_method_chart = None
         
         #Appointments per week Graph
         self.weekly_apps_graph = QtWidgets.QFrame(parent=self.Reports_page)
@@ -1549,6 +1552,7 @@ class Ui_MainWindow(object):
         self.gender_dist_graph.setLayout(self.gender_dist_layout)
  
         self.gender_dist_layout.addWidget(self.graph_label3)
+        self.gender_dist_chart = None
 
         
         #Age Distribution Graph
@@ -1578,6 +1582,7 @@ class Ui_MainWindow(object):
         age_dist_label.setText("Age Distribution")
 
         self.age_dist_layout.addWidget(age_dist_label)
+        self.age_dist_chart = None
 
 
         #Monthly Revenue Graph
