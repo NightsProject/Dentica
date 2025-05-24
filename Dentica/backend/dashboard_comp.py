@@ -1,4 +1,5 @@
 from backend.DB import connectDB
+from ui.ui_main_window import Ui_MainWindow
 from Frontend.Graphs.Appointment_status import DonutChart
 
 def load_summary():
@@ -9,9 +10,7 @@ def load_summary():
     
     data = [patients, appointments, payments, treatments]
     
-    today_status = create_appointment_status_chart()
-    
-    return data, today_status
+    return data
 
 def count_patients():
     patients = 0
@@ -169,8 +168,6 @@ def get_todays_appointment_status_counts():
 
     return [scheduled, completed, cancelled]
 
-
-
 def create_appointment_status_chart():
     try:
         status_counts = get_todays_appointment_status_counts()
@@ -180,4 +177,15 @@ def create_appointment_status_chart():
     except Exception as e:
         print("Error loading chart:", e)
         return None
+    
+def refresh_appointment_chart(self):
+    if self.appointment_chart:
+        self.today_stat_layout.removeWidget(self.appointment_chart)
+        self.appointment_chart.deleteLater()
+        self.appointment_chart = None
+
+    self.appointment_chart = create_appointment_status_chart()
+    if self.appointment_chart:
+        self.today_stat_layout.addWidget(self.appointment_chart)
+
 

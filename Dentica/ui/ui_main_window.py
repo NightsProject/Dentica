@@ -434,6 +434,8 @@ class Ui_MainWindow(object):
         self.dash_graph.setLayout(self.today_stat_layout)
         self.today_stat_layout.addWidget(self.graph_label)
         
+        self.appointment_chart = None
+        
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
         self.TotPat_card.setGeometry(QtCore.QRect(490, 30, 200, 130))
@@ -1461,13 +1463,9 @@ class Ui_MainWindow(object):
         self.graph_label1.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.graph_label1.setText("Total Appointments Status")
         
-        layout2 = QVBoxLayout()
-        self.tot_appstat_graph.setLayout(layout2)
-        labels = ['Scheduled', 'Completed', 'Cancelled']
-        chart_values = [15, 50, 10]
-        donut_chart2 = DonutChart1(labels, chart_values)
-        layout2.addWidget(self.graph_label1)
-        layout2.addWidget(donut_chart2)
+        self.tot_appstat_layout = QVBoxLayout()
+        self.tot_appstat_graph.setLayout(self.tot_appstat_layout)
+        self.tot_appstat_layout.addWidget(self.graph_label1)
         
         #Payment Method Chart
         self.payment_method_graph = QtWidgets.QFrame(parent=self.Reports_page)
@@ -1488,15 +1486,10 @@ class Ui_MainWindow(object):
         self.graph_label2.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.graph_label2.setText("Payment Method")
 
-        layout3 = QVBoxLayout()
-        self.payment_method_graph.setLayout(layout3)
+        self.payment_method_layout = QVBoxLayout()
+        self.payment_method_graph.setLayout(self.payment_method_layout)
 
-        labels2 = ['Cash', 'Card', 'GCash']
-        chart_values2 = [150, 300, 100]  
-
-        payment_method_chart = PaymentMethodPie(labels2, chart_values2)
-        layout3.addWidget(self.graph_label2)
-        layout3.addWidget(payment_method_chart)
+        self.payment_method_layout.addWidget(self.graph_label2)
         
         #Appointments per week Graph
         self.weekly_apps_graph = QtWidgets.QFrame(parent=self.Reports_page)
@@ -1552,48 +1545,40 @@ class Ui_MainWindow(object):
         self.graph_label3.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.graph_label3.setText("Gender Distribution")
 
-        layout4 = QVBoxLayout()
-        self.gender_dist_graph.setLayout(layout4)
+        self.gender_dist_layout = QVBoxLayout()
+        self.gender_dist_graph.setLayout(self.gender_dist_layout)
+ 
+        self.gender_dist_layout.addWidget(self.graph_label3)
 
-        gender_labels = ['Male', 'Female', 'Other']
-        gender_values = [60, 35, 5]  
-
-        gender_pie_chart = GenderDistributionPie(gender_labels, gender_values)  
-        layout4.addWidget(self.graph_label3)
-        layout4.addWidget(gender_pie_chart)
         
-        #Gender Distribution Graph
-        self.payment_method_graph = QtWidgets.QFrame(parent=self.Reports_page)
-        self.payment_method_graph.setGeometry(QtCore.QRect(270, 280, 250, 250))
-        self.payment_method_graph.setStyleSheet("""
-        #payment_method_graph {
-        background: #C6D7EC;
-        border: 1px solid #fff;
-        border-radius: 12px;
+        #Age Distribution Graph
+        self.age_dist_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.age_dist_graph.setGeometry(QtCore.QRect(270, 280, 250, 250))
+        self.age_dist_graph.setStyleSheet("""
+        #age_dist_graph{
+                background: #C6D7EC;
+                border: 1px solid #fff;
+                border-radius: 12px;
         }
         """)
-        self.payment_method_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.payment_method_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.payment_method_graph.setObjectName("payment_method_graph")
+        self.age_dist_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.age_dist_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.age_dist_graph.setObjectName("age_dist_graph")
 
-        layout_pm = QVBoxLayout()
-        self.payment_method_graph.setLayout(layout_pm)
+        self.age_dist_layout = QVBoxLayout()
+        self.age_dist_graph.setLayout(self.age_dist_layout)
 
-        label_pm = QtWidgets.QLabel(parent=self.payment_method_graph)
+        age_dist_label = QtWidgets.QLabel(parent=self.age_dist_graph)
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(10)
         font.setBold(True)
-        label_pm.setFont(font)
-        label_pm.setStyleSheet("background: #C6D7EC; color: #37547A;")
-        label_pm.setText("Age Distribution")
+        age_dist_label.setFont(font)
+        age_dist_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        age_dist_label.setText("Age Distribution")
 
-        layout_pm.addWidget(label_pm)
+        self.age_dist_layout.addWidget(age_dist_label)
 
-        labels_age = ['<18', '18–30', '31–50', '51+']
-        values_age = [5, 20, 15, 10]  # example data, replace with your real data
-        age_dist_chart = PatientAgeDistributionPie(labels_age, values_age)
-        layout_pm.addWidget(age_dist_chart)
 
         #Monthly Revenue Graph
         self.monthly_rev_graph = QtWidgets.QFrame(parent=self.Reports_page)
