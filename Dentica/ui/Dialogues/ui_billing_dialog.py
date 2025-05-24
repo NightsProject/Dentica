@@ -64,8 +64,8 @@ class Add_Payment(QtWidgets.QDialog):
         
 
         self.save = QtWidgets.QPushButton("Save", self)
-        self.add_patient.setGeometry(120, 380, 80, 30)
-        self.add_patient.setStyleSheet("background-color: #37547A; color: #fff;")
+        self.save.setGeometry(120, 380, 80, 30)
+        self.save.setStyleSheet("background-color: #37547A; color: #fff;")
 
 
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
