@@ -29,7 +29,6 @@ def get_all_appointments_with_treatment_count():
     cursor.close()
     conn.close()
     
-    print(all_appointments)
     return all_appointments
 
 def generate_new_appointment_id():
@@ -342,4 +341,3 @@ def perform_appointment_deletion(appointment_id):
 
 
 
-        

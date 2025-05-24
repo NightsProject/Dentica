@@ -8,6 +8,7 @@ from backend.booking_comp import generate_new_booking_id
 from controller.treatment_ctr import Treatment_Dialog_Ctr
 from PyQt6.QtCore import Qt
 from datetime import datetime
+from backend.treatment_comp import delete_treatment_by_id
 
 class Appointment_Dialog_Ctr(Add_Appointment):
     
@@ -20,6 +21,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
        # Setup treatments and counter based on appointment data
         self.treatments = appointment_data.get('Treatments', []) if appointment_data else []
         self.treatment_counter = len(self.treatments) + 1
+        self.treatments_to_delete = [] # when updating the appointment
 
         self.setup_patient_input()  # Initialize patient input components
 
@@ -175,6 +177,60 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(f"{treatment['Cost']:.2f}"))
         self.Treat_table.setCellWidget(row, 3, action_widget)
     
+    
+    def remove_treatment(self, row):
+        """
+        Remove a treatment both from the internal list and the UI table by the given row index.
+        Tracks deletions for DB update if editing an existing appointment.
+        """
+        if row < 0 or row >= len(self.treatments):
+            return  # Invalid row index
+
+        # Confirm deletion with user
+        confirm = QMessageBox.question(
+            self,
+            "Confirm Deletion",
+            "Are you sure you want to delete this treatment?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        if confirm != QMessageBox.StandardButton.Yes:
+            return
+
+        # Remove treatment from internal list
+        removed_treatment = self.treatments.pop(row)
+
+        # Mark for DB deletion if editing existing appointment
+        if self.appointment_data and "Treatment_ID" in removed_treatment:
+            if not hasattr(self, "treatments_to_delete"):
+                self.treatments_to_delete = []
+            self.treatments_to_delete.append(removed_treatment["Treatment_ID"])
+
+        # Remove row from the table
+        self.Treat_table.removeRow(row)
+
+        # Update treatment IDs and UI rows below the removed row
+        for i in range(row, len(self.treatments)):
+            treatment = self.treatments[i]
+            treatment["Treatment_ID"] = i + 1  # Reassign new sequential ID
+
+            # Update table UI row i (shifted up)
+            self.Treat_table.item(i, 0).setText(str(treatment["Treatment_ID"]))
+
+            # Reconnect delete button for new row index
+            action_widget = self.Treat_table.cellWidget(i, 3)
+            if action_widget:
+                btn = action_widget.findChild(QtWidgets.QPushButton)
+                if btn:
+                    btn.clicked.disconnect()
+                    btn.clicked.connect(lambda checked=False, r=i: self.remove_treatment(r))
+
+        # Decrement treatment counter
+        self.treatment_counter -= 1
+
+        # Update total billing
+        self.update_total_billing()
+
+    
     def setup_patient_input(self):
         """Initialize patient input components and connections"""
         if not hasattr(self, 'patient_input_line_edit') or self.patient_input_line_edit is None:
@@ -194,8 +250,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.patient_input.setMaxVisibleItems(10)
         self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
         self.patient_input.setEditable(True)
+    
     # Validation
-
     def validate_required(self, field):
         if not field.text().strip():
             field.setStyleSheet("border: 2px solid red;")
@@ -314,6 +370,13 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 }
             }
 
+
+        # Delete treatments marked for deletion
+        if hasattr(self, "treatments_to_delete"):
+            for treat_id in self.treatments_to_delete:
+                delete_treatment_by_id(self.appointment_id, treat_id)
+            self.treatments_to_delete = []
+            
         # Update in database
         success = update_appointment_in_db(appointment_data)
         if success:

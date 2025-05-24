@@ -15,8 +15,10 @@ from controller.patient_page_ctr import Patient_Page_Ctr
 from controller.viewapp_ctr import View_Appointent_Ctr
 
 from backend.DB import connectDBF,connectDB, set_credentials, createAllTables
+
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts, create_appointment_status_chart
 from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data
+
 from backend.appointments_comp import get_appointment_data
 from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion
 from backend.billing_comp import get_all_billings
@@ -38,6 +40,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
+        self.search_patient.textChanged.connect(self.search_patient_data)
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
@@ -123,32 +126,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             
             connection.close()
             
-        except mysql.connector.InterfaceError as e:
-            print("MySQL Interface Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.DatabaseError as e:
-            print("MySQL Database Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.ProgrammingError as e:
-            print("MySQL Programming Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.OperationalError as e:
-            print("MySQL Operational Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.IntegrityError as e:
-            print("MySQL Integrity Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.DataError as e:
-            print("MySQL Data Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.NotSupportedError as e:
-            print("MySQL Not Supported Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.Error as e:
-            print("MySQL Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
         except Exception as e:
-            print("Unexpected Error:", e)
             QMessageBox.critical(None, "Error", str(e))
     #====================HANDLE CREDENTIALS================= end
     #===========================================================
@@ -168,9 +146,13 @@ class MainController(QMainWindow, Ui_MainWindow):
     # This function reloads all the tables in the UI
     # It calls the functions to get the data from the backend
     def reload_all_tables(self):
-        summary_data = load_summary()
+        
+        summary_data, chart_widget = load_summary()
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)
+                
+        if chart_widget:
+            self.today_stat_layout.addWidget(chart_widget)
 
         todays_appointments_list = get_todays_appointments()
         self.update_todays_appointments_table(todays_appointments_list)
@@ -192,14 +174,15 @@ class MainController(QMainWindow, Ui_MainWindow):
     
     #DASHBOARD TAB=============== start
     def update_summary(self, data, status):
-        today_status = get_todays_appointment_status_counts()
+       
         self.label_5.setText(str(data[0]))
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
         self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
-        self.scheduled_label.setText(f"Scheduled:                                                                 {today_status[0]}")
-        self.completed_label.setText (f"Completed:                                                                {today_status[1]}")
-        self.cancelled_label.setText(f"Cancelled:                                                                  {today_status[2]}")
+        self.scheduled_label.setText(f"Scheduled: {status[0]}")
+        self.completed_label.setText (f"Completed: {status[1]}")
+        self.cancelled_label.setText(f"Cancelled: {status[2]}")
+        
         #update the chart values
         
     #update_todays_appointments_table
@@ -591,4 +574,10 @@ class MainController(QMainWindow, Ui_MainWindow):
 
     #====================ACTION BUTTONS================= end
     #=======================================================
+    
+    #search implementations
+    
+    def search_patient_data(self, keyword):
+        data = search_patients(keyword)
+        self.update_patients_list(data)
     

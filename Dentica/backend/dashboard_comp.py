@@ -68,7 +68,6 @@ def pending_payments():
         unpaid_payments = result[0]
     cursor.close()
     conn.close()
-    print("Pending Payments:", unpaid_payments)
     return str(unpaid_payments)
 
 
