@@ -109,32 +109,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             
             connection.close()
             
-        except mysql.connector.InterfaceError as e:
-            print("MySQL Interface Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.DatabaseError as e:
-            print("MySQL Database Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.ProgrammingError as e:
-            print("MySQL Programming Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.OperationalError as e:
-            print("MySQL Operational Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.IntegrityError as e:
-            print("MySQL Integrity Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.DataError as e:
-            print("MySQL Data Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.NotSupportedError as e:
-            print("MySQL Not Supported Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
-        except mysql.connector.Error as e:
-            print("MySQL Error:", e)
-            QMessageBox.critical(None, "MySQL Connection Error", str(e))
         except Exception as e:
-            print("Unexpected Error:", e)
             QMessageBox.critical(None, "Error", str(e))
     #====================HANDLE CREDENTIALS================= end
     #===========================================================
@@ -188,6 +163,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.scheduled_label.setText(f"Scheduled: {status[0]}")
         self.completed_label.setText (f"Completed: {status[1]}")
         self.cancelled_label.setText(f"Cancelled: {status[2]}")
+        
         #update the chart values
         
     #update_todays_appointments_table
