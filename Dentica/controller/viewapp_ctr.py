@@ -23,7 +23,16 @@ class View_Appointent_Ctr(View_Appointment):
         self.patient_input.setText(data['Patient_Name'])
         self.schedule_input.setText(data['Schedule'])
         self.status_input.setText(data['Status'])
+        
+        # Set payment info
+        payment = data.get("Payment", {})
+        self.payment_id.setText(payment.get("Payment_ID", "N/A"))
+        self.payment_stat.setText(payment.get("Payment_Status", "N/A"))
 
+        total_amount = payment.get("Total_Amount")
+        self.Cost_line.setText(f"${total_amount:,.2f}" if total_amount is not None else "N/A")
+
+        
         # Fill treatment table
         treatments = data.get('Treatments', [])
         self.Treat_table.setRowCount(len(treatments))

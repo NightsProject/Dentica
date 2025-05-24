@@ -3,6 +3,8 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 from ui.Dialogues.ui_appointment_dialog import Add_Appointment
 from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name,update_appointment_in_db
+from backend.billing_comp import generate_new_payment_id
+from backend.booking_comp import generate_new_booking_id
 from controller.treatment_ctr import Treatment_Dialog_Ctr
 from PyQt6.QtCore import Qt
 from datetime import datetime
@@ -19,23 +21,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.treatments = appointment_data.get('Treatments', []) if appointment_data else []
         self.treatment_counter = len(self.treatments) + 1
 
-        # Setup patient input
-        self.patient_input.setEditable(True)
-        self.patient_input.setMaxVisibleItems(10)
-        self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
-
-        self.patient_input_line_edit = self.patient_input.lineEdit()
-        if self.patient_input_line_edit is not None:
-            self.patient_input_line_edit.setPlaceholderText("Search by name...")
-            self.patient_input_line_edit.setMaxLength(50)
-            self.patient_input_line_edit.setAlignment(Qt.AlignmentFlag.AlignLeft)
-            self.patient_input_line_edit.setFocus()
-            self.patient_input_line_edit.textChanged.connect(self.update_patient_search)
-        else:
-            print("Warning: Could not get line edit from patient input combo box")
-
-        # Load all patients once
-        self.all_patients = get_patients_name()
+        self.setup_patient_input()  # Initialize patient input components
 
         # If editing an existing appointment
         if appointment_data:
@@ -49,10 +35,11 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             self.add_btn.clicked.connect(self.on_update_pressed)
 
             self.update_patient_search(appointment_data.get('Patient_Name', ''))
+            self.update_total_billing()
         else:
             # Creating a new appointment
-            self.new_appointment_id = generate_new_appointment_id()
-            self.appointment_input.setText(self.new_appointment_id)
+            self.appointment_id = generate_new_appointment_id()
+            self.appointment_input.setText(self.appointment_id)
             self.add_btn.setText("Add")
             try:
                 self.add_btn.clicked.disconnect()
@@ -138,11 +125,26 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         form.exec()
 
     def handle_treatment_added(self, data):
-        data["Appointment_ID"] = self.new_appointment_id
+        data["Appointment_ID"] = self.appointment_id
         self.treatment_counter += 1
         self.treatments.append(data)
         self.update_treatment_table_ui(data)
-    
+        self.update_total_billing()  # Update total billing after treatment is added
+
+    def update_total_billing(self):
+        total = 0.0
+        for treatment in self.treatments:
+            try:
+                #treatment dict has a 'Cost' field with a string/float
+                cost = float(treatment.get("Cost", 0))
+                total += cost
+            except ValueError:
+                print(f"Invalid cost value in treatment: {treatment}")
+
+        #display the total billing
+        self.total_input.setText(f"₱{total:,.2f}")
+        return total
+
     def update_treatment_table_ui(self, treatment):
         row = self.Treat_table.rowCount()
         self.Treat_table.insertRow(row)
@@ -233,12 +235,38 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
         status = self.status_input.currentText()
 
+        #setup booking and payment details
+        booking_id = generate_new_booking_id()
+        booking_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        Payment_id = generate_new_payment_id()  
+        total_amount = self.total_input.text().replace('₱', '').replace(',', '')
+        payment_method = "None"
+        payment_status = "Unpaid"
+        
+        booking_data = {
+            "Booking_ID": booking_id,
+            "Patient_ID": pat_id,
+            "Appointment_ID": app_id,
+            "Booking_Date_Time": booking_date
+        }
+        
+        payment_data = {
+            "Payment_ID": Payment_id,
+            "Booking_ID": booking_id,
+            "Total_Amount": total_amount,
+            "Payment_Method": payment_method,
+            "Payment_Status": payment_status
+        }
+        
         appointment_data = {
             "Appointment_ID": app_id,
             "Patient_ID": pat_id,
             "Schedule": formatted_sched,
             "Status": status,
-            "Treatments": self.treatments
+            "Treatments": self.treatments,
+            "Booking": booking_data,
+            "Payment": payment_data
         }
 
         success = save_appointment_to_db(appointment_data)
@@ -272,13 +300,19 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
         status = self.status_input.currentText()
 
+        total_amount = self.update_total_billing()
+        
+
         appointment_data = {
             "Appointment_ID": app_id,
             "Patient_ID": pat_id,
             "Schedule": formatted_sched,
             "Status": status,
-            "Treatments": self.treatments
-        }
+            "Treatments": self.treatments,
+            "Payment": {
+                "Total_Amount": total_amount
+                }
+            }
 
         # Update in database
         success = update_appointment_in_db(appointment_data)

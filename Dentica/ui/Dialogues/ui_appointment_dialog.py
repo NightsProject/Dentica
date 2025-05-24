@@ -105,7 +105,6 @@ class Add_Appointment(QtWidgets.QDialog):
         self.total_input = QtWidgets.QLineEdit(self)
         self.total_input.setGeometry(430, 470, 130, 22)
         self.total_input.setReadOnly(True)
-        self.total_input.setText("Fetch Total Cost")
         self.total_input.setStyleSheet("background-color: #fff; color: #37547A;")
 
         self.add_btn = QtWidgets.QPushButton("Add", self)
