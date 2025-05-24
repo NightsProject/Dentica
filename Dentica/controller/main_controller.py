@@ -156,6 +156,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         summary_data = load_summary()
 
+
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)
         total_status, payment_method, gender_dist, age_dist = load_graphs()
