@@ -74,7 +74,8 @@ def search_payments(keyword):
             pay.Appointment_ID,
             pay.Total_Amount,
             pay.Payment_Method,
-            pay.Payment_Status
+            pay.Payment_Status,
+            pay.Payment_Date
         FROM Pays AS pay
         JOIN Patient AS pat
           ON pay.Patient_ID = pat.Patient_ID
@@ -90,11 +91,13 @@ def search_payments(keyword):
          OR CAST(pay.Total_Amount AS CHAR) LIKE %s
          OR LOWER(pay.Payment_Method)   LIKE %s
          OR LOWER(pay.Payment_Status)   LIKE %s
+         OR CAST(pay.Payment_Date AS CHAR) LIKE %s
         ORDER BY pay.Payment_ID
     """
 
     # include both individual name‐parts and the full name for maximum flexibility
     params = [
+        like_kw,
         like_kw,
         like_kw,
         like_kw,
