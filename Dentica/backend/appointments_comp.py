@@ -309,35 +309,52 @@ def save_appointment_to_db(appointment_data):
 
         
 
-
 def perform_appointment_deletion(appointment_id):
-    conn = connectDB()
+    conn   = connectDB()
     cursor = conn.cursor()
     try:
-        # Delete all treatments related to the appointment first
+        # 1) Delete all treatments for this appointment
         cursor.execute("""
             DELETE FROM Treatment
             WHERE Appointment_ID = %s
         """, (appointment_id,))
-        
-        # Delete the appointment itself
+
+        # 2) Delete all bookings for this appointment
+        cursor.execute("""
+            DELETE FROM Books
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+
+        # 3) Delete all cancellations for this appointment
+        cursor.execute("""
+            DELETE FROM Cancel
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+
+        # 4) Delete all payments for this appointment
+        cursor.execute("""
+            DELETE FROM Pays
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+
+        # 5) Finally, delete the appointment itself
         cursor.execute("""
             DELETE FROM Appointment
             WHERE Appointment_ID = %s
         """, (appointment_id,))
 
         conn.commit()
-        success = True
+        return True
+
     except Exception as e:
         print("Delete Appointment Error:", e)
-        import traceback
-        traceback.print_exc()
         conn.rollback()
-        success = False
+        return False
+
     finally:
         cursor.close()
         conn.close()
-    return success
+
 
 
 def search_appointments(keyword):

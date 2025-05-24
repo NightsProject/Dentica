@@ -163,57 +163,57 @@ def perform_patient_deletion(patient_id):
     conn = connectDB()
     cursor = conn.cursor()
     try:
-        # Delete all treatments related to appointments of the patient
+        # 1) Delete all treatments for this patient’s appointments
         cursor.execute("""
-            DELETE t FROM Treatment t
-            JOIN Appointment a ON t.Appointment_ID = a.Appointment_ID
+            DELETE t
+            FROM Treatment t
+            JOIN Appointment a
+              ON t.Appointment_ID = a.Appointment_ID
             WHERE a.Patient_ID = %s
         """, (patient_id,))
 
-        # Delete all appointments of the patient
-        cursor.execute("""
-            DELETE FROM Appointment
-            WHERE Patient_ID = %s
-        """, (patient_id,))
-
-        # Delete all bookings related to the patient
+        # 2) Delete all bookings for this patient
         cursor.execute("""
             DELETE FROM Books
             WHERE Patient_ID = %s
         """, (patient_id,))
 
-        # Delete all cancellations related to the patient
+        # 3) Delete all cancellations for this patient
         cursor.execute("""
             DELETE FROM Cancel
             WHERE Patient_ID = %s
         """, (patient_id,))
 
-        # Delete all payments related to the patient
+        # 4) Delete all payments for this patient
         cursor.execute("""
             DELETE FROM Pays
             WHERE Patient_ID = %s
         """, (patient_id,))
 
-        # Finally, delete the patient
+        # 5) Delete all appointments for this patient
+        cursor.execute("""
+            DELETE FROM Appointment
+            WHERE Patient_ID = %s
+        """, (patient_id,))
+
+        # 6) Finally, delete the patient record itself
         cursor.execute("""
             DELETE FROM Patient
             WHERE Patient_ID = %s
         """, (patient_id,))
 
         conn.commit()
-        success = True
+        return True
+
     except Exception as e:
         print("Delete Patient Error:", e)
-        import traceback
-        traceback.print_exc()
         conn.rollback()
-        success = False
+        return False
+
     finally:
         cursor.close()
         conn.close()
-    return success
 
- 
 def get_patient_data(patient_id):
         try:
             connection = connectDB()
