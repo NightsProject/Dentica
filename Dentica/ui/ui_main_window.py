@@ -1151,10 +1151,23 @@ class Ui_MainWindow(object):
 
         #Search bill
         self.Search_bill = QtWidgets.QLineEdit(parent=self.Bill_frame)
-        self.Search_bill.setGeometry(QtCore.QRect(700, 25, 211, 31))
+        self.Search_bill.setGeometry(QtCore.QRect(570, 25, 241, 31))
         self.Search_bill.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.Search_bill.setReadOnly(False)
         self.Search_bill.setObjectName("Search_bill")
+    
+
+        #Add button
+        self.AddBill_btn = QtWidgets.QPushButton(parent=self.Bill_frame)
+        self.AddBill_btn.setGeometry(QtCore.QRect(800, 25, 121, 31))
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        self.AddBill_btn.setFont(font)
+        self.AddBill_btn.setStyleSheet("background-color: #0E283F; border-radius: 8px; color: white;")
+        self.AddBill_btn.setIcon(add_icon)
+        self.AddBill_btn.setIconSize(QtCore.QSize(23, 23))
+        self.AddBill_btn.setObjectName("AddBill_btn")
 
         #Billing Table Frame
         self.bill_table_frame = QtWidgets.QFrame(parent=self.Billing_page)
@@ -1760,6 +1773,7 @@ class Ui_MainWindow(object):
         #Billings Tab
         self.label_14.setText(_translate("MainWindow", "Payment"))
         self.Search_bill.setPlaceholderText(_translate("MainWindow", "Search invoices..."))
+        self.AddBill_btn.setText(_translate("MainWindow", "Add Payment"))
         item = self.Billing_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Patient Name"))
         item = self.Billing_table.horizontalHeaderItem(1)
@@ -2010,7 +2024,7 @@ class Ui_MainWindow(object):
                         """)
 
         # Apply to all add buttons
-        for add_btn in [self.add_icon, self.AddApp_btn]:
+        for add_btn in [self.add_icon, self.AddApp_btn, self.AddBill_btn]:
                 add_btn.setStyleSheet(f"""
                         background-color: {add_bg}; 
                         border-radius: 8px; 
