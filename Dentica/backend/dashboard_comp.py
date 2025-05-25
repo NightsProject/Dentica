@@ -1,12 +1,13 @@
 from backend.DB import connectDB
 from ui.ui_main_window import Ui_MainWindow
 from Frontend.Graphs.Appointment_status import DonutChart
+from PyQt6.QtWidgets import QMessageBox
 
 def load_summary():
     patients = count_patients()
     appointments = todays_appointments()
     payments = pending_payments()
-    treatments = completed_treatments()
+    treatments = treatment_summary_today()
     
     data = [patients, appointments, payments, treatments]
     
@@ -75,43 +76,32 @@ def pending_payments():
     return str(unpaid_payments)
 
 
-def completed_treatments():
+def treatment_summary_today():
+    """
+    Returns counts of today's treatments (across all appointments):
+      - completed:     Treatment_Status = 'Completed'
+      - non_canceled:  Treatment_Status != 'Canceled'
+    """
     conn = connectDB()
     cursor = conn.cursor()
 
-    # Count completed treatments for today on Scheduled appointments (excluding canceled treatments)
     cursor.execute("""
-        SELECT COUNT(*) 
-        FROM Treatment t
-        JOIN Appointment a 
-          ON t.Appointment_ID = a.Appointment_ID
-        WHERE t.Treatment_Status = 'Completed'
-          AND DATE(t.Treatment_Date_Time) = CURDATE()
-          AND a.Status = 'Scheduled'
+        SELECT
+            SUM(CASE WHEN Treatment_Status = 'Completed' THEN 1 ELSE 0 END) AS completed,
+            SUM(CASE WHEN Treatment_Status != 'Canceled' THEN 1 ELSE 0 END) AS non_canceled
+        FROM Treatment
+        WHERE DATE(Treatment_Date_Time) = CURDATE()
     """)
-    completed_result = cursor.fetchone()
-    completed_treatments = completed_result[0] if completed_result else 0
-
-    # Count all non-canceled treatments for today on Scheduled appointments
-    cursor.execute("""
-        SELECT COUNT(*) 
-        FROM Treatment t
-        JOIN Appointment a 
-          ON t.Appointment_ID = a.Appointment_ID
-        WHERE t.Treatment_Status != 'Canceled'
-          AND DATE(t.Treatment_Date_Time) = CURDATE()
-          AND a.Status = 'Scheduled'
-    """)
-    total_result = cursor.fetchone()
-    total_treatments = total_result[0] if total_result else 0
+    row = cursor.fetchone() or (0, 0)
+    completed, non_canceled = row
 
     cursor.close()
     conn.close()
 
-    print("Today's Completed Treatments on Scheduled Appointments:", completed_treatments)
-    print("Today's Non-Canceled Treatments on Scheduled Appointments:", total_treatments)
-    
-    return [completed_treatments, total_treatments]
+    return [completed, non_canceled]
+
+
+
 
 
 def get_todays_appointments():
@@ -132,7 +122,6 @@ def get_todays_appointments():
         JOIN Patient p ON a.Patient_ID = p.Patient_ID
         LEFT JOIN Treatment t ON a.Appointment_ID = t.Appointment_ID
         WHERE DATE(a.Schedule) = CURDATE()
-          AND a.Status = 'Scheduled'
         ORDER BY 
             CASE t.Treatment_Status
                 WHEN 'Waiting' THEN 1
@@ -205,5 +194,4 @@ def refresh_appointment_chart(self):
     self.appointment_chart = create_appointment_status_chart()
     if self.appointment_chart:
         self.today_stat_layout.addWidget(self.appointment_chart)
-
 

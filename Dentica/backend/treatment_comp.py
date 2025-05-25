@@ -56,3 +56,70 @@ def update_treatment(self, appointment_id, treatment_id, new_status):
         cursor.close()
         conn.close()
 
+
+def check_treatment_completion(appointment_id, parent=None):
+    """
+    Checks all treatments for the given appointment_id. If every treatment
+    is marked 'Completed', updates the Appointment.Status to 'Completed'
+    and pops up a notification.
+
+    Args:
+        appointment_id (str): The appointment to check.
+        parent (QWidget or None): Optional parent for the message box.
+
+    Returns:
+        bool: True if appointment was updated to Completed, False otherwise.
+    """
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    try:
+        # Count treatments not yet completed
+        cursor.execute("""
+            SELECT COUNT(*) 
+            FROM Treatment
+            WHERE Appointment_ID = %s
+              AND Treatment_Status != 'Completed'
+        """, (appointment_id,))
+        remaining = cursor.fetchone()[0]
+
+        # If none remain, mark appointment as completed
+        if remaining == 0:
+            # First check current appointment status to avoid duplicate notifications
+            cursor.execute("""
+                SELECT Status 
+                FROM Appointment
+                WHERE Appointment_ID = %s
+            """, (appointment_id,))
+            current_status = cursor.fetchone()[0]
+
+            if current_status != 'Completed':
+                cursor.execute("""
+                    UPDATE Appointment
+                    SET Status = 'Completed'
+                    WHERE Appointment_ID = %s
+                """, (appointment_id,))
+                conn.commit()
+
+                # Notify user
+                if parent:
+                    QMessageBox.information(
+                        parent,
+                        "Appointment Completed",
+                        f"All treatments for appointment {appointment_id} are done.\n"
+                        "The appointment status has been set to Completed."
+                    )
+                return True
+
+        return False
+
+    except Exception as e:
+        print("Error checking treatments:", e)
+        conn.rollback()
+        return False
+
+    finally:
+        cursor.close()
+        conn.close()
+
+    

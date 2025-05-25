@@ -25,7 +25,7 @@ from backend.billing_comp import get_all_billings, search_payments
 from backend.booking_comp import get_all_bookings, search_bookings
 from backend.reports_comp import load_graphs, refresh_graphs
 from backend.cancelations_comp import get_all_cancellations
-from backend.treatment_comp import update_treatment
+from backend.treatment_comp import update_treatment, check_treatment_completion
 
 
 
@@ -247,7 +247,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.label_5.setText(str(data[0]))
         self.label_6.setText(str(data[1]))
         self.label_7.setText(str(data[2]))
-        self.label_9.setText(f"{data[3][0]}/{data[3][1]}")
+        self.label_9.setText(f"{data[3][0]}/{data[3][1]}9")
         self.scheduled_label.setText(f"Scheduled:                                                                 {status[0]}")
         self.completed_label.setText (f"Completed:                                                                {status[1]}")
         self.cancelled_label.setText(f"Cancelled:                                                                 {status[2]}")
@@ -838,6 +838,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.StandardButton.Yes:
             success = update_treatment(self, appointment_id, treatment_id, "Completed")
             if success:
+                check_treatment_completion(appointment_id, parent=self)
                 self.reload_all_tables()
 
     def in_progress_treatment(self):
