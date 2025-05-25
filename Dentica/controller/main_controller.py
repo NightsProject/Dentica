@@ -5,7 +5,8 @@ from PyQt6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PyQt6 import QtCore, QtGui, QtWidgets
 from ui.ui_main_window import Ui_MainWindow
 from PyQt6.QtWidgets import QMessageBox
-import mysql.connector
+
+from PyQt6.QtGui import QColor, QBrush
 
 from ui.Dialogues.ui_exit_dialog import Exit_App
 from controller.database_login_ctr import Database_Dialog_Ctr
@@ -252,26 +253,33 @@ class MainController(QMainWindow, Ui_MainWindow):
     # It sets the row count to 0 and then inserts rows for each appointment
     # It sets the items for each column in the row
     # It uses the appointment data to set the values for each column
-    def update_todays_appointments_table(self, appointments):   
-        
+    def update_todays_appointments_table(self, appointments):
+        """
+        appointments is a list of tuples:
+        (appointment_id, patient_name, treatment_time, procedure, status)
+        """
         self.UpAp_table.setRowCount(0)
         for appointment in appointments:
-            row_position = self.UpAp_table.rowCount()
-            self.UpAp_table.insertRow(row_position)
+            row = self.UpAp_table.rowCount()
+            self.UpAp_table.insertRow(row)
 
-            self.UpAp_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(appointment[1])))  # Patient Name
-            self.UpAp_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(appointment[2])))  # Treatment time
-            self.UpAp_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(appointment[3])))  # Treatment Procedure
-            self.UpAp_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(appointment[4])))  # Treatment Status 
+            # Unpack
+            appointment_id, patient_name, treatment_time, procedure, status = appointment
+
+            # Populate cells
+            self.UpAp_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(patient_name)))
+            self.UpAp_table.setItem(row, 1, QtWidgets.QTableWidgetItem(str(treatment_time)))
+            self.UpAp_table.setItem(row, 2, QtWidgets.QTableWidgetItem(str(procedure)))
+            self.UpAp_table.setItem(row, 3, QtWidgets.QTableWidgetItem(str(status)))
+
+            # Create action widget based on status
+            action_widget = self.create_todApp_action_buttons(appointment_id, status, row)
+            self.UpAp_table.setCellWidget(row, 4, action_widget)
             
-            appointment_id = appointment[0]
-            action_widget = self.create_todApp_action_buttons(appointment_id, row_position)
-            self.UpAp_table.setCellWidget(row_position, 4, action_widget)
-            
-            total_today_appointment = self.UpAp_table.rowCount()
-            self.UpAp_pagination.set_total_rows(total_today_appointment)
-            self.UpAp_pagination.show_current_page()  
-              
+
+        total = self.UpAp_table.rowCount()
+        self.UpAp_pagination.set_total_rows(total)
+        self.UpAp_pagination.show_current_page()
             
             #appointment_id = appointment[0]
     #DASHBOARD TAB================ end
@@ -717,104 +725,85 @@ class MainController(QMainWindow, Ui_MainWindow):
         bill_popup.payment_added.connect(self.reload_all_tables)
         bill_popup.exec()
     
-    def create_todApp_action_buttons(self, treatment_id, row):
+    def create_todApp_action_buttons(self, appointment_id, status, row):
+        """
+        status: 'Waiting', 'In-Progress', or 'Completed'
+        row: the row index in UpAp_table
+        """
         widget = QtWidgets.QWidget()
-        widget.setStyleSheet("background: none;")
-
-        layout = QtWidgets.QHBoxLayout()
+        layout = QtWidgets.QHBoxLayout(widget)
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)
 
-        # Done Button
-        done_btn = QtWidgets.QPushButton("Done")
-        done_btn.setMaximumWidth(60)
-        done_btn.setStyleSheet("""
+        # Shared style template
+        btn_style = """
             QPushButton {
                 color: white;
                 border: none;
-                background-color: #37547A;
                 padding: 5px 10px;
                 border-radius: 3px;
                 font-size: 12px;
             }
             QPushButton:hover {
-                background-color: #8DB8E0;
+                opacity: 0.8;
             }
-        """)
-        done_btn.clicked.connect(self.done_treatment)
+        """
 
-        # In-Progress Button
-        progress_btn = QtWidgets.QPushButton("In-Progress")
-        progress_btn.setMaximumWidth(90)
-        progress_btn.setStyleSheet("""
-            QPushButton {
-                color: white;
-                border: none;
-                background-color: #FF9800;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #FFB74D;
-            }
-        """)
-        progress_btn.clicked.connect(self.progress_treatment)
+        # 1) Waiting → show In-Progress (orange) & Cancel (red)
+        if status == "Waiting":
+            btn_ip = QtWidgets.QPushButton("In-Progress")
+            btn_ip.setMaximumWidth(90)
+            btn_ip.setStyleSheet(btn_style + "QPushButton { background-color: #FFA500; }")  # orange
+            btn_ip.clicked.connect(self.in_progress_treatment)
+            btn_ip.setProperty("Appointment ID", appointment_id)
+            layout.addWidget(btn_ip)
 
-        # Cancel Button
-        cancel_btn = QtWidgets.QPushButton("Cancel")
-        cancel_btn.setMaximumWidth(60)
-        cancel_btn.setStyleSheet("""
-            QPushButton {
-                color: white;
-                border: none;
-                background-color: #37547A;
-                padding: 5px 10px;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #8DB8E0;
-            }
-        """)
-        cancel_btn.clicked.connect(self.cancel_treatment)
+            btn_cancel = QtWidgets.QPushButton("Cancel")
+            btn_cancel.setMaximumWidth(60)
+            btn_cancel.setStyleSheet(btn_style + "QPushButton { background-color: #E74C3C; }")  # red
+            btn_cancel.clicked.connect(self.cancel_treatment)
+            btn_cancel.setProperty("Appointment ID", appointment_id)
+            layout.addWidget(btn_cancel)
 
-        layout.addWidget(progress_btn)
-        layout.addWidget(done_btn)
-        layout.addWidget(cancel_btn)
+        # 2) In-Progress → show Done (green) & Cancel (red)
+        elif status == "In-Progress":
+            btn_done = QtWidgets.QPushButton("Done")
+            btn_done.setMaximumWidth(60)
+            btn_done.setStyleSheet(btn_style + "QPushButton { background-color: #27AE60; }")  # green
+            btn_done.clicked.connect(self.done_treatment)
+            btn_done.setProperty("Appointment ID", appointment_id)
+            layout.addWidget(btn_done)
+
+            btn_cancel = QtWidgets.QPushButton("Cancel")
+            btn_cancel.setMaximumWidth(60)
+            btn_cancel.setStyleSheet(btn_style + "QPushButton { background-color: #E74C3C; }")  # red
+            btn_cancel.clicked.connect(self.cancel_appointment)
+            btn_cancel.setProperty("Appointment ID", appointment_id)
+            layout.addWidget(btn_cancel)
 
         widget.setLayout(layout)
-
-        # Set property to Treatment ID
-        done_btn.setProperty("Treatment ID", treatment_id)
-        cancel_btn.setProperty("Treatment ID", treatment_id)
-        progress_btn.setProperty("Treatment ID", treatment_id)
-
         return widget
 
-    # Slot for Done
+
+    # In your slots, access the appointment ID:
     def done_treatment(self):
-        print("Done treatment...")
         button = self.sender()
-        treatment_id = button.property("Treatment ID")
-        print(f"Treatment ID Done: {treatment_id}")
-        # TODO: Add done logic
+        appointment_id = button.property("Appointment ID")
+        print(f"Appointment {appointment_id} marked Done.")
+        # TODO: update Appointment.Status = 'Completed'
 
-    # Slot for In-Progress
-    def progress_treatment(self):
-        print("In-Progress treatment...")
+    def in_progress_treatment(self):
         button = self.sender()
-        treatment_id = button.property("Treatment ID")
-        print(f"Treatment ID In-Progress: {treatment_id}")
-        # TODO: Add in-progress logic
+        appointment_id = button.property("Appointment ID")
+        print(f"Appointment {appointment_id} marked In-Progress.")
+        # TODO: update Appointment.Status = 'In-Progress'
 
-    # Slot for Cancel
     def cancel_treatment(self):
-        print("Cancel treatment...")
         button = self.sender()
-        treatment_id = button.property("Treatment ID")
-        print(f"Treatment ID Cancelled: {treatment_id}")
-        # TODO: Add cancel logic
+        appointment_id = button.property("Appointment ID")
+        print(f"Appointment {appointment_id} marked Cancelled.")
+        # TODO: update Appointment.Status = 'Cancelled'
+
 
         
     #====================ACTION BUTTONS================= end
