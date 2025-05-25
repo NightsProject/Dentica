@@ -170,6 +170,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
     def handle_treatment_added(self, data):
         data["Appointment_ID"] = self.appointment_id
         self.treatment_counter += 1
+        self.status_input.setCurrentText("Scheduled")
         self.treatments.append(data)
         self.update_treatment_table_ui(data)
         self.update_total_billing()  # Update total billing after treatment is added
