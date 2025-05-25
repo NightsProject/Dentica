@@ -122,4 +122,103 @@ def check_treatment_completion(appointment_id, parent=None):
         cursor.close()
         conn.close()
 
-    
+def auto_handle_all_treatments_canceled(appointment_id, parent=None):
+    """
+    Checks if all treatments for the given appointment are canceled.
+    If yes, deletes or modifies the necessary data:
+    - Marks appointment as 'Cancelled' (or deletes, depending on your design),
+    - Removes bookings/payments,
+    - Inserts cancellation data with a default reason,
+    - Notifies user via QMessageBox if parent provided.
+
+    Args:
+        appointment_id (str): Appointment to check.
+        parent (QWidget or None): For showing message boxes.
+
+    Returns:
+        bool: True if data was deleted/modified, False otherwise.
+    """
+    # Import datetime here or globally
+    from datetime import datetime
+
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    try:
+        # Check if all treatments are canceled
+        cursor.execute("""
+            SELECT COUNT(*)
+            FROM Treatment
+            WHERE Appointment_ID = %s
+              AND Treatment_Status != 'Canceled'
+        """, (appointment_id,))
+        remaining = cursor.fetchone()[0]
+
+        if remaining == 0:
+            # All treatments canceled, proceed
+
+            # Fetch current appointment details
+            cursor.execute("""
+                SELECT Status, Patient_ID
+                FROM Appointment
+                WHERE Appointment_ID = %s
+            """, (appointment_id,))
+            appt_row = cursor.fetchone()
+            if not appt_row:
+                return False  # appointment not found
+
+            current_status, patient_id = appt_row
+
+            if current_status == "Cancelled":
+                # Already cancelled, no action
+                return False
+
+            # 1) Update appointment status to Cancelled
+            cursor.execute("""
+                UPDATE Appointment
+                SET Status = 'Cancelled'
+                WHERE Appointment_ID = %s
+            """, (appointment_id,))
+
+            # 2) Insert cancellation record with default reason
+            cancel_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            default_reason = "Auto-cancelled because all treatments were cancelled."
+
+            cursor.execute("""
+                INSERT INTO Cancel (Patient_ID, Appointment_ID, Cancellation_Date_Time, Reason)
+                VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE 
+                    Cancellation_Date_Time = VALUES(Cancellation_Date_Time),
+                    Reason = VALUES(Reason)
+            """, (patient_id, appointment_id, cancel_datetime, default_reason))
+
+            # 3) Delete booking and payment records linked to this appointment
+            cursor.execute("DELETE FROM Pays WHERE Appointment_ID = %s", (appointment_id,))
+            cursor.execute("DELETE FROM Books WHERE Appointment_ID = %s", (appointment_id,))
+
+            # 4) Commit changes
+            conn.commit()
+
+            # 5) Notify user
+            if parent:
+                QMessageBox.information(
+                    parent,
+                    "Appointment Auto-Cancelled",
+                    f"Appointment {appointment_id} has been auto-cancelled "
+                    "because all its treatments were cancelled."
+                )
+
+            return True
+
+        else:
+            # Not all treatments canceled, no action
+            return False
+
+    except Exception as e:
+        print("Error in auto_handle_all_treatments_canceled:", e)
+        conn.rollback()
+        return False
+
+    finally:
+        cursor.close()
+        conn.close()
