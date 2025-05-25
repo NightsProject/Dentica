@@ -13,7 +13,7 @@ To solve these issues, we present the Dentica Management System — a modern, st
 - Treatment History Management: Comprehensive tracking of treatment details linked to appointments.
 - Billing & Payment Management: Automated bill generation, payment processing, and financial record keeping.
 - Reports & Analytics: Real-time reporting capabilities to drive insights into clinic operations.
-- User Authentication: Role-based access control (with the dentist as the primary user and receptionist as a secondary user) to ensure secure system access.
+
 
 
 
