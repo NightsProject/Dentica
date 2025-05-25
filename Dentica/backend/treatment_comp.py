@@ -1,4 +1,5 @@
 from backend.DB import connectDB
+from PyQt6.QtWidgets import QMessageBox
 
 def delete_treatment_by_id(appointment_id, treatment_id):
     try:
@@ -16,38 +17,78 @@ def delete_treatment_by_id(appointment_id, treatment_id):
         print(f"[DB ERROR] Failed to delete treatment: {e}")
         return False
     
-from PyQt6.QtWidgets import QMessageBox
 
 def update_treatment(self, appointment_id, treatment_id, new_status):
     """
     Updates the Treatment_Status of a treatment record based on Appointment_ID and Treatment_ID.
 
+    Business Rules:
+    - If trying to cancel a treatment but the appointment is already paid → block cancel.
+    - If trying to start a treatment (In-Progress) but payment not made → block progress.
+
     Args:
         appointment_id (str): The ID of the appointment.
         treatment_id (str): The ID of the treatment.
-        new_status (str): New status to set. Example: 'In-Progress', 'Completed', etc.
+        new_status (str): New status to set. Example: 'In-Progress', 'Completed', 'Canceled'.
 
     Returns:
         bool: True if update was successful, False otherwise.
     """
     conn = connectDB()
     cursor = conn.cursor()
-    
+
     try:
+        # Get payment status
+        cursor.execute("""
+            SELECT Payment_Status
+            FROM Pays
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+        pay_row = cursor.fetchone()
+        payment_status = pay_row[0] if pay_row else None
+
+        # Rule 1: Cannot cancel paid treatment
+        if new_status.lower() == "canceled" and payment_status == "Paid":
+            QMessageBox.warning(
+                self,
+                "Cancellation Denied",
+                f"Treatment cannot be canceled because payment for Appointment {appointment_id} is already marked as 'Paid'."
+            )
+            return False
+
+        # Rule 2: Cannot proceed to In-Progress if not paid
+        if new_status.lower() == "in-progress" and payment_status != "Paid":
+            QMessageBox.warning(
+                self,
+                "Action Denied",
+                f"Cannot proceed to 'In-Progress'. Payment for Appointment {appointment_id} is not yet completed."
+            )
+            return False
+
+        # Proceed to update treatment status
         cursor.execute("""
             UPDATE Treatment
             SET Treatment_Status = %s
             WHERE Appointment_ID = %s AND Treatment_ID = %s
         """, (new_status, appointment_id, treatment_id))
-        
+
         conn.commit()
-        
+
         if cursor.rowcount > 0:
-            QMessageBox.information(self, "Success", f"Successfully updated Treatment {treatment_id} (Appointment {appointment_id}) to '{new_status}'.")
+            QMessageBox.information(
+                self,
+                "Success",
+                f"Successfully updated Treatment {treatment_id} (Appointment {appointment_id}) to '{new_status}'."
+            )
             return True
         else:
-            QMessageBox.warning(self, "Update Failed", f"No treatment record found for Appointment {appointment_id} and Treatment {treatment_id}.")
+            QMessageBox.warning(
+                self,
+                "Update Failed",
+                f"No treatment record found for Appointment {appointment_id} and Treatment {treatment_id}."
+            )
             return False
+
     except Exception as e:
         QMessageBox.critical(self, "Error", f"Error updating treatment: {e}")
         conn.rollback()
@@ -55,6 +96,7 @@ def update_treatment(self, appointment_id, treatment_id, new_status):
     finally:
         cursor.close()
         conn.close()
+
 
 
 def check_treatment_completion(appointment_id, parent=None):
