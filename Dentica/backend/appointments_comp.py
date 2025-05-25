@@ -169,20 +169,41 @@ def update_appointment_in_db(appointment_data):
             current_ts,
             appointment_data['Appointment_ID'],
         ))
+        
         # 3) Refresh Treatments
         cursor.execute("DELETE FROM Treatment WHERE Appointment_ID = %s",
                        (appointment_data['Appointment_ID'],))
+
+        # Determine treatment default status based on appointment status
+        appt_status = appointment_data['Status']
         for t in appointment_data['Treatments']:
+            if appt_status == "Cancelled":
+                forced_status = "Canceled"
+            elif appt_status == "Scheduled":
+                forced_status = "Waiting"
+            else:
+                forced_status = t['Treatment_Status']
+
             cursor.execute("""
                 INSERT INTO Treatment (
-                    Appointment_ID, Treatment_ID, Diagnosis, Cost,
-                    Treatment_Procedure, Treatment_Date_Time, Treatment_Status
+                    Appointment_ID,
+                    Treatment_ID,
+                    Diagnosis,
+                    Cost,
+                    Treatment_Procedure,
+                    Treatment_Date_Time,
+                    Treatment_Status
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (
                 appointment_data['Appointment_ID'],
-                t['Treatment_ID'], t['Diagnosis'], t['Cost'],
-                t['Treatment_Procedure'], t['Treatment_Date_Time'], t['Treatment_Status']
+                t['Treatment_ID'],
+                t['Diagnosis'],
+                t['Cost'],
+                t['Treatment_Procedure'],
+                t['Treatment_Date_Time'],
+                forced_status
             ))
+
 
         # 4) Update Payment
         if 'Payment' in appointment_data and 'Total_Amount' in appointment_data['Payment']:

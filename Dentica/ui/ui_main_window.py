@@ -822,6 +822,7 @@ class Ui_MainWindow(object):
         self.completed_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
         self.cancelled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
 
+
         layout.addWidget(self.calendar)
         layout.addWidget(self.scheduled_label)
         layout.addWidget(self.completed_label)
