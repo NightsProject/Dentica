@@ -34,6 +34,7 @@ class Add_Treatment(QtWidgets.QDialog):
             widget.setGeometry(x_input, y, 160, 22)
 
         self.treat_id_input = QtWidgets.QLineEdit(self)
+        self.treat_id_input.setReadOnly(True)
         add_row(0, "Treatment ID:", self.treat_id_input)
 
         self.diagnosis_input = QtWidgets.QLineEdit(self)
@@ -50,6 +51,14 @@ class Add_Treatment(QtWidgets.QDialog):
         self.cost_input = QtWidgets.QLineEdit(self)
         add_row(4, "Cost:", self.cost_input)
 
+        self.treat_status = QtWidgets.QComboBox(self)
+        self.treat_status.addItems(["Completed","In-Progress","Waiting","Canceled"])
+        add_row(5, "Status:", self.treat_status)
+        self.treat_status.setStyleSheet("background-color: #fff; color: #000;")
+        self.treat_status.setGeometry(x_input, row_start + 5 * row_height, 160, 22)
+        self.treat_status.setCurrentText("Waiting")
+        self.treat_status.setStyleSheet("background-color: #fff; color: #000;")
+     
         self.add_btn = QtWidgets.QPushButton("Add", self)
         self.add_btn.setGeometry(80, 340, 80, 30)
         self.add_btn.setStyleSheet("background-color: #37547A; color: #fff;")

@@ -2,7 +2,12 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
 from ui.Dialogues.ui_exit_dialog import Exit_App
-from Frontend.Graphs.Appointment_status import DonutChart
+
+from Frontend.Graphs.Common_Treatments import CommonTreatmentsBarChart
+from Frontend.Graphs.Treatment_Cost import TreatmentCostsLineChart
+
+from ui.Patients_Page import PatientPage
+from ui.TablePagination import TablePagination
 from PyQt6.QtGui import QTextCharFormat, QColor
 
 
@@ -307,6 +312,69 @@ class Ui_MainWindow(object):
                 """)
         self.verticalLayout.addWidget(self.Bill_btn)
         
+        #Booking button
+        self.Book_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        book_icon = QtGui.QIcon(f"{filepath}Booking.svg")
+        self.Book_btn.setIcon(book_icon)
+        self.Book_btn.setIconSize(QtCore.QSize(25, 25))
+        self.Book_btn.setObjectName("Bill_btn")
+        self.Book_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(4), self.set_active_button(self.Book_btn)))
+        self.Book_btn.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: transparent;
+                        border: none;
+                        color: #fff;
+                        font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
+                }
+                QPushButton:hover {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
+                """)
+        self.verticalLayout.addWidget(self.Book_btn)
+        
+        #Cancels button
+        self.Cancels_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        can_icon= QtGui.QIcon(f"{filepath}Cancellations.svg")
+        self.Cancels_btn.setIcon(can_icon)
+        self.Cancels_btn.setIconSize(QtCore.QSize(25, 25))
+        self.Cancels_btn.setObjectName("Rep_btn")
+        self.Cancels_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(5), self.set_active_button(self.Cancels_btn)))
+        self.Cancels_btn.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: transparent;
+                        border: none;
+                        color: #fff;
+                        font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
+                }
+                QPushButton:hover {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
+                """)
+        self.verticalLayout.addWidget(self.Cancels_btn)
+        self.verticalLayout.addStretch()
+        
 
         #Reports button
         self.Rep_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
@@ -314,7 +382,7 @@ class Ui_MainWindow(object):
         self.Rep_btn.setIcon(rep_icon)
         self.Rep_btn.setIconSize(QtCore.QSize(25, 25))
         self.Rep_btn.setObjectName("Rep_btn")
-        self.Rep_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(4), self.set_active_button(self.Rep_btn)))
+        self.Rep_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(6), self.set_active_button(self.Rep_btn)))
         self.Rep_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -339,8 +407,9 @@ class Ui_MainWindow(object):
                 """)
         self.verticalLayout.addWidget(self.Rep_btn)
         self.verticalLayout.addStretch()
+ 
         
-        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
+        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Cancels_btn, self.Rep_btn]:
                 btn.setCheckable(True)
 
         self.button_group = QtWidgets.QButtonGroup()
@@ -349,6 +418,8 @@ class Ui_MainWindow(object):
         self.button_group.addButton(self.Patient_btn)
         self.button_group.addButton(self.Apntmnt_btn)
         self.button_group.addButton(self.Bill_btn)
+        self.button_group.addButton(self.Book_btn)
+        self.button_group.addButton(self.Cancels_btn)
         self.button_group.addButton(self.Rep_btn)
 
         #Pages
@@ -360,40 +431,6 @@ class Ui_MainWindow(object):
         self.Pages.setObjectName("Pages")
         self.Dashboard_page = QtWidgets.QWidget()
         self.Dashboard_page.setObjectName("Dashboard_page")
-        
-        # #User menu drop-down
-        # self.user_menu = QtWidgets.QFrame(parent = self.centralwidget)
-        # self.user_menu.setObjectName("user_menu")
-        # self.user_menu.setGeometry(QtCore.QRect(1050, 70, 150, 100))
-        # self.user_menu.setStyleSheet("""
-        # #user_menu{
-        #         background: #1F1F21; 
-        #         border: 1px solid #e5e7eb;
-        #         border-radius: 5px;
-        #         }
-        # QPushButton {
-        #                 text-align: left;
-        #                 background-color: transparent;
-        #                 border: none;
-        #                 color: #fff;
-        #                 font-size: 12px;
-        #         }
-        # QPushButton:hover {
-        #                 background-color: #8DB8E0;
-        #                 color: #fff;
-        #         }
-        # """)
-        # self.user_menu.setVisible(False)
-
-        # #User login
-        # self.settings_btn = QtWidgets.QPushButton("User login", parent=self.user_menu)
-        # self.settings_btn.setGeometry(10, 10, 130, 30)
-        # self.settings_btn.setObjectName("settings_btn")
-
-        # #database login
-        # self.logout_btn = QtWidgets.QPushButton("Database login", parent=self.user_menu)
-        # self.logout_btn.setGeometry(10, 50, 130, 30)
-        # self.logout_btn.setObjectName("logout_btn")
         
        
         #Dashboard graph
@@ -419,14 +456,11 @@ class Ui_MainWindow(object):
         self.graph_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
         self.graph_label.setText("Appointments Status")
         
-        layout = QVBoxLayout()
-        self.dash_graph.setLayout(layout)
-        labels = ['Scheduled', 'Completed', 'Cancelled']
-        chart_values = [15, 50, 10]
-        donut_chart = DonutChart(labels, chart_values)
-        layout.addWidget(self.graph_label)
-        layout.addWidget(donut_chart)
+        self.today_stat_layout = QVBoxLayout()
+        self.dash_graph.setLayout(self.today_stat_layout)
+        self.today_stat_layout.addWidget(self.graph_label)
         
+        self.appointment_chart = None
         
         #Total Patient Card
         self.TotPat_card = QtWidgets.QFrame(parent=self.Dashboard_page)
@@ -630,12 +664,12 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 400, 340))
+        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 325))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
-        background-color: #C6D7EC;
-        border: none;
+                background-color: #C6D7EC;
+                border: none;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
@@ -646,7 +680,7 @@ class Ui_MainWindow(object):
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
-        self.UpAp_table.setColumnCount(4)
+        self.UpAp_table.setColumnCount(5)
         self.UpAp_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(0, item)
@@ -656,6 +690,8 @@ class Ui_MainWindow(object):
         self.UpAp_table.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.UpAp_table.setHorizontalHeaderItem(4, item)
         self.UpAp_table.verticalHeader().setVisible(False)
 
         self.UpAp_table.horizontalHeader().setStyleSheet("""
@@ -667,6 +703,18 @@ class Ui_MainWindow(object):
         }
         """)
 
+  
+        self.UpAp_table.setColumnWidth(0, 120)  # Pat. Name
+        self.UpAp_table.setColumnWidth(1, 70)  # Time
+        self.UpAp_table.setColumnWidth(2, 150)  # Treatment Proc
+        self.UpAp_table.setColumnWidth(3, 60)  # Status
+        self.UpAp_table.setColumnWidth(4, 100)  # Actions
+        
+        self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
+        
+        self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=10)
+        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-3)
+  
   
         # Calendar Frame
         self.frame_3 = QtWidgets.QFrame(parent=self.Dashboard_page)
@@ -686,7 +734,7 @@ class Ui_MainWindow(object):
         layout.setContentsMargins(12, 12, 12, 12)
 
         self.calendar = QCalendarWidget(parent=self.frame_3)
-        self.calendar.setSelectionMode(QtWidgets.QCalendarWidget.SelectionMode.NoSelection)
+        self.calendar.setSelectionMode(QtWidgets.QCalendarWidget.SelectionMode.SingleSelection)
         self.calendar.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         prev_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_prevmonth")
         next_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_nextmonth")
@@ -773,6 +821,7 @@ class Ui_MainWindow(object):
         self.scheduled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")   
         self.completed_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
         self.cancelled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
+
 
         layout.addWidget(self.calendar)
         layout.addWidget(self.scheduled_label)
@@ -886,19 +935,23 @@ class Ui_MainWindow(object):
                 background: #C6D7EC;                
         }
         """)
-        
+        self.Patients_table.verticalHeader().setVisible(False)
+
         #Sizing
-        self.Patients_table.setColumnWidth(0, 162)  # Name
-        self.Patients_table.setColumnWidth(1, 67)  # Gender
-        self.Patients_table.setColumnWidth(2, 70)  # Birthdate
-        self.Patients_table.setColumnWidth(3, 115)  # Contact
-        self.Patients_table.setColumnWidth(4, 120)  # Email
-        self.Patients_table.setColumnWidth(5, 145)  # Address
+        self.Patients_table.setColumnWidth(0, 175)  # Name
+        self.Patients_table.setColumnWidth(1, 70)  # Gender
+        self.Patients_table.setColumnWidth(2, 75)  # Birthdate
+        self.Patients_table.setColumnWidth(3, 120)  # Contact
+        self.Patients_table.setColumnWidth(4, 130)  # Email
+        self.Patients_table.setColumnWidth(5, 150)  # Address
         self.Patients_table.setColumnWidth(6, 160)  # Actions
 
         #Row height for each patient
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
 
+        self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
+        self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
+        
         #Appointments Page
         
         #Appointments top bar
@@ -996,17 +1049,20 @@ class Ui_MainWindow(object):
                 background-color: #C6D7EC;            
         }
         """)
-        
+        self.Appointments_table.verticalHeader().setVisible(False)
+
         #Appointment table sizing
-        self.Appointments_table.setColumnWidth(0, 200)  # Pat. Name
-        self.Appointments_table.setColumnWidth(1, 150)  # Date
-        self.Appointments_table.setColumnWidth(2, 150)  # Status
-        self.Appointments_table.setColumnWidth(3, 117)  # Treatment
+        self.Appointments_table.setColumnWidth(0, 215)  # Pat. Name
+        self.Appointments_table.setColumnWidth(1, 165)  # Date
+        self.Appointments_table.setColumnWidth(2, 160)  # Status
+        self.Appointments_table.setColumnWidth(3, 120)  # Treatment
         self.Appointments_table.setColumnWidth(4, 160)  # Actions
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
 
-
+        self.appointments_pagination = TablePagination(self.Appointments_table, rows_per_page=10)
+        self.appointments_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
+        
         #Appointments buttons layout
         self.horizontalLayoutWidget = QtWidgets.QWidget(parent=self.app_table_frame)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 10, 461, 41))
@@ -1106,9 +1162,9 @@ class Ui_MainWindow(object):
         self.Pages.addWidget(self.Appointments_page)
 
 
-        #Billing Page
+        #Payment Page
 
-        #Billings top bar
+        #Payment top bar
         self.Billing_page = QtWidgets.QWidget()
         self.Billing_page.setObjectName("Billing_page")
         self.Bill_frame = QtWidgets.QFrame(parent=self.Billing_page)
@@ -1119,7 +1175,7 @@ class Ui_MainWindow(object):
                 """)
         self.Bill_frame.setObjectName("Bill_frame")
 
-        #Billing
+        #Payment
         self.label_14 = QtWidgets.QLabel(parent=self.Bill_frame)
         self.label_14.setGeometry(QtCore.QRect(20, 25, 180, 31))
         font = QtGui.QFont()
@@ -1132,22 +1188,11 @@ class Ui_MainWindow(object):
 
         #Search bill
         self.Search_bill = QtWidgets.QLineEdit(parent=self.Bill_frame)
-        self.Search_bill.setGeometry(QtCore.QRect(580, 25, 211, 31))
+        self.Search_bill.setGeometry(QtCore.QRect(710, 25, 211, 31))
         self.Search_bill.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.Search_bill.setReadOnly(False)
         self.Search_bill.setObjectName("Search_bill")
-
-        #Add bill button
-        self.AddBill_btn = QtWidgets.QPushButton(parent=self.Bill_frame)
-        self.AddBill_btn.setGeometry(QtCore.QRect(810, 25, 111, 31))
-        font = QtGui.QFont()
-        font.setFamily("Inter")
-        font.setPointSize(10)
-        self.AddBill_btn.setFont(font)
-        self.AddBill_btn.setStyleSheet("background-color: #0E283F; border-radius: 8px; color: white;")
-        self.AddBill_btn.setIcon(add_icon)
-        self.AddBill_btn.setIconSize(QtCore.QSize(23, 23))
-        self.AddBill_btn.setObjectName("AddBill_btn")
+    
 
         #Billing Table Frame
         self.bill_table_frame = QtWidgets.QFrame(parent=self.Billing_page)
@@ -1167,7 +1212,7 @@ class Ui_MainWindow(object):
         self.Billing_table = QtWidgets.QTableWidget(parent=self.bill_table_frame)
         self.Billing_table.setGeometry(QtCore.QRect(40, 60, 840, 615))
         self.Billing_table.setObjectName("Billing_table")
-        self.Billing_table.setColumnCount(6)
+        self.Billing_table.setColumnCount(7)
         self.Billing_table.setRowCount(0)
         self.Billing_table.setStyleSheet("""
         QTableWidget {
@@ -1197,6 +1242,8 @@ class Ui_MainWindow(object):
         self.Billing_table.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.Billing_table.setHorizontalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.Billing_table.setHorizontalHeaderItem(6, item)
         self.Billing_table.horizontalHeader().setStyleSheet("""
         QHeaderView::section {
                 font-family: "Inter"; 
@@ -1204,19 +1251,23 @@ class Ui_MainWindow(object):
                 color: #64748B;                
         }
         """)
- 
+        self.Billing_table.verticalHeader().setVisible(False)
+
         # Bill Sizing
-        self.Billing_table.setColumnWidth(0, 90)  # Bill ID 
-        self.Billing_table.setColumnWidth(1, 206)  # Pat. Name
-        self.Billing_table.setColumnWidth(2, 120)  # App. ID
-        self.Billing_table.setColumnWidth(3, 150)  # Total Amount
-        self.Billing_table.setColumnWidth(4, 130)  # Method
+        self.Billing_table.setColumnWidth(0, 160)  # Pat. name
+        self.Billing_table.setColumnWidth(1, 105)  # App. ID
+        self.Billing_table.setColumnWidth(2, 120)  # Amount
+        self.Billing_table.setColumnWidth(3, 110)  # method
+        self.Billing_table.setColumnWidth(4, 105)  # Date
         self.Billing_table.setColumnWidth(5, 110)  # Status
+        self.Billing_table.setColumnWidth(6, 130) # Action Button
 
         
         self.Billing_table.verticalHeader().setDefaultSectionSize(60)
 
-
+        self.Billing_pagination = TablePagination(self.Billing_table, rows_per_page=10)
+        self.Billing_pagination.setup_pagination_controls(self.Billing_page, y_offset=85)
+        
         #Billing buttons layout
         self.horizontalLayoutWidget_2 = QtWidgets.QWidget(parent=self.bill_table_frame)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(20, 10, 461, 41))
@@ -1249,7 +1300,7 @@ class Ui_MainWindow(object):
                 """)
         self.horizontalLayout_2.addWidget(self.pushButton_12)
 
-        #Pending Billing button
+        #Paid Billing button
         self.pushButton_13 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_13.setObjectName("pushButton_13")
         self.pushButton_13.setStyleSheet("""
@@ -1272,7 +1323,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.pushButton_13)
         
 
-        #Paid Billing button
+        #Unaid Billing button
         self.pushButton_14 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_14.setObjectName("pushButton_14")
         self.pushButton_14.setStyleSheet("""
@@ -1294,68 +1345,455 @@ class Ui_MainWindow(object):
                 """)
         self.horizontalLayout_2.addWidget(self.pushButton_14)
 
-        #Overdue Billing button
-        self.pushButton_15 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
-        self.pushButton_15.setStyleSheet("""
-                QPushButton {
-                        text-align: left;
-                        padding: 10px;
-                        background-color: #C6D7EC;
-                        border: none;
-                        color: #37547A;
-                        font-size: 16px;
-                        text-align: center;
-                        font-family: Inter;                
-                }
-                QPushButton:hover {
-                        background-color: #8DB8E0;
-                        color: #37547A;
-                        border-radius: 8px;
-                }
-                """)
-        self.pushButton_15.setObjectName("pushButton_15")
-
-        self.horizontalLayout_2.addWidget(self.pushButton_15)
         self.Pages.addWidget(self.Billing_page)
+        
+        #Booking Page
 
-        #Reports Page
-
-        #Reports Top bar frame
-        self.Reports_page = QtWidgets.QWidget()
-        self.Reports_page.setObjectName("Reports_page")
-        self.Reports_topbar_frame = QtWidgets.QFrame(parent=self.Reports_page)
-        self.Reports_topbar_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
-        self.Reports_topbar_frame.setStyleSheet("""
-                #Reports_topbar_frame {background-color: #B2CDE9;
+        #Booking top bar
+        self.Booking_page = QtWidgets.QWidget()
+        self.Booking_page.setObjectName("Booking_page")
+        self.Book_frame = QtWidgets.QFrame(parent=self.Booking_page)
+        self.Book_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.Book_frame.setStyleSheet("""
+                #Book_frame {background-color: #B2CDE9;
                 }
                 """)
-        self.Reports_topbar_frame.setObjectName("Reports_topbar_frame")
+        self.Book_frame.setObjectName("Book_frame")
 
-        #Reports
-        self.label_15 = QtWidgets.QLabel(parent=self.Reports_topbar_frame)
-        self.label_15.setGeometry(QtCore.QRect(20, 25, 180, 31))
+        #Booking
+        self.payment_label = QtWidgets.QLabel(parent=self.Book_frame)
+        self.payment_label.setGeometry(QtCore.QRect(20, 25, 180, 31))
         font = QtGui.QFont()
         font.setFamily("Katarine")
         font.setPointSize(18)
         font.setBold(True)
-        self.label_15.setFont(font)
-        self.label_15.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
-        self.label_15.setObjectName("label_15")
+        self.payment_label.setFont(font)
+        self.payment_label.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        self.payment_label.setObjectName("payment_label")
+        self.payment_label.setText("Booking")
 
-        
-        #Reports table frame
-        self.Reports_table_frame = QtWidgets.QFrame(parent=self.Reports_page)
-        self.Reports_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
-        self.Reports_table_frame.setStyleSheet("""
-        #Reports_table_frame {
+        #Search book
+        self.Search_book = QtWidgets.QLineEdit(parent=self.Book_frame)
+        self.Search_book.setGeometry(QtCore.QRect(710, 25, 211, 31))
+        self.Search_book.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
+        self.Search_book.setReadOnly(False)
+        self.Search_book.setObjectName("Search_book")
+
+        #Booking Table Frame
+        self.book_table_frame = QtWidgets.QFrame(parent=self.Booking_page)
+        self.book_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
+        self.book_table_frame.setStyleSheet("""
+        #book_table_frame {
                 background: #C6D7EC;
                 border: 1px solid #fff;  
                 border-radius: 12px;
         }
         """)
-        self.Reports_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.Reports_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.Reports_table_frame.setObjectName("Reports_table_frame")
+        self.book_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.book_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.book_table_frame.setObjectName("book_table_frame")
+
+        #Booking Table
+        self.Booking_table = QtWidgets.QTableWidget(parent=self.book_table_frame)
+        self.Booking_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
+        self.Booking_table.setObjectName("Booking_table")
+        self.Booking_table.setColumnCount(4)
+        self.Booking_table.setRowCount(0)
+        self.Booking_table.setStyleSheet("""
+        QTableWidget {
+                background-color: #C6D7EC;
+                border: none;
+                gridline-color: transparent;
+        }
+        QTableWidget::item {
+                border-bottom: 1px solid #e5e7eb;
+                color: #64748B;
+        }
+        QHeaderView::section {
+                border: none;
+                background-color: #C6D7EC;
+                color: #64748B;
+        }
+        """)
+        item = QtWidgets.QTableWidgetItem()
+        self.Booking_table.setHorizontalHeaderItem(0, item)
+        item.setText("Booking ID")
+        item = QtWidgets.QTableWidgetItem()
+        self.Booking_table.setHorizontalHeaderItem(1, item)
+        item.setText("Appointment ID")
+        item = QtWidgets.QTableWidgetItem()
+        self.Booking_table.setHorizontalHeaderItem(2, item)
+        item.setText("Patient Name")
+        item = QtWidgets.QTableWidgetItem()
+        self.Booking_table.setHorizontalHeaderItem(3, item)
+        item.setText("Date Booked")
+        self.Booking_table.horizontalHeader().setStyleSheet("""
+        QHeaderView::section {
+                font-family: "Inter"; 
+                font-size: 14px;        
+                color: #64748B;                
+        }
+        """)
+        self.Booking_table.verticalHeader().setVisible(False)
+
+        # Book Sizing
+        self.Booking_table.setColumnWidth(0, 185)  # Booking ID 
+        self.Booking_table.setColumnWidth(1, 185)  # Pat. ID
+        self.Booking_table.setColumnWidth(2, 310)  # Pat. Name
+        self.Booking_table.setColumnWidth(3, 200)  # Book DateTime
+
+        
+        self.Booking_table.verticalHeader().setDefaultSectionSize(60)
+
+        self.Booking_pagination = TablePagination(self.Booking_table, rows_per_page=10)
+        self.Booking_pagination.setup_pagination_controls(self.Booking_page, y_offset=85)
+        
+        self.Pages.addWidget(self.Booking_page)
+        
+        #Cancellations Page
+
+        #Cancellations top bar
+        self.Cancel_page = QtWidgets.QWidget()
+        self.Cancel_page.setObjectName("Cancel_page")
+        self.Cancel_frame = QtWidgets.QFrame(parent=self.Cancel_page)
+        self.Cancel_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.Cancel_frame.setStyleSheet("""
+                #Cancel_frame {background-color: #B2CDE9;
+                }
+                """)
+        self.Cancel_frame.setObjectName("Cancel_frame")
+
+        #Cancellations
+        self.cancel_label = QtWidgets.QLabel(parent=self.Cancel_frame)
+        self.cancel_label.setGeometry(QtCore.QRect(20, 25, 180, 31))
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setPointSize(18)
+        font.setBold(True)
+        self.cancel_label.setFont(font)
+        self.cancel_label.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        self.cancel_label.setObjectName("cancel_label")
+        self.cancel_label.setText("Cancellations")
+
+        #Search cancels
+        self.Search_cancel = QtWidgets.QLineEdit(parent=self.Cancel_frame)
+        self.Search_cancel.setGeometry(QtCore.QRect(700, 25, 211, 31))
+        self.Search_cancel.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
+        self.Search_cancel.setReadOnly(False)
+        self.Search_cancel.setObjectName("Search_cancel")
+
+        #Cancel Table Frame
+        self.cancel_table_frame = QtWidgets.QFrame(parent=self.Cancel_page)
+        self.cancel_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
+        self.cancel_table_frame.setStyleSheet("""
+        #cancel_table_frame {
+                background: #C6D7EC;
+                border: 1px solid #fff;  
+                border-radius: 12px;
+        }
+        """)
+        self.cancel_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.cancel_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.cancel_table_frame.setObjectName("cancel_table_frame")
+
+        #Cancel Table
+        self.Cancel_table = QtWidgets.QTableWidget(parent=self.cancel_table_frame)
+        self.Cancel_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
+        self.Cancel_table.setObjectName("Cancel_table")
+        self.Cancel_table.setColumnCount(5)
+        self.Cancel_table.setRowCount(0)
+        self.Cancel_table.setStyleSheet("""
+        QTableWidget {
+                background-color: #C6D7EC;
+                border: none;
+                gridline-color: transparent;
+        }
+        QTableWidget::item {
+                border-bottom: 1px solid #e5e7eb;
+                color: #64748B;
+        }
+        QHeaderView::section {
+                border: none;
+                background-color: #C6D7EC;
+                color: #64748B;
+        }
+        """)
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(0, item)
+        item.setText("Patient Name")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(1, item)
+        item.setText("Appointment ID")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(2, item)
+        item.setText("Appointment Schedule")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(3, item)
+        item.setText("Date Cancelled")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(4, item)
+        item.setText("Reason")
+        self.Cancel_table.horizontalHeader().setStyleSheet("""
+        QHeaderView::section {
+                font-family: "Inter"; 
+                font-size: 14px;        
+                color: #64748B;                
+        }
+        """)
+        self.Cancel_table.verticalHeader().setVisible(False)
+
+        # Cacncel Sizing
+        self.Cancel_table.setColumnWidth(0, 145)  # Appointment ID 
+        self.Cancel_table.setColumnWidth(1, 185)  # Pat. Name
+        self.Cancel_table.setColumnWidth(2, 250)  # Date. Cancelled
+        self.Cancel_table.setColumnWidth(3, 200)  # Reason
+
+        
+        self.Cancel_table.verticalHeader().setDefaultSectionSize(60)
+
+        self.Cancel_pagination = TablePagination(self.Cancel_table, rows_per_page=10)
+        self.Cancel_pagination.setup_pagination_controls(self.Cancel_page, y_offset=85)
+        
+        self.Pages.addWidget(self.Cancel_page)
+
+        
+        #Reports Page
+        self.Reports_page = QtWidgets.QWidget()
+        self.Reports_page.setObjectName("Reports_page")
+        
+        #Total Appointment Status Graph
+        self.tot_appstat_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.tot_appstat_graph.setGeometry(QtCore.QRect(10, 20, 250, 250))
+        self.tot_appstat_graph.setStyleSheet("""
+        #tot_appstat_graph {
+                background: #C6D7EC;
+                border: 1px solid #fff;  
+                border-radius: 12px;
+        }
+        """)
+        self.tot_appstat_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.tot_appstat_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.tot_appstat_graph.setObjectName("tot_appstat_graph")
+        
+        self.graph_label1 = QtWidgets.QLabel(parent=self.tot_appstat_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        font.setBold(True)
+        self.graph_label1.setFont(font)
+        self.graph_label1.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        self.graph_label1.setText("Total Appointments Status")
+        
+        self.tot_appstat_layout = QVBoxLayout()
+        self.tot_appstat_graph.setLayout(self.tot_appstat_layout)
+        self.tot_appstat_layout.addWidget(self.graph_label1)
+        
+        self.tot_appstat_chart = None
+        
+        #Payment Method Chart
+        self.payment_method_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.payment_method_graph.setGeometry(QtCore.QRect(270, 20, 250, 250))  
+        self.payment_method_graph.setStyleSheet("""
+        #payment_method_graph {
+                background: #C6D7EC;
+                border: 1px solid #fff;  
+                border-radius: 12px;
+        }
+        """)
+        self.payment_method_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.payment_method_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.payment_method_graph.setObjectName("payment_method_graph")
+
+        self.graph_label2 = QtWidgets.QLabel(parent=self.payment_method_graph)
+        self.graph_label2.setFont(font)
+        self.graph_label2.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        self.graph_label2.setText("Payment Method")
+
+        self.payment_method_layout = QVBoxLayout()
+        self.payment_method_graph.setLayout(self.payment_method_layout)
+
+        self.payment_method_layout.addWidget(self.graph_label2)
+        self.payment_method_chart = None
+        
+        #Appointments per week Graph
+        self.weekly_apps_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.weekly_apps_graph.setGeometry(QtCore.QRect(530, 20, 400, 250))
+        self.weekly_apps_graph.setStyleSheet("""
+        #weekly_apps_graph {
+                background: #C6D7EC;
+                border: 1px solid #fff;  
+                border-radius: 12px;
+        }
+        """)
+        self.weekly_apps_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.weekly_apps_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.weekly_apps_graph.setObjectName("weekly_apps_graph")
+        
+        self.graph_label2 = QtWidgets.QLabel(parent=self.weekly_apps_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(12)
+        font.setBold(True)
+        self.graph_label2.setFont(font)
+        self.graph_label2.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        self.graph_label2.setText("Appointments per Quarter")
+        
+        self.app_ot_layout = QVBoxLayout()
+        self.weekly_apps_graph.setLayout(self.app_ot_layout)
+        self.app_ot_layout.addWidget(self.graph_label2)
+        
+        self.app_ot_chart = None
+        
+        # Gender Distribution Graph 
+        self.gender_dist_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.gender_dist_graph.setGeometry(QtCore.QRect(10, 280, 250, 250))  
+        self.gender_dist_graph.setStyleSheet("""
+        #gender_dist_graph {
+                background: #C6D7EC;
+                border: 1px solid #fff;  
+                border-radius: 12px;
+        }
+        """)
+        self.gender_dist_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.gender_dist_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.gender_dist_graph.setObjectName("gender_dist_graph")
+
+        self.graph_label3 = QtWidgets.QLabel(parent=self.gender_dist_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        font.setBold(True)
+        self.graph_label3.setFont(font)
+        self.graph_label3.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        self.graph_label3.setText("Gender Distribution")
+
+        self.gender_dist_layout = QVBoxLayout()
+        self.gender_dist_graph.setLayout(self.gender_dist_layout)
+ 
+        self.gender_dist_layout.addWidget(self.graph_label3)
+        self.gender_dist_chart = None
+
+        
+        #Age Distribution Graph
+        self.age_dist_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.age_dist_graph.setGeometry(QtCore.QRect(270, 280, 250, 250))
+        self.age_dist_graph.setStyleSheet("""
+        #age_dist_graph{
+                background: #C6D7EC;
+                border: 1px solid #fff;
+                border-radius: 12px;
+        }
+        """)
+        self.age_dist_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.age_dist_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.age_dist_graph.setObjectName("age_dist_graph")
+
+        self.age_dist_layout = QVBoxLayout()
+        self.age_dist_graph.setLayout(self.age_dist_layout)
+
+        age_dist_label = QtWidgets.QLabel(parent=self.age_dist_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        font.setBold(True)
+        age_dist_label.setFont(font)
+        age_dist_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        age_dist_label.setText("Age Distribution")
+
+        self.age_dist_layout.addWidget(age_dist_label)
+        self.age_dist_chart = None
+
+
+        #Quarterly Revenue Graph
+        self.quarterly_rev_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.quarterly_rev_graph.setGeometry(QtCore.QRect(530, 280, 400, 250))
+        self.quarterly_rev_graph.setStyleSheet("""
+        #quarterly_rev_graph {
+        background: #C6D7EC;
+        border: 1px solid #fff;
+        border-radius: 12px;
+        }
+        """)
+        self.quarterly_rev_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.quarterly_rev_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.quarterly_rev_graph.setObjectName("quarterly_rev_graph")
+
+        self.quarterly_rev_layout = QVBoxLayout()
+        self.quarterly_rev_graph.setLayout(self.quarterly_rev_layout)
+
+        rev_label = QtWidgets.QLabel(parent=self.quarterly_rev_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        font.setBold(True)
+        rev_label.setFont(font)
+        rev_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        rev_label.setText("Quarterly Revenue")
+
+        self.quarterly_rev_layout.addWidget(rev_label)
+        self.quarterly_rev_chart = None
+        
+        
+        #Common Treatments Graph
+        self.common_treatments_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.common_treatments_graph.setGeometry(QtCore.QRect(10, 540, 510, 250))
+        self.common_treatments_graph.setStyleSheet("""
+        #common_treatments_graph {
+        background: #C6D7EC;
+        border: 1px solid #fff;
+        border-radius: 12px;
+        }
+        """)
+        self.common_treatments_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.common_treatments_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.common_treatments_graph.setObjectName("common_treatments_graph")
+
+        self.common_treatments_layout = QVBoxLayout()
+        self.common_treatments_graph.setLayout(self.common_treatments_layout)
+
+        ct_label = QtWidgets.QLabel(parent=self.common_treatments_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        font.setBold(True)
+        ct_label.setFont(font)
+        ct_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        ct_label.setText("Common Treatments Performed")
+
+        self.common_treatments_layout.addWidget(ct_label)
+        self.Comm_treat_chart = None
+
+        
+        #Treatment Cost
+        self.treatment_costs_graph = QtWidgets.QFrame(parent=self.Reports_page)
+        self.treatment_costs_graph.setGeometry(QtCore.QRect(530, 540, 400, 250))  
+        self.treatment_costs_graph.setStyleSheet("""
+        #treatment_costs_graph {
+        background: #C6D7EC;
+        border: 1px solid #fff;
+        border-radius: 12px;
+        }
+        """)
+        self.treatment_costs_graph.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.treatment_costs_graph.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.treatment_costs_graph.setObjectName("treatment_costs_graph")
+
+        self.treat_cost_layout = QVBoxLayout()
+        self.treatment_costs_graph.setLayout(self.treat_cost_layout)
+
+        tc_label = QtWidgets.QLabel(parent=self.treatment_costs_graph)
+        font = QtGui.QFont()
+        font.setFamily("Inter")
+        font.setPointSize(10)
+        font.setBold(True)
+        tc_label.setFont(font)
+        tc_label.setStyleSheet("background: #C6D7EC; color: #37547A;")
+        tc_label.setText("Treatment Costs Over Time")
+        self.treat_cost_layout.addWidget(tc_label)
+
+        
+        self.treat_cost_chart = None
+        
         self.Pages.addWidget(self.Reports_page)
 
         #User popup dialog
@@ -1379,9 +1817,11 @@ class Ui_MainWindow(object):
         self.Dash_btn.setText(_translate("MainWindow", "Dashboard"))
         self.Patient_btn.setText(_translate("MainWindow", "Patients"))
         self.Apntmnt_btn.setText(_translate("MainWindow", "Appointments"))
-        self.Bill_btn.setText(_translate("MainWindow", "Billing"))
+        self.Bill_btn.setText(_translate("MainWindow", "Payment"))
+        self.Book_btn.setText(_translate("Main Window", "Booking"))
+        self.Cancels_btn.setText(_translate("Main Window", "Cancellations"))
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
-        self.label_2.setText(_translate("MainWindow", "Total Patients"))
+        self.label_2.setText(_translate("MainWindow", "Todays Patients"))
         self.label_5.setText(_translate("MainWindow", "0"))
         self.label_3.setText(_translate("MainWindow", "Today's Appointments"))
         self.label_6.setText(_translate("MainWindow", "0"))
@@ -1390,15 +1830,20 @@ class Ui_MainWindow(object):
         self.label_8.setText(_translate("MainWindow", "Completed Treatments"))
         self.label_9.setText(_translate("MainWindow", "0"))
         
-        self.label_10.setText(_translate("MainWindow", "Todays Appointments"))
+        self.label_10.setText(_translate("MainWindow", "Todays Treatments"))
         item = self.UpAp_table.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Patient Name"))
         item = self.UpAp_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Time"))
         item = self.UpAp_table.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Status"))
+        item.setText(_translate("MainWindow", "Treatment Procedure"))
         item = self.UpAp_table.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Treatment"))
+        item.setText(_translate("MainWindow", "Status"))
+        item = self.UpAp_table.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Actions"))
+        self.Search_book.setPlaceholderText(_translate("Main Window", "Search bookings..."))
+        self.Search_cancel.setPlaceholderText(_translate("Main Window", "Search cancellations..."))
+        #TODO fix the todays appointments table size
 
         #Patients Tab
         self.label_12.setText(_translate("MainWindow", "Patients"))
@@ -1440,28 +1885,26 @@ class Ui_MainWindow(object):
 
         
         #Billings Tab
-        self.label_14.setText(_translate("MainWindow", "Billing"))
+        self.label_14.setText(_translate("MainWindow", "Payment"))
         self.Search_bill.setPlaceholderText(_translate("MainWindow", "Search invoices..."))
-        self.AddBill_btn.setText(_translate("MainWindow", "New Invoice"))
         item = self.Billing_table.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Billing ID"))
-        item = self.Billing_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Patient Name"))
-        item = self.Billing_table.horizontalHeaderItem(2)
+        item = self.Billing_table.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Appointment ID"))
-        item = self.Billing_table.horizontalHeaderItem(3)
+        item = self.Billing_table.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Total Amount"))
-        item = self.Billing_table.horizontalHeaderItem(4)
+        item = self.Billing_table.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Method"))
+        item = self.Billing_table.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Payment Date"))
         item = self.Billing_table.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Status"))
+        item = self.Billing_table.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Actions"))
         self.pushButton_12.setText(_translate("MainWindow", "All"))
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
-        self.pushButton_14.setText(_translate("MainWindow", "Pending"))
-        self.pushButton_15.setText(_translate("MainWindow", "Overdue"))
+        self.pushButton_14.setText(_translate("MainWindow", "Unpaid"))
         
-        #Reports Tab
-        self.label_15.setText(_translate("MainWindow", "Reports"))
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -1483,7 +1926,7 @@ class Ui_MainWindow(object):
         user_menu.setVisible(not user_menu.isVisible())
 
     def set_active_button(self, button):
-        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]:
+        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Cancels_btn, self.Rep_btn]:
                 btn.setChecked(btn == button)
     
     def toggle_theme(self):
@@ -1540,17 +1983,17 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
-        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame, self.Reports_topbar_frame]:
+        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame]:
                 frame.setStyleSheet(f"background-color: {main_bg};")
         
         # Apply to labels in top bars
-        for label in [self.label_12, self.label_13, self.label_14, self.label_15]:
+        for label in [self.label_12, self.label_13, self.label_14]:
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
         
         # Apply to cards
         for card in [self.dash_graph, self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
                         self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
-                        self.bill_table_frame, self.Reports_table_frame]:
+                        self.bill_table_frame]:
                 card.setStyleSheet(f"""
                 background: {card_bg};
                 border: 1px solid {card_bg};  
@@ -1563,7 +2006,7 @@ class Ui_MainWindow(object):
                 label.setStyleSheet(f"background: {card_bg}; color: {card_text};")
         
         # Apply to sidebar buttons
-        sidebar_buttons = [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Rep_btn]
+        sidebar_buttons = [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Cancels_btn, self.Rep_btn]
         for btn in sidebar_buttons:
                 btn.setStyleSheet(f"""
                 QPushButton {{
@@ -1589,13 +2032,13 @@ class Ui_MainWindow(object):
                                        """)
     
         # Apply to headers (TOP BAR)
-        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Reports_topbar_frame]:
+        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Book_frame]:
                 header.setStyleSheet(f"""
                         background-color: {main_bg};
                                      """)
         
         # Apply to header labels (TOP BAR)
-        for title in [self.label_12,self.label_13,self.label_14,self.label_15]:
+        for title in [self.label_12,self.label_13,self.label_14,self.payment_label]:
                 title.setStyleSheet(f"""
                         background-color: {main_bg};
                         color: {main_text};
@@ -1685,7 +2128,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to all search
-        for search in [self.search_patient, self.Search_app, self.Search_bill]:
+        for search in [self.search_patient, self.Search_app, self.Search_bill,self.Search_book]:
                 search.setStyleSheet(f"""
                         background-color: {search_bg}; 
                         border-radius: 8px;        
@@ -1718,7 +2161,7 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Billing table frame
+        # Apply to Payment table frame
         self.bill_table_frame.setStyleSheet(f"""
                 #bill_table_frame {{
                         background: {table_bg};
@@ -1727,17 +2170,17 @@ class Ui_MainWindow(object):
                         }}
                         """)
         
-        # Apply to Report table frame
-        self.Reports_table_frame.setStyleSheet(f"""
-                #Reports_table_frame {{
+        # Apply to Booking table frame
+        self.book_table_frame.setStyleSheet(f"""
+                #book_table_frame {{
                         background: {table_bg};
-                        border: 1px solid {card_bd};
-                        border-radius: 12px;
-                        }}
+                        border: 1px solid {card_bd};  
+                        border-radius: 12px;      
+                        }}                                                 
                         """)
-        
+
         # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table]:
+        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
@@ -1771,7 +2214,7 @@ class Ui_MainWindow(object):
         
         # Apply to button filter in Appointment and Billing page
         for fil_btn in [self.pushButton_8, self.pushButton_9, self.pushButton_7, self.pushButton_6, 
-                        self.pushButton_12, self.pushButton_13, self.pushButton_14, self.pushButton_15]:
+                        self.pushButton_12, self.pushButton_13, self.pushButton_14]:
                 fil_btn.setStyleSheet(f"""
                         QPushButton {{
                                 text-align: left;
@@ -1789,7 +2232,7 @@ class Ui_MainWindow(object):
                                 border-radius: 8px;
                         }}
                         """)         
-       #Apply to calendar
+       # Apply to calendar
         if not self.dark_mode:
                 # Restore frame_3 original style
                 self.frame_3.setStyleSheet("""
@@ -1952,3 +2395,5 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
+        #TODO all tables should not be editable
+        #TODO all column in a row should be selectable

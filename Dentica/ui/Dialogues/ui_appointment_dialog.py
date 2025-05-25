@@ -4,11 +4,11 @@ from controller.treatment_ctr import Treatment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
 
 class Add_Appointment(QtWidgets.QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, appointment_data=None):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Book Appointment")
-        self.setFixedSize(600, 600)
+        self.setFixedSize(550, 600)
         self.setStyleSheet("""
             QDialog {
                 background-color: #B2CDE9;
@@ -36,11 +36,15 @@ class Add_Appointment(QtWidgets.QDialog):
             widget.setGeometry(input_x, y, 160, 22)
 
         self.appointment_input = QtWidgets.QLineEdit(self)
+        self.appointment_input.setReadOnly(True)
         add_row(0, "Appointment ID:", self.appointment_input)
 
-        self.patient_input = QtWidgets.QLineEdit(self)
-        self.patient_input.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
-        add_row(1, "Patient ID:", self.patient_input)
+        self.patient_input = QtWidgets.QComboBox(self)
+        self.patient_input.setEditable(True)
+        self.patient_input.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        add_row(1, "Patient Name:", self.patient_input)
+        self.patient_input.lineEdit().textChanged.connect(self.update_patient_search)
+
 
         self.AddPatient_btn = QtWidgets.QPushButton("Add Patient", self)
         self.AddPatient_btn.setGeometry(400, row_start + 1 * row_height, 120, 30)
@@ -52,15 +56,22 @@ class Add_Appointment(QtWidgets.QDialog):
         self.schedule_input.setDateTime(QtCore.QDateTime.currentDateTime())
         add_row(2, "Schedule:", self.schedule_input)
 
+        self.status_input = QtWidgets.QComboBox(self)
+        self.status_input.setGeometry(input_x, row_start + 3 * row_height, 160, 22)
+        self.status_input.addItems(["Select Status", "Scheduled", "Completed", "Cancelled"])
+        
+        label = QtWidgets.QLabel("Status:", self)
+        label.setGeometry(label_x, row_start + 3 * row_height, 120, 20)
+        label.setStyleSheet(label_style)
+        
         self.AddTreat_btn = QtWidgets.QPushButton("Add Treatment", self)
         self.AddTreat_btn.setGeometry(400, row_start + 3 * row_height, 120, 30)
         self.AddTreat_btn.setStyleSheet("background-color: #37547A; color: #fff;")
-        self.AddTreat_btn.clicked.connect(self.add_treat_form)
-
+      
         self.Treat_table = QtWidgets.QTableWidget(self)
-        self.Treat_table.setGeometry(20, 220, 300, 280)
-        self.Treat_table.setColumnCount(3)
-        self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost"])
+        self.Treat_table.setGeometry(20, 220, 500, 280)
+        self.Treat_table.setColumnCount(4)
+        self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost", "Actions"])
         self.Treat_table.setStyleSheet("""
             QTableWidget {
                 background-color: #B2CDE9;
@@ -86,26 +97,68 @@ class Add_Appointment(QtWidgets.QDialog):
         self.Treat_table.setRowCount(0)
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
+        header = self.Treat_table.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)  # TreatmentID
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)          # Procedure
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Cost
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Fixed)            # Actions
+        
+        self.Treat_table.setColumnWidth(3, 100)
+        self.Treat_table.verticalHeader().setVisible(False)
+        
+        self.total_label = QtWidgets.QLabel("Total Bill:", self)
+        self.total_label.setGeometry(20, 510, 120, 20)
+        self.total_label.setStyleSheet("color: #37547A; font-family: Inter; font-size: 14px;")
+
+        self.total_input = QtWidgets.QLineEdit(self)
+        self.total_input.setGeometry(80, 510, 160, 22)
+        self.total_input.setReadOnly(True)
+        self.total_input.setStyleSheet("background-color: #fff; color: #37547A;")
 
         self.add_btn = QtWidgets.QPushButton("Add", self)
-        self.add_btn.setGeometry(200, 530, 80, 30)
+        self.add_btn.setGeometry(200, 550, 80, 30)
         self.add_btn.setStyleSheet("background-color: #37547A; color: #fff;")
 
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
-        self.cancel_btn.setGeometry(310, 530, 80, 30)
+        self.cancel_btn.setGeometry(310, 550, 80, 30)
         self.cancel_btn.setStyleSheet("""
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
         self.cancel_btn.clicked.connect(self.reject)
+        
+        if appointment_data:
+            self.populate_fields(appointment_data)
+            
+    def populate_fields(self, appointment_data):
+        self.appointment_input.setText(appointment_data['Appointment_ID'])
+        self.appointment_input.setReadOnly(True)
+        
+        # Set patient
+        patient_name = appointment_data.get('Patient_Name', '')
+        self.patient_input.setCurrentText(patient_name)
+        
+        # Set schedule
+        schedule = QtCore.QDateTime.fromString(appointment_data['Schedule'], QtCore.Qt.DateFormat.ISODate)
+        self.schedule_input.setDateTime(schedule)
+        
+        # Set status
+        status_index = self.status_input.findText(appointment_data['Status'])
+        if status_index >= 0:
+            self.status_input.setCurrentIndex(status_index)
+        
+        # Clear existing treatments and add new ones
+        self.treatments = appointment_data.get('Treatments', [])
+        self.Treat_table.setRowCount(0)
+        for treatment in self.treatments:
+            self.update_treatment_table_ui(treatment)
+        if self.treatments:
+            max_id = max(int(t['Treatment_ID']) for t in self.treatments)
+            self.treatment_counter = max_id + 1
 
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
         patient_popup.exec()
-
-    def add_treat_form(self):
-        treat_popup = Treatment_Dialog_Ctr()
-        treat_popup.exec()
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
