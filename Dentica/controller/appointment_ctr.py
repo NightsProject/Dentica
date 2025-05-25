@@ -1,6 +1,6 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QMessageBox, QInputDialog
 from ui.Dialogues.ui_appointment_dialog import Add_Appointment
 from backend.appointments_comp import generate_new_appointment_id, save_appointment_to_db, get_patients_name,update_appointment_in_db
 from backend.billing_comp import generate_new_payment_id
@@ -392,12 +392,51 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                             "You must add at least one treatment for non-cancelled appointments.")
             return
         
+        
+        
+        
         # Prepare appointment data
         app_id = self.appointment_id
         pat_id = self.get_selected_patient_id()
         sched = self.schedule_input.dateTime().toPyDateTime()
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
         status = self.status_input.currentText()
+
+        if status == "Cancelled":
+            reply = QMessageBox.question(
+                self,
+                "Confirm Cancellation",
+                "Are you sure you want to cancel this appointment?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No
+            )
+
+            if reply == QMessageBox.StandardButton.Yes:
+                # Ask for reason
+                reason, ok = QInputDialog.getText(
+                    self,
+                    "Cancellation Reason",
+                    "Please enter the reason for cancellation:"
+                )
+
+                if ok and reason.strip():
+                    cancel_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+                    cancel = {
+                        "Cancellation_Date_Time": cancel_date,
+                        "Reason": reason.strip()
+                    }
+
+                    print("Appointment cancelled:", cancel)  # Replace with actual logic
+                else:
+                    QMessageBox.warning(self, "Input Required", "Cancellation reason is required.")
+                    return
+            else:
+                
+                return
+
+
+    
 
         total_amount = self.update_total_billing()
         
@@ -410,7 +449,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             "Treatments": self.treatments,
             "Payment": {
                 "Total_Amount": total_amount
-                }
+                },
+            "Cancel": cancel
             }
 
 

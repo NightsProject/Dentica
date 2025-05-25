@@ -135,7 +135,7 @@ def update_appointment_in_db(appointment_data):
     try:
         cursor = conn.cursor()
 
-        # Update appointment
+        # Update Appointment table
         cursor.execute("""
             UPDATE Appointment SET
                 Patient_ID = %s,
@@ -149,25 +149,29 @@ def update_appointment_in_db(appointment_data):
             appointment_data['Appointment_ID']
         ))
 
-        # Delete existing treatments
+        # Delete old treatments and insert new ones
         cursor.execute("""
             DELETE FROM Treatment
             WHERE Appointment_ID = %s
         """, (appointment_data['Appointment_ID'],))
 
-        # Insert updated treatments
         for treatment in appointment_data['Treatments']:
             cursor.execute("""
-                INSERT INTO Treatment (Appointment_ID, Treatment_ID, Diagnosis, Cost, Treatment_Procedure, Treatment_Date_Time, Treatment_Status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO Treatment (
+                    Appointment_ID, Treatment_ID, Diagnosis, Cost,
+                    Treatment_Procedure, Treatment_Date_Time, Treatment_Status
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (
-                appointment_data['Appointment_ID'], treatment['Treatment_ID'],
-                treatment["Diagnosis"], treatment["Cost"],
-                treatment["Treatment_Procedure"], treatment["Treatment_Date_Time"],
+                appointment_data['Appointment_ID'],
+                treatment['Treatment_ID'],
+                treatment["Diagnosis"],
+                treatment["Cost"],
+                treatment["Treatment_Procedure"],
+                treatment["Treatment_Date_Time"],
                 treatment["Treatment_Status"]
             ))
 
-        # Update payment total_amount
+        # Update payment info
         if 'Payment' in appointment_data and 'Total_Amount' in appointment_data['Payment']:
             cursor.execute("""
                 UPDATE Pays SET
@@ -176,6 +180,29 @@ def update_appointment_in_db(appointment_data):
             """, (
                 appointment_data['Payment']['Total_Amount'],
                 appointment_data['Appointment_ID']
+            ))
+
+        # If appointment is cancelled, insert or update cancellation reason
+        if appointment_data['Status'] == "Cancelled" and "Cancel" in appointment_data:
+            cancel = appointment_data['Cancel']
+
+            # Upsert (delete then insert to avoid duplicates)
+            cursor.execute("""
+                DELETE FROM Cancel
+                WHERE Patient_ID = %s AND Appointment_ID = %s
+            """, (
+                appointment_data['Patient_ID'],
+                appointment_data['Appointment_ID']
+            ))
+
+            cursor.execute("""
+                INSERT INTO Cancel (Patient_ID, Appointment_ID, Cancellation_Date_Time, Reason)
+                VALUES (%s, %s, %s, %s)
+            """, (
+                appointment_data['Patient_ID'],
+                appointment_data['Appointment_ID'],
+                cancel['Cancellation_Date_Time'],
+                cancel['Reason']
             ))
 
         conn.commit()
@@ -189,6 +216,7 @@ def update_appointment_in_db(appointment_data):
     finally:
         cursor.close()
         conn.close()
+
 
 
 # Function to search patients by name

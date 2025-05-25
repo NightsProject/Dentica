@@ -34,3 +34,4 @@ def get_all_cancellations():
     conn.close()
     
     return cancellations
+
