@@ -34,6 +34,7 @@ class Add_Treatment(QtWidgets.QDialog):
             widget.setGeometry(x_input, y, 160, 22)
 
         self.treat_id_input = QtWidgets.QLineEdit(self)
+        self.treat_id_input.setReadOnly(True)
         add_row(0, "Treatment ID:", self.treat_id_input)
 
         self.diagnosis_input = QtWidgets.QLineEdit(self)

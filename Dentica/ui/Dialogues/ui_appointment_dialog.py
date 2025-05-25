@@ -36,6 +36,7 @@ class Add_Appointment(QtWidgets.QDialog):
             widget.setGeometry(input_x, y, 160, 22)
 
         self.appointment_input = QtWidgets.QLineEdit(self)
+        self.appointment_input.setReadOnly(True)
         add_row(0, "Appointment ID:", self.appointment_input)
 
         self.patient_input = QtWidgets.QComboBox(self)
