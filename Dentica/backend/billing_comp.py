@@ -72,23 +72,20 @@ def generate_new_payment_id():
     cursor.execute("""
         SELECT Payment_ID 
         FROM Pays 
-        ORDER BY CAST(SUBSTRING(Payment_ID, 3) AS UNSIGNED)
+        ORDER BY CAST(SUBSTRING(Payment_ID, 3) AS UNSIGNED) ASC
     """)
 
-    existing_ids = cursor.fetchall()
+    existing_ids = {int(payment_id[2:]) for (payment_id,) in cursor.fetchall()}
     cursor.close()
     conn.close()
 
-    # Look for the first missing ID in sequence
+    # Find first unused ID
     expected_id = 1
-    for (payment_id,) in existing_ids:
-        num_id = int(payment_id[2:])  # Remove 'PY' prefix and convert to int
-        if num_id != expected_id:
-            break
+    while expected_id in existing_ids:
         expected_id += 1
 
-    new_payment_id = f'PY{expected_id:05d}'  # Zero-padded to 5 digits
-    return new_payment_id
+    return f'PY{expected_id:05d}'
+
 
 
 def search_payments(keyword):
