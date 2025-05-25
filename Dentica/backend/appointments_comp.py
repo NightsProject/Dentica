@@ -1,5 +1,5 @@
 from backend.DB import connectDB
-
+from datetime import datetime
 
 def get_all_appointments_with_treatment_count():
     all_appointments = []
@@ -128,6 +128,16 @@ def get_appointment_data(appointment_id):
 
 
 def update_appointment_in_db(appointment_data):
+    """
+    appointment_data must include:
+      - Appointment_ID
+      - Patient_ID
+      - Schedule (string 'YYYY-MM-DD HH:MM:SS' or datetime)
+      - Status
+      - Treatments (list of dicts)
+      - Payment → Total_Amount (optional)
+      - Cancel (dict with Cancellation_Date_Time & Reason) if Status == 'Cancelled'
+    """
     conn = connectDB()
     if not conn:
         return False
@@ -135,12 +145,12 @@ def update_appointment_in_db(appointment_data):
     try:
         cursor = conn.cursor()
 
-        # Update Appointment table
+        # 1) Update Appointment
         cursor.execute("""
-            UPDATE Appointment SET
-                Patient_ID = %s,
-                Schedule = %s,
-                Status = %s
+            UPDATE Appointment
+            SET Patient_ID = %s,
+                Schedule   = %s,
+                Status     = %s
             WHERE Appointment_ID = %s
         """, (
             appointment_data['Patient_ID'],
@@ -149,13 +159,20 @@ def update_appointment_in_db(appointment_data):
             appointment_data['Appointment_ID']
         ))
 
-        # Delete old treatments and insert new ones
+        #update the booking to the current date of reschedule
+        current_ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cursor.execute("""
-            DELETE FROM Treatment
+            UPDATE Books
+            SET Booking_Date_Time = %s
             WHERE Appointment_ID = %s
-        """, (appointment_data['Appointment_ID'],))
-
-        for treatment in appointment_data['Treatments']:
+        """, (
+            current_ts,
+            appointment_data['Appointment_ID'],
+        ))
+        # 3) Refresh Treatments
+        cursor.execute("DELETE FROM Treatment WHERE Appointment_ID = %s",
+                       (appointment_data['Appointment_ID'],))
+        for t in appointment_data['Treatments']:
             cursor.execute("""
                 INSERT INTO Treatment (
                     Appointment_ID, Treatment_ID, Diagnosis, Cost,
@@ -163,46 +180,55 @@ def update_appointment_in_db(appointment_data):
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (
                 appointment_data['Appointment_ID'],
-                treatment['Treatment_ID'],
-                treatment["Diagnosis"],
-                treatment["Cost"],
-                treatment["Treatment_Procedure"],
-                treatment["Treatment_Date_Time"],
-                treatment["Treatment_Status"]
+                t['Treatment_ID'], t['Diagnosis'], t['Cost'],
+                t['Treatment_Procedure'], t['Treatment_Date_Time'], t['Treatment_Status']
             ))
 
-        # Update payment info
+        # 4) Update Payment
         if 'Payment' in appointment_data and 'Total_Amount' in appointment_data['Payment']:
             cursor.execute("""
-                UPDATE Pays SET
-                    Total_Amount = %s
+                UPDATE Pays
+                SET Total_Amount = %s
                 WHERE Appointment_ID = %s
             """, (
                 appointment_data['Payment']['Total_Amount'],
                 appointment_data['Appointment_ID']
             ))
 
-        # If appointment is cancelled, insert or update cancellation reason
+        # 5) Handle Cancel entries
         if appointment_data['Status'] == "Cancelled" and "Cancel" in appointment_data:
             cancel = appointment_data['Cancel']
-
-            # Upsert (delete then insert to avoid duplicates)
+            # Remove any old cancel record first
             cursor.execute("""
                 DELETE FROM Cancel
-                WHERE Patient_ID = %s AND Appointment_ID = %s
+                WHERE Patient_ID     = %s
+                  AND Appointment_ID = %s
             """, (
                 appointment_data['Patient_ID'],
                 appointment_data['Appointment_ID']
             ))
-
+            # Insert new cancel record
             cursor.execute("""
-                INSERT INTO Cancel (Patient_ID, Appointment_ID, Cancellation_Date_Time, Reason)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO Cancel (
+                    Patient_ID, Appointment_ID,
+                    Cancellation_Date_Time, Reason
+                ) VALUES (%s, %s, %s, %s)
             """, (
                 appointment_data['Patient_ID'],
                 appointment_data['Appointment_ID'],
                 cancel['Cancellation_Date_Time'],
                 cancel['Reason']
+            ))
+
+        elif appointment_data['Status'] in ("Scheduled", "Completed"):
+            # If no longer cancelled, remove any lingering cancel row
+            cursor.execute("""
+                DELETE FROM Cancel
+                WHERE Patient_ID     = %s
+                  AND Appointment_ID = %s
+            """, (
+                appointment_data['Patient_ID'],
+                appointment_data['Appointment_ID']
             ))
 
         conn.commit()
@@ -439,3 +465,27 @@ def search_appointments(keyword):
 
     # return list of lists: [Appointment_ID, Patient_Full_Name, Schedule, Status, Treatment_Count]
     return [list(r) for r in rows]
+
+def get_appointment_details(appointment_id):
+    conn = connectDB()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT Status, Schedule
+            FROM Appointment
+            WHERE Appointment_ID = %s
+        """, (appointment_id,))
+        result = cursor.fetchone()
+        if result:
+            return {
+                "Status": result[0],
+                "Schedule": result[1]  # Returns as datetime object
+            }
+        else:
+            return None
+    except Exception as e:
+        print("Error fetching appointment details:", e)
+        return None
+    finally:
+        cursor.close()
+        conn.close()

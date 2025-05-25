@@ -44,18 +44,22 @@ def generate_new_patient_id():
     cursor.close()
     conn.close()
 
-    # Look for the first missing ID in sequence
+    # Extract existing numeric parts into a set for faster lookup
+    existing_id_set = set(num_id for (num_id,) in existing_ids)
+
+    # Find the smallest missing positive integer
     expected_id = 1
-    for (num_id,) in existing_ids:
-        if num_id != expected_id:
-            break
+    while expected_id in existing_id_set:
         expected_id += 1
 
-    new_patient_id = f'P{expected_id:05d}'  # Zero-padded to 5 digits
+    new_patient_id = f'P{expected_id:05d}'  # e.g., P00002
     return new_patient_id
 
 
+from PyQt6 import QtWidgets
+
 def update_patient(
+    self,
     patient_id,
     first_name,
     middle_name,
@@ -69,6 +73,19 @@ def update_patient(
     conn = connectDB()
     cursor = conn.cursor()
     try:
+        # Check if another patient (not this one) has the same first and last name
+        cursor.execute("""
+            SELECT * FROM Patient
+            WHERE First_Name = %s AND Last_Name = %s AND Patient_ID != %s
+        """, (first_name, last_name, patient_id))
+        duplicate = cursor.fetchone()
+
+        if duplicate:
+            QtWidgets.QMessageBox.warning(self, "Duplicate Entry",
+                "Another patient with the same first and last name already exists.")
+            return False
+
+        # Proceed to update
         cursor.execute("""
             UPDATE Patient SET
                 First_Name = %s,
@@ -91,23 +108,27 @@ def update_patient(
             address,
             patient_id
         ))
+
         conn.commit()
-        success = True
+        return True
+
     except Exception as e:
         print("Update Patient Error:", e)
         import traceback
         traceback.print_exc()
-        success = False
+        return False
+
     finally:
         cursor.close()
         conn.close()
-    return success
+
 
 ## Function to insert a new patient into the database
 # This function takes various patient details as parameters and inserts them into the Patient table.
 # It returns True if the insertion is successful, otherwise it returns False.
 # The function uses a try-except block to handle any exceptions that may occur during the database operation.
-def insert_patient(
+
+def insert_patient(self, 
     patient_id,
     first_name,
     middle_name,
@@ -121,6 +142,20 @@ def insert_patient(
     conn = connectDB()
     cursor = conn.cursor()
     try:
+        # Check for duplicate first and last name
+        cursor.execute("""
+            SELECT COUNT(*) FROM Patient
+            WHERE First_Name = %s AND Last_Name = %s
+        """, (first_name, last_name))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            QMessageBox.warning(self, "Duplicate Entry",
+                    f"A patient with the name {first_name} {last_name} already exists.")
+            
+            return False
+
+        # Proceed with insertion
         cursor.execute("""
             INSERT INTO Patient (
                 Patient_ID,
@@ -145,16 +180,16 @@ def insert_patient(
             address
         ))
         conn.commit()
-        success = True
+        return True
     except Exception as e:
         print("Insert Patient Error:", e)
         import traceback
         traceback.print_exc()
-        success = False
+        return False
     finally:
         cursor.close()
         conn.close()
-    return success
+
 
 # Function to delete a patient from the database and its assiocated datas
 # This function takes a patient ID as a parameter and deletes the corresponding record from the Patient table.

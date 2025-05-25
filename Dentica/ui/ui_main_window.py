@@ -734,7 +734,7 @@ class Ui_MainWindow(object):
         layout.setContentsMargins(12, 12, 12, 12)
 
         self.calendar = QCalendarWidget(parent=self.frame_3)
-        self.calendar.setSelectionMode(QtWidgets.QCalendarWidget.SelectionMode.NoSelection)
+        self.calendar.setSelectionMode(QtWidgets.QCalendarWidget.SelectionMode.SingleSelection)
         self.calendar.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         prev_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_prevmonth")
         next_btn = self.calendar.findChild(QtWidgets.QToolButton, "qt_calendar_nextmonth")

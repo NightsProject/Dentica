@@ -9,6 +9,7 @@ from controller.treatment_ctr import Treatment_Dialog_Ctr
 from PyQt6.QtCore import Qt
 from datetime import datetime
 from backend.treatment_comp import delete_treatment_by_id
+from backend.appointments_comp import get_appointment_details
 
 
 """
@@ -377,6 +378,39 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
 
     def on_update_pressed(self):
+
+        # Fetch current data from DB before update
+        prev_appointment = get_appointment_details(self.appointment_id)
+
+        if not prev_appointment:
+            QMessageBox.critical(self, "Error", "Failed to fetch existing appointment details.")
+            return
+
+        previous_status = prev_appointment["Status"]
+        previous_schedule = prev_appointment["Schedule"]
+        new_status = self.status_input.currentText()
+        new_schedule = self.schedule_input.dateTime().toPyDateTime()
+
+        # Notify for cancel data deletion
+        if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
+            QMessageBox.information(
+                self,
+                "Cancellation Record Removed",
+                "The appointment was previously cancelled. The cancellation record will now be removed."
+            )
+
+        # Notify for schedule change
+        # Compare datetime strings (strip seconds for a more user-friendly comparison)
+        prev_sched_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
+        new_sched_str = new_schedule.strftime('%Y-%m-%d %H:%M')
+
+        if previous_schedule != new_schedule:
+            QMessageBox.information(
+                self,
+                "Appointment Rescheduled",
+                f"The appointment has been rescheduled from {prev_sched_str} to {new_sched_str}."
+            )
+
         # Validate required fields
         valid_patient = bool(self.get_selected_patient_id())
         valid_status = self.validate_status()
@@ -402,6 +436,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
         status = self.status_input.currentText()
 
+        cancel = None
+        
         if status == "Cancelled":
             reply = QMessageBox.question(
                 self,
@@ -449,9 +485,10 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             "Treatments": self.treatments,
             "Payment": {
                 "Total_Amount": total_amount
-                },
-            "Cancel": cancel
+                }
             }
+        if cancel:
+            appointment_data["Cancel"] = cancel
 
 
         # Delete treatments marked for deletion

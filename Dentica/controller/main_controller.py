@@ -82,7 +82,6 @@ class MainController(QMainWindow, Ui_MainWindow):
     
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
-        #self.AddBill_btn.clicked.connect(lambda:self.open_billing())
         self.add_icon.clicked.connect(lambda: self.open_patient())
         self.exitbtn.clicked.connect(lambda: self.confirm_exit())
         
@@ -90,6 +89,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.Search_app.textChanged.connect(self.search_appointment_data)
         self.Search_bill.textChanged.connect(self.search_payment_data)
         self.Search_book.textChanged.connect(self.search_booking_data)
+        self.calendar.clicked.connect(self.on_calendar_date_clicked)
 
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
@@ -393,6 +393,12 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Cancel_pagination.set_total_rows(total_bookings)
             self.Cancel_pagination.show_current_page()       
             
+    def on_calendar_date_clicked(self, date):
+        # date is a QDate object
+        clicked_date_str = date.toString("yyyy-MM-dd")
+        print(f"Date clicked: {clicked_date_str}")
+
+  
             
     #====================LOAD DATAS TO UI=============== end
     #=======================================================

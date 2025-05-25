@@ -168,7 +168,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         email = self.email_input.text()
         birth_date = self.birth_input.date().toString("yyyy-MM-dd")
 
-        success = insert_patient(patient_id, first_name, middle_name, last_name, gender, birth_date, contact_number, email, address)
+        success = insert_patient(self, patient_id, first_name, middle_name, last_name, gender, birth_date, contact_number, email, address)
         if success:
             self.copy_patient_picture(patient_id)  # Copy the picture after adding the patient
             self.patient_added.emit()
@@ -206,7 +206,7 @@ class Patient_Dialog_Ctr(Add_Patient):
             QMessageBox.warning(self, "Validation Error", "Please fill in all required fields.")
             return
 
-        success = update_patient(
+        success = update_patient(self,
             patient_id,
             first_name,
             middle_name,
