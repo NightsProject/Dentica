@@ -196,7 +196,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         # Create action buttons
         action_widget = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(5, 2, 5, 2)
+        layout.setSpacing(5)
         
         delete_btn = QtWidgets.QPushButton("Delete")
         delete_btn.setStyleSheet("""
@@ -204,9 +205,13 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 background-color: #ff4444;
                 color: white;
                 border: none;
-                padding: 2px 5px;
+                padding: 4px 8px;
                 border-radius: 3px;
+                min-width: 60px;
             }
+            QPushButton:hover {
+            background-color: #cc0000;
+        }
         """)
         delete_btn.clicked.connect(lambda: self.remove_treatment(row))
         layout.addWidget(delete_btn)

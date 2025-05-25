@@ -73,7 +73,7 @@ class View_Appointment(QtWidgets.QDialog):
         self.Treat_label.setStyleSheet("color: #37547A; font-family: Inter; font-size: 15px;")
 
         self.Treat_table = QtWidgets.QTableWidget(self)
-        self.Treat_table.setGeometry(20, 195, 630, 210)
+        self.Treat_table.setGeometry(20, 195, 602, 210)
         self.Treat_table.setColumnCount(6)
         self.Treat_table.setHorizontalHeaderLabels(["TreatmentID","Diagnosis","Date & Time", "Procedure","Status", "Cost"])
         self.Treat_table.setStyleSheet("""
@@ -101,6 +101,7 @@ class View_Appointment(QtWidgets.QDialog):
         self.Treat_table.setRowCount(0)
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
+        self.Treat_table.verticalHeader().setVisible(False)
         
         self.Total_cost = QtWidgets.QLabel("Total Cost:", self)
         self.Total_cost.setGeometry(20, 420, 120, 20)
@@ -109,7 +110,7 @@ class View_Appointment(QtWidgets.QDialog):
         self.Cost_line = QtWidgets.QLineEdit(self)
         self.Cost_line.setText("Fetch Total Cost")
         self.Cost_line.setReadOnly(True)
-        self.Cost_line.setGeometry(150, 420, 160, 22)
+        self.Cost_line.setGeometry(100, 420, 160, 22)
 
         self.exit_btn = QtWidgets.QPushButton("Exit", self)
         self.exit_btn.setGeometry(300, 455, 80, 30)

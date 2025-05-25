@@ -766,6 +766,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         row: the row index in UpAp_table
         """
         widget = QtWidgets.QWidget()
+        widget.setStyleSheet("background: none;")
         layout = QtWidgets.QHBoxLayout(widget)
         layout.setContentsMargins(5, 2, 5, 2)
         layout.setSpacing(5)

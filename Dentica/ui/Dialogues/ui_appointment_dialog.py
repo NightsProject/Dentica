@@ -8,7 +8,7 @@ class Add_Appointment(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Book Appointment")
-        self.setFixedSize(600, 600)
+        self.setFixedSize(550, 600)
         self.setStyleSheet("""
             QDialog {
                 background-color: #B2CDE9;
@@ -68,7 +68,7 @@ class Add_Appointment(QtWidgets.QDialog):
         self.AddTreat_btn.setStyleSheet("background-color: #37547A; color: #fff;")
       
         self.Treat_table = QtWidgets.QTableWidget(self)
-        self.Treat_table.setGeometry(20, 220, 300, 280)
+        self.Treat_table.setGeometry(20, 220, 500, 280)
         self.Treat_table.setColumnCount(4)
         self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost", "Actions"])
         self.Treat_table.setStyleSheet("""
@@ -96,23 +96,30 @@ class Add_Appointment(QtWidgets.QDialog):
         self.Treat_table.setRowCount(0)
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
+        header = self.Treat_table.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)  # TreatmentID
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)          # Procedure
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Cost
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Fixed)            # Actions
         
+        self.Treat_table.setColumnWidth(3, 100)
+        self.Treat_table.verticalHeader().setVisible(False)
         
         self.total_label = QtWidgets.QLabel("Total Bill:", self)
-        self.total_label.setGeometry(340, 470, 100, 22)
+        self.total_label.setGeometry(20, 510, 120, 20)
         self.total_label.setStyleSheet("color: #37547A; font-family: Inter; font-size: 14px;")
 
         self.total_input = QtWidgets.QLineEdit(self)
-        self.total_input.setGeometry(430, 470, 130, 22)
+        self.total_input.setGeometry(80, 510, 160, 22)
         self.total_input.setReadOnly(True)
         self.total_input.setStyleSheet("background-color: #fff; color: #37547A;")
 
         self.add_btn = QtWidgets.QPushButton("Add", self)
-        self.add_btn.setGeometry(200, 530, 80, 30)
+        self.add_btn.setGeometry(200, 550, 80, 30)
         self.add_btn.setStyleSheet("background-color: #37547A; color: #fff;")
 
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self)
-        self.cancel_btn.setGeometry(310, 530, 80, 30)
+        self.cancel_btn.setGeometry(310, 550, 80, 30)
         self.cancel_btn.setStyleSheet("""
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}

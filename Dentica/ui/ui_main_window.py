@@ -1554,9 +1554,9 @@ class Ui_MainWindow(object):
         self.Cancel_table.verticalHeader().setVisible(False)
 
         # Cacncel Sizing
-        self.Cancel_table.setColumnWidth(0, 185)  # Appointment ID 
+        self.Cancel_table.setColumnWidth(0, 145)  # Appointment ID 
         self.Cancel_table.setColumnWidth(1, 185)  # Pat. Name
-        self.Cancel_table.setColumnWidth(2, 310)  # Date. Cancelled
+        self.Cancel_table.setColumnWidth(2, 250)  # Date. Cancelled
         self.Cancel_table.setColumnWidth(3, 200)  # Reason
 
         
