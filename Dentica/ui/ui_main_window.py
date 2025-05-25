@@ -1511,7 +1511,7 @@ class Ui_MainWindow(object):
         self.Cancel_table = QtWidgets.QTableWidget(parent=self.cancel_table_frame)
         self.Cancel_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
         self.Cancel_table.setObjectName("Cancel_table")
-        self.Cancel_table.setColumnCount(4)
+        self.Cancel_table.setColumnCount(5)
         self.Cancel_table.setRowCount(0)
         self.Cancel_table.setStyleSheet("""
         QTableWidget {
@@ -1531,15 +1531,18 @@ class Ui_MainWindow(object):
         """)
         item = QtWidgets.QTableWidgetItem()
         self.Cancel_table.setHorizontalHeaderItem(0, item)
-        item.setText("Appointment ID")
-        item = QtWidgets.QTableWidgetItem()
-        self.Cancel_table.setHorizontalHeaderItem(1, item)
         item.setText("Patient Name")
         item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(1, item)
+        item.setText("Appointment ID")
+        item = QtWidgets.QTableWidgetItem()
         self.Cancel_table.setHorizontalHeaderItem(2, item)
-        item.setText("Date Cancelled")
+        item.setText("Appointment Schedule")
         item = QtWidgets.QTableWidgetItem()
         self.Cancel_table.setHorizontalHeaderItem(3, item)
+        item.setText("Date Cancelled")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(4, item)
         item.setText("Reason")
         self.Cancel_table.horizontalHeader().setStyleSheet("""
         QHeaderView::section {

@@ -24,7 +24,7 @@ from backend.appointments_comp import get_all_appointments_with_treatment_count,
 from backend.billing_comp import get_all_billings, search_payments
 from backend.booking_comp import get_all_bookings, search_bookings
 from backend.reports_comp import load_graphs, refresh_graphs
-
+from backend.cancelations_comp import get_all_cancellations
 
 
 
@@ -185,6 +185,9 @@ class MainController(QMainWindow, Ui_MainWindow):
                 
                 all_bookings_list = get_all_bookings()
                 self.update_bookings_list(all_bookings_list)
+                             
+                all_canceled_list = get_all_cancellations()
+                self.update_cancel_list(all_canceled_list)
             
             connection.close()
             
@@ -229,6 +232,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         all_bookings_list = get_all_bookings()
         self.update_bookings_list(all_bookings_list)
+        
+        all_canceled_list = get_all_cancellations()
+        self.update_cancel_list(all_canceled_list)
         
         refresh_appointment_chart(self)
         refresh_graphs(self)
@@ -367,6 +373,26 @@ class MainController(QMainWindow, Ui_MainWindow):
             total_bookings = self.Booking_table.rowCount()
             self.Booking_pagination.set_total_rows(total_bookings)
             self.Booking_pagination.show_current_page()       
+    #Bookings TAB ===================end
+    
+    #Cancelation TAB =================start
+    def update_cancel_list(self, canceled):
+        self.Cancel_table.setRowCount(0)
+        for canceled in canceled:
+            row_position = self.Cancel_table.rowCount()
+            self.Cancel_table.insertRow(row_position)
+            self.Cancel_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(canceled[1]))) #patient full name
+            self.Cancel_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(canceled[2]))) #appointment id
+            self.Cancel_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(canceled[3]))) #appointment schedule
+            self.Cancel_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(canceled[4]))) #date cancelled
+            self.Cancel_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(canceled[5]))) #reason
+           
+            #canceled is =canceled[0]
+            total_bookings = self.Cancel_table.rowCount()
+            self.Cancel_pagination.set_total_rows(total_bookings)
+            self.Cancel_pagination.show_current_page()       
+            
+            
     #====================LOAD DATAS TO UI=============== end
     #=======================================================
     
