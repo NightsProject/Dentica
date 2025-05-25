@@ -343,6 +343,38 @@ class Ui_MainWindow(object):
                 """)
         self.verticalLayout.addWidget(self.Book_btn)
         
+        #Cancels button
+        self.Cancels_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        can_icon= QtGui.QIcon(f"{filepath}Cancellations.svg")
+        self.Cancels_btn.setIcon(can_icon)
+        self.Cancels_btn.setIconSize(QtCore.QSize(25, 25))
+        self.Cancels_btn.setObjectName("Rep_btn")
+        self.Cancels_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(5), self.set_active_button(self.Cancels_btn)))
+        self.Cancels_btn.setStyleSheet("""
+                QPushButton {
+                        text-align: left;
+                        padding: 10px;
+                        background-color: transparent;
+                        border: none;
+                        color: #fff;
+                        font-size: 16px;
+                        font-family: Ondo;
+                        font-weight: bold;
+                }
+                QPushButton:hover {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }
+                QPushButton:checked {
+                        background-color: #8DB8E0;
+                        color: #fff;
+                        border-radius: 8px;
+                }                    
+                """)
+        self.verticalLayout.addWidget(self.Cancels_btn)
+        self.verticalLayout.addStretch()
+        
 
         #Reports button
         self.Rep_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
@@ -350,7 +382,7 @@ class Ui_MainWindow(object):
         self.Rep_btn.setIcon(rep_icon)
         self.Rep_btn.setIconSize(QtCore.QSize(25, 25))
         self.Rep_btn.setObjectName("Rep_btn")
-        self.Rep_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(5), self.set_active_button(self.Rep_btn)))
+        self.Rep_btn.clicked.connect(lambda: (self.Pages.setCurrentIndex(6), self.set_active_button(self.Rep_btn)))
         self.Rep_btn.setStyleSheet("""
                 QPushButton {
                         text-align: left;
@@ -377,7 +409,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addStretch()
  
         
-        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Rep_btn]:
+        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Cancels_btn, self.Rep_btn]:
                 btn.setCheckable(True)
 
         self.button_group = QtWidgets.QButtonGroup()
@@ -387,6 +419,7 @@ class Ui_MainWindow(object):
         self.button_group.addButton(self.Apntmnt_btn)
         self.button_group.addButton(self.Bill_btn)
         self.button_group.addButton(self.Book_btn)
+        self.button_group.addButton(self.Cancels_btn)
         self.button_group.addButton(self.Rep_btn)
 
         #Pages
@@ -1278,7 +1311,7 @@ class Ui_MainWindow(object):
                 """)
         self.horizontalLayout_2.addWidget(self.pushButton_12)
 
-        #Pending Billing button
+        #Paid Billing button
         self.pushButton_13 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_13.setObjectName("pushButton_13")
         self.pushButton_13.setStyleSheet("""
@@ -1301,7 +1334,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.pushButton_13)
         
 
-        #Paid Billing button
+        #Unaid Billing button
         self.pushButton_14 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
         self.pushButton_14.setObjectName("pushButton_14")
         self.pushButton_14.setStyleSheet("""
@@ -1323,28 +1356,6 @@ class Ui_MainWindow(object):
                 """)
         self.horizontalLayout_2.addWidget(self.pushButton_14)
 
-        #Overdue Billing button
-        self.pushButton_15 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget_2)
-        self.pushButton_15.setStyleSheet("""
-                QPushButton {
-                        text-align: left;
-                        padding: 10px;
-                        background-color: #C6D7EC;
-                        border: none;
-                        color: #37547A;
-                        font-size: 16px;
-                        text-align: center;
-                        font-family: Inter;                
-                }
-                QPushButton:hover {
-                        background-color: #8DB8E0;
-                        color: #37547A;
-                        border-radius: 8px;
-                }
-                """)
-        self.pushButton_15.setObjectName("pushButton_15")
-
-        self.horizontalLayout_2.addWidget(self.pushButton_15)
         self.Pages.addWidget(self.Billing_page)
         
         #Booking Page
@@ -1449,7 +1460,111 @@ class Ui_MainWindow(object):
         self.Booking_pagination.setup_pagination_controls(self.Booking_page, y_offset=85)
         
         self.Pages.addWidget(self.Booking_page)
+        
+        #Cancellations Page
 
+        #Cancellations top bar
+        self.Cancel_page = QtWidgets.QWidget()
+        self.Cancel_page.setObjectName("Cancel_page")
+        self.Cancel_frame = QtWidgets.QFrame(parent=self.Cancel_page)
+        self.Cancel_frame.setGeometry(QtCore.QRect(0, 0, 940, 71))
+        self.Cancel_frame.setStyleSheet("""
+                #Cancel_frame {background-color: #B2CDE9;
+                }
+                """)
+        self.Cancel_frame.setObjectName("Cancel_frame")
+
+        #Cancellations
+        self.cancel_label = QtWidgets.QLabel(parent=self.Cancel_frame)
+        self.cancel_label.setGeometry(QtCore.QRect(20, 25, 180, 31))
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setPointSize(18)
+        font.setBold(True)
+        self.cancel_label.setFont(font)
+        self.cancel_label.setStyleSheet("background-color: #B2CDE9; color: #0E283F;")
+        self.cancel_label.setObjectName("cancel_label")
+        self.cancel_label.setText("Cancellations")
+
+        #Search cancels
+        self.Search_cancel = QtWidgets.QLineEdit(parent=self.Cancel_frame)
+        self.Search_cancel.setGeometry(QtCore.QRect(700, 25, 211, 31))
+        self.Search_cancel.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
+        self.Search_cancel.setReadOnly(False)
+        self.Search_cancel.setObjectName("Search_cancel")
+
+        #Cancel Table Frame
+        self.cancel_table_frame = QtWidgets.QFrame(parent=self.Cancel_page)
+        self.cancel_table_frame.setGeometry(QtCore.QRect(20, 80, 900, 680))
+        self.cancel_table_frame.setStyleSheet("""
+        #cancel_table_frame {
+                background: #C6D7EC;
+                border: 1px solid #fff;  
+                border-radius: 12px;
+        }
+        """)
+        self.cancel_table_frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.cancel_table_frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.cancel_table_frame.setObjectName("cancel_table_frame")
+
+        #Cancel Table
+        self.Cancel_table = QtWidgets.QTableWidget(parent=self.cancel_table_frame)
+        self.Cancel_table.setGeometry(QtCore.QRect(10, 20, 880, 655))
+        self.Cancel_table.setObjectName("Cancel_table")
+        self.Cancel_table.setColumnCount(4)
+        self.Cancel_table.setRowCount(0)
+        self.Cancel_table.setStyleSheet("""
+        QTableWidget {
+                background-color: #C6D7EC;
+                border: none;
+                gridline-color: transparent;
+        }
+        QTableWidget::item {
+                border-bottom: 1px solid #e5e7eb;
+                color: #64748B;
+        }
+        QHeaderView::section {
+                border: none;
+                background-color: #C6D7EC;
+                color: #64748B;
+        }
+        """)
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(0, item)
+        item.setText("Appointment ID")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(1, item)
+        item.setText("Patient Name")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(2, item)
+        item.setText("Date Cancelled")
+        item = QtWidgets.QTableWidgetItem()
+        self.Cancel_table.setHorizontalHeaderItem(3, item)
+        item.setText("Reason")
+        self.Cancel_table.horizontalHeader().setStyleSheet("""
+        QHeaderView::section {
+                font-family: "Inter"; 
+                font-size: 14px;        
+                color: #64748B;                
+        }
+        """)
+        self.Cancel_table.verticalHeader().setVisible(False)
+
+        # Cacncel Sizing
+        self.Cancel_table.setColumnWidth(0, 185)  # Appointment ID 
+        self.Cancel_table.setColumnWidth(1, 185)  # Pat. Name
+        self.Cancel_table.setColumnWidth(2, 310)  # Date. Cancelled
+        self.Cancel_table.setColumnWidth(3, 200)  # Reason
+
+        
+        self.Cancel_table.verticalHeader().setDefaultSectionSize(60)
+
+        self.Cancel_pagination = TablePagination(self.Cancel_table, rows_per_page=10)
+        self.Cancel_pagination.setup_pagination_controls(self.Cancel_page, y_offset=85)
+        
+        self.Pages.addWidget(self.Cancel_page)
+
+        
         #Reports Page
         self.Reports_page = QtWidgets.QWidget()
         self.Reports_page.setObjectName("Reports_page")
@@ -1712,6 +1827,7 @@ class Ui_MainWindow(object):
         self.Apntmnt_btn.setText(_translate("MainWindow", "Appointments"))
         self.Bill_btn.setText(_translate("MainWindow", "Payment"))
         self.Book_btn.setText(_translate("Main Window", "Booking"))
+        self.Cancels_btn.setText(_translate("Main Window", "Cancellations"))
         self.Rep_btn.setText(_translate("MainWindow", "Reports"))
         self.label_2.setText(_translate("MainWindow", "Todays Patients"))
         self.label_5.setText(_translate("MainWindow", "0"))
@@ -1734,6 +1850,7 @@ class Ui_MainWindow(object):
         item = self.UpAp_table.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Actions"))
         self.Search_book.setPlaceholderText(_translate("Main Window", "Search bookings..."))
+        self.Search_cancel.setPlaceholderText(_translate("Main Window", "Search cancellations..."))
         #TODO fix the todays appointments table size
 
         #Patients Tab
@@ -1795,8 +1912,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Actions"))
         self.pushButton_12.setText(_translate("MainWindow", "All"))
         self.pushButton_13.setText(_translate("MainWindow", "Paid"))
-        self.pushButton_14.setText(_translate("MainWindow", "Pending"))
-        self.pushButton_15.setText(_translate("MainWindow", "Overdue"))
+        self.pushButton_14.setText(_translate("MainWindow", "Unpaid"))
         
 
     def mousePressEvent(self, event):
@@ -1819,7 +1935,7 @@ class Ui_MainWindow(object):
         user_menu.setVisible(not user_menu.isVisible())
 
     def set_active_button(self, button):
-        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Rep_btn]:
+        for btn in [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Cancels_btn, self.Rep_btn]:
                 btn.setChecked(btn == button)
     
     def toggle_theme(self):
@@ -1899,7 +2015,7 @@ class Ui_MainWindow(object):
                 label.setStyleSheet(f"background: {card_bg}; color: {card_text};")
         
         # Apply to sidebar buttons
-        sidebar_buttons = [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Rep_btn]
+        sidebar_buttons = [self.Dash_btn, self.Patient_btn, self.Apntmnt_btn, self.Bill_btn, self.Book_btn, self.Cancels_btn, self.Rep_btn]
         for btn in sidebar_buttons:
                 btn.setStyleSheet(f"""
                 QPushButton {{
