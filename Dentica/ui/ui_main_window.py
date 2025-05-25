@@ -2223,7 +2223,7 @@ class Ui_MainWindow(object):
         
         # Apply to button filter in Appointment and Billing page
         for fil_btn in [self.pushButton_8, self.pushButton_9, self.pushButton_7, self.pushButton_6, 
-                        self.pushButton_12, self.pushButton_13, self.pushButton_14, self.pushButton_15]:
+                        self.pushButton_12, self.pushButton_13, self.pushButton_14]:
                 fil_btn.setStyleSheet(f"""
                         QPushButton {{
                                 text-align: left;
