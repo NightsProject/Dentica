@@ -340,7 +340,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
         #setup booking and payment details
         booking_id = generate_new_booking_id()
-        print(booking_id)
         booking_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         Payment_id = generate_new_payment_id()
@@ -384,138 +383,134 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
 
     def on_update_pressed(self):
-
-        # Fetch current data from DB before update
-        prev_appointment = get_appointment_details(self.appointment_id)
-
-        if not prev_appointment:
+        # 1) Fetch current data from DB before update
+        prev = get_appointment_details(self.appointment_id)
+        if not prev:
             QMessageBox.critical(self, "Error", "Failed to fetch existing appointment details.")
             return
 
-        previous_status = prev_appointment["Status"]
-        previous_schedule = prev_appointment["Schedule"]
-        new_status = self.status_input.currentText()
-        new_schedule = self.schedule_input.dateTime().toPyDateTime()
+        previous_status   = prev["Status"]
+        previous_schedule = prev["Schedule"]
+        new_status        = self.status_input.currentText()
+        new_schedule      = self.schedule_input.dateTime().toPyDateTime()
 
-        # Notify for cancel data deletion
+        # 2) Notify for cancel-record deletion if coming back from Cancelled
         if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
             QMessageBox.information(
-                self,
-                "Cancellation Record Removed",
-                "The appointment was previously cancelled. The cancellation record will now be removed."
+                self, "Cancellation Record Removed",
+                "The appointment was previously cancelled. Cancellation data will now be removed."
             )
 
-        # Notify for schedule change
-        # Compare datetime strings (strip seconds for a more user-friendly comparison)
-        prev_sched_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
-        new_sched_str = new_schedule.strftime('%Y-%m-%d %H:%M')
-
+        # 3) Notify for schedule change
+        prev_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
+        new_str  = new_schedule.strftime('%Y-%m-%d %H:%M')
         if previous_schedule != new_schedule:
             QMessageBox.information(
-                self,
-                "Appointment Rescheduled",
-                f"The appointment has been rescheduled from {prev_sched_str} to {new_sched_str}."
+                self, "Appointment Rescheduled",
+                f"Appointment moved from {prev_str} to {new_str}."
             )
 
-        # Validate required fields
-        valid_patient = bool(self.get_selected_patient_id())
-        valid_status = self.validate_status()
-        
-        if not (valid_patient and valid_status):
+        # 4) Validation
+        if not (self.get_selected_patient_id() and self.validate_status()):
             QMessageBox.warning(self, "Validation Error",
-                            "Please select a valid patient and status.")
+                                "Please select a valid patient and status.")
             return
-        
-        # Only require treatments if status is not Cancelled
-        if self.status_input.currentText() != "Cancelled" and not self.treatments:
+        if new_status != "Cancelled" and not self.treatments:
             QMessageBox.warning(self, "No Treatments",
-                            "You must add at least one treatment for non-cancelled appointments.")
+                                "You must add at least one treatment for non-cancelled appointments.")
             return
-        
-        
-        
-        
-        # Prepare appointment data
+
+        # 5) Prepare core appointment_data
         app_id = self.appointment_id
         pat_id = self.get_selected_patient_id()
-        sched = self.schedule_input.dateTime().toPyDateTime()
-        formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
-        status = self.status_input.currentText()
+        formatted_sched = new_schedule.strftime('%Y-%m-%d %H:%M:%S')
 
-        cancel = None
-        
-        if status == "Cancelled":
+        appointment_data = {
+            "Appointment_ID": app_id,
+            "Patient_ID":     pat_id,
+            "Schedule":       formatted_sched,
+            "Status":         new_status,
+            "Treatments":     self.treatments,
+        }
+
+        # 6) Cancellation payload
+        if new_status == "Cancelled":
             reply = QMessageBox.question(
-                self,
-                "Confirm Cancellation",
+                self, "Confirm Cancellation",
                 "Are you sure you want to cancel this appointment?",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
-
-            if reply == QMessageBox.StandardButton.Yes:
-                # Ask for reason
-                reason, ok = QInputDialog.getText(
-                    self,
-                    "Cancellation Reason",
-                    "Please enter the reason for cancellation:"
-                )
-
-                if ok and reason.strip():
-                    cancel_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-                    cancel = {
-                        "Cancellation_Date_Time": cancel_date,
-                        "Reason": reason.strip()
-                    }
-
-                    print("Appointment cancelled:", cancel)  # Replace with actual logic
-                else:
-                    QMessageBox.warning(self, "Input Required", "Cancellation reason is required.")
-                    return
-            else:
-                
+            if reply != QMessageBox.StandardButton.Yes:
                 return
 
+            reason, ok = QInputDialog.getText(
+                self, "Cancellation Reason",
+                "Please enter the reason for cancellation:"
+            )
+            if not (ok and reason.strip()):
+                QMessageBox.warning(self, "Input Required", "Cancellation reason is required.")
+                return
 
-    
-
-        total_amount = self.update_total_billing()
-        
-
-        appointment_data = {
-            "Appointment_ID": app_id,
-            "Patient_ID": pat_id,
-            "Schedule": formatted_sched,
-            "Status": status,
-            "Treatments": self.treatments,
-            "Payment": {
-                "Total_Amount": total_amount
-                }
+            appointment_data["Cancel"] = {
+                "Cancellation_Date_Time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                "Reason": reason.strip()
             }
-        if cancel:
-            appointment_data["Cancel"] = cancel
 
+        # 7) Re-schedule logic: if coming back from Cancelled → Scheduled, generate new IDs
+        if previous_status == "Cancelled" and new_status == "Scheduled":
+            booking_id = generate_new_booking_id()
+            payment_id = generate_new_payment_id()
+            booking_dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            total_amt  = self.update_total_billing()
 
-        # Delete treatments marked for deletion
+            appointment_data["Booking"] = {
+                "Booking_ID":        booking_id,
+                "Patient_ID":        pat_id,
+                "Appointment_ID":    app_id,
+                "Booking_Date_Time": booking_dt
+            }
+
+            appointment_data["Payment"] = {
+                "Payment_ID":     payment_id,
+                "Patient_ID":     pat_id,
+                "Appointment_ID": app_id,
+                "Total_Amount":   total_amt,
+                "Payment_Method": "None",
+                "Payment_Status": "Unpaid",
+                "Payment_Date":   None
+            }
+
+        # 8) If still Scheduled (but not a re-schedule), carry forward and update payment info
+        elif new_status == "Scheduled" and "Booking" not in appointment_data:
+            appointment_data["Booking"] = {
+                "Booking_ID":        prev["Booking_ID"],
+                "Patient_ID":        pat_id,
+                "Appointment_ID":    app_id,
+                "Booking_Date_Time": prev["Booking_Date_Time"].strftime('%Y-%m-%d %H:%M:%S')
+            }
+            appointment_data["Payment"] = {
+                "Payment_ID":     prev["Payment_ID"],
+                "Patient_ID":     pat_id,
+                "Appointment_ID": app_id,
+                "Total_Amount":   self.update_total_billing(),
+                "Payment_Method": prev["Payment_Method"],
+                "Payment_Status": prev["Payment_Status"],
+                "Payment_Date":   prev["Payment_Date"]
+            }
+
+        # 9) Delete treatments marked for deletion
         if hasattr(self, "treatments_to_delete"):
-            for treat_id in self.treatments_to_delete:
-                delete_treatment_by_id(self.appointment_id, treat_id)
+            for tid in self.treatments_to_delete:
+                delete_treatment_by_id(app_id, tid)
             self.treatments_to_delete = []
-            
-        # Update in database
+
+        # 10) Commit to DB
         success = update_appointment_in_db(appointment_data)
         if success:
             QMessageBox.information(self, "Success", "Appointment updated successfully.")
             self.appointment_added.emit()
             self.accept()
         else:
-            QMessageBox.critical(self, "Database Error", 
-                            "Failed to update the appointment. Please try again.")
-            
-            
-            
-            
-            
-            
- 
+            QMessageBox.critical(self, "Database Error",
+                                "Failed to update the appointment. Please try again.")

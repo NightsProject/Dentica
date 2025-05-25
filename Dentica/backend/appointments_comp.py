@@ -127,16 +127,39 @@ def get_appointment_data(appointment_id):
 
 
 
+from datetime import datetime
+from backend.patients_comp import connectDB  # adjust import as needed
+
 def update_appointment_in_db(appointment_data):
     """
     appointment_data must include:
-      - Appointment_ID
-      - Patient_ID
-      - Schedule (string 'YYYY-MM-DD HH:MM:SS' or datetime)
-      - Status
-      - Treatments (list of dicts)
-      - Payment → Total_Amount (optional)
-      - Cancel (dict with Cancellation_Date_Time & Reason) if Status == 'Cancelled'
+      - Appointment_ID (str)
+      - Patient_ID     (str)
+      - Schedule       (str or datetime)
+      - Status         ('Scheduled'|'Completed'|'Cancelled')
+      - Treatments     (list of dicts)
+      - Booking        (dict) ⏎ only for re-schedules:
+          {
+            "Booking_ID": str,
+            "Patient_ID": str,
+            "Appointment_ID": str,
+            "Booking_Date_Time": str
+          }
+      - Payment        (dict) ⏎ only for re-schedules or updates:
+          {
+            "Payment_ID": str,
+            "Patient_ID": str,
+            "Appointment_ID": str,
+            "Total_Amount": Decimal,
+            "Payment_Method": str,
+            "Payment_Status": str,
+            "Payment_Date": str or None
+          }
+      - Cancel         (dict) ⏎ only when Status == 'Cancelled'
+          {
+            "Cancellation_Date_Time": str,
+            "Reason": str
+          }
     """
     conn = connectDB()
     if not conn:
@@ -144,113 +167,142 @@ def update_appointment_in_db(appointment_data):
 
     try:
         cursor = conn.cursor()
+        appt_id = appointment_data["Appointment_ID"]
+        pat_id  = appointment_data["Patient_ID"]
+        status  = appointment_data["Status"]
+        sched   = appointment_data["Schedule"]
 
         # 1) Update Appointment
         cursor.execute("""
             UPDATE Appointment
-            SET Patient_ID = %s,
-                Schedule   = %s,
-                Status     = %s
-            WHERE Appointment_ID = %s
-        """, (
-            appointment_data['Patient_ID'],
-            appointment_data['Schedule'],
-            appointment_data['Status'],
-            appointment_data['Appointment_ID']
-        ))
+               SET Patient_ID = %s,
+                   Schedule   = %s,
+                   Status     = %s
+             WHERE Appointment_ID = %s
+        """, (pat_id, sched, status, appt_id))
 
-        #update the booking to the current date of reschedule
-        current_ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute("""
-            UPDATE Books
-            SET Booking_Date_Time = %s
-            WHERE Appointment_ID = %s
-        """, (
-            current_ts,
-            appointment_data['Appointment_ID'],
-        ))
-        
+        # 2) Books & Pays handling
+        if status == "Cancelled":
+            # a) Remove any existing booking & payment
+            cursor.execute("DELETE FROM Pays  WHERE Appointment_ID = %s", (appt_id,))
+            cursor.execute("DELETE FROM Books WHERE Appointment_ID = %s", (appt_id,))
+
+        elif status == "Scheduled" and "Booking" in appointment_data and "Payment" in appointment_data:
+            # b) Re-schedule: insert new booking + payment
+            b = appointment_data["Booking"]
+            p = appointment_data["Payment"]
+
+            cursor.execute("""
+                INSERT INTO Books (
+                    Booking_ID, Patient_ID, Appointment_ID, Booking_Date_Time
+                ) VALUES (%s, %s, %s, %s)
+            """, (
+                b["Booking_ID"],
+                b["Patient_ID"],
+                b["Appointment_ID"],
+                b["Booking_Date_Time"]
+            ))
+
+            cursor.execute("""
+                INSERT INTO Pays (
+                    Payment_ID, Patient_ID, Appointment_ID,
+                    Total_Amount, Payment_Method, Payment_Status, Payment_Date
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                p["Payment_ID"],
+                p["Patient_ID"],
+                p["Appointment_ID"],
+                p["Total_Amount"],
+                p["Payment_Method"],
+                p["Payment_Status"],
+                p.get("Payment_Date")
+            ))
+
+        else:
+            # c) Normal Scheduled/Completed → bump booking timestamp
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute("""
+                UPDATE Books
+                   SET Booking_Date_Time = %s
+                 WHERE Appointment_ID   = %s
+            """, (now, appt_id))
+
         # 3) Refresh Treatments
-        cursor.execute("DELETE FROM Treatment WHERE Appointment_ID = %s",
-                       (appointment_data['Appointment_ID'],))
-
-        # Determine treatment default status based on appointment status
-        appt_status = appointment_data['Status']
-        for t in appointment_data['Treatments']:
-            if appt_status == "Cancelled":
-                forced_status = "Canceled"
-            elif appt_status == "Scheduled":
-                forced_status = "Waiting"
+        cursor.execute("DELETE FROM Treatment WHERE Appointment_ID = %s", (appt_id,))
+        for t in appointment_data["Treatments"]:
+            # force child status if appointment-level override
+            if status == "Cancelled":
+                child_stat = "Canceled"
+            elif status == "Scheduled":
+                child_stat = "Waiting"
             else:
-                forced_status = t['Treatment_Status']
+                child_stat = t["Treatment_Status"]
 
             cursor.execute("""
                 INSERT INTO Treatment (
-                    Appointment_ID,
-                    Treatment_ID,
-                    Diagnosis,
-                    Cost,
-                    Treatment_Procedure,
-                    Treatment_Date_Time,
-                    Treatment_Status
+                    Appointment_ID, Treatment_ID, Diagnosis, Cost,
+                    Treatment_Procedure, Treatment_Date_Time, Treatment_Status
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, (
-                appointment_data['Appointment_ID'],
-                t['Treatment_ID'],
-                t['Diagnosis'],
-                t['Cost'],
-                t['Treatment_Procedure'],
-                t['Treatment_Date_Time'],
-                forced_status
+                appt_id,
+                t["Treatment_ID"],
+                t["Diagnosis"],
+                t["Cost"],
+                t["Treatment_Procedure"],
+                t["Treatment_Date_Time"],
+                child_stat
             ))
 
-
-        # 4) Update Payment
-        if 'Payment' in appointment_data and 'Total_Amount' in appointment_data['Payment']:
+        # 4) Upsert payment on Scheduled/Completed (covers updates to total, method, status)
+        if status in ("Scheduled", "Completed") and "Payment" in appointment_data:
+            p = appointment_data["Payment"]
             cursor.execute("""
-                UPDATE Pays
-                SET Total_Amount = %s
-                WHERE Appointment_ID = %s
+                INSERT INTO Pays (
+                    Payment_ID, Patient_ID, Appointment_ID,
+                    Total_Amount, Payment_Method, Payment_Status, Payment_Date
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    Total_Amount   = VALUES(Total_Amount),
+                    Payment_Method = VALUES(Payment_Method),
+                    Payment_Status = VALUES(Payment_Status),
+                    Payment_Date   = VALUES(Payment_Date)
             """, (
-                appointment_data['Payment']['Total_Amount'],
-                appointment_data['Appointment_ID']
+                p["Payment_ID"],
+                p["Patient_ID"],
+                p["Appointment_ID"],
+                p["Total_Amount"],
+                p["Payment_Method"],
+                p["Payment_Status"],
+                p.get("Payment_Date")
             ))
 
-        # 5) Handle Cancel entries
-        if appointment_data['Status'] == "Cancelled" and "Cancel" in appointment_data:
-            cancel = appointment_data['Cancel']
-            # Remove any old cancel record first
+        # 5) Cancel table
+        if status == "Cancelled" and "Cancel" in appointment_data:
+            c = appointment_data["Cancel"]
+            # delete old
             cursor.execute("""
                 DELETE FROM Cancel
                 WHERE Patient_ID     = %s
                   AND Appointment_ID = %s
-            """, (
-                appointment_data['Patient_ID'],
-                appointment_data['Appointment_ID']
-            ))
-            # Insert new cancel record
+            """, (pat_id, appt_id))
+            # insert new
             cursor.execute("""
                 INSERT INTO Cancel (
                     Patient_ID, Appointment_ID,
                     Cancellation_Date_Time, Reason
                 ) VALUES (%s, %s, %s, %s)
             """, (
-                appointment_data['Patient_ID'],
-                appointment_data['Appointment_ID'],
-                cancel['Cancellation_Date_Time'],
-                cancel['Reason']
+                pat_id, appt_id,
+                c["Cancellation_Date_Time"],
+                c["Reason"]
             ))
-
-        elif appointment_data['Status'] in ("Scheduled", "Completed"):
-            # If no longer cancelled, remove any lingering cancel row
+        elif status in ("Scheduled", "Completed"):
+            # remove any stale cancellation
             cursor.execute("""
                 DELETE FROM Cancel
                 WHERE Patient_ID     = %s
                   AND Appointment_ID = %s
-            """, (
-                appointment_data['Patient_ID'],
-                appointment_data['Appointment_ID']
-            ))
+            """, (pat_id, appt_id))
 
         conn.commit()
         return True
@@ -263,6 +315,8 @@ def update_appointment_in_db(appointment_data):
     finally:
         cursor.close()
         conn.close()
+
+
 
 
 
