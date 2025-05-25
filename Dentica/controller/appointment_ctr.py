@@ -333,9 +333,10 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
         #setup booking and payment details
         booking_id = generate_new_booking_id()
+        print(booking_id)
         booking_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        Payment_id = generate_new_payment_id()  
+        Payment_id = generate_new_payment_id()
         total_amount = self.total_input.text().replace('₱', '').replace(',', '')
         payment_method = "None"
         payment_status = "Unpaid"

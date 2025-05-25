@@ -40,23 +40,24 @@ def generate_new_booking_id():
     cursor.execute("""
         SELECT Booking_ID
         FROM Books
-        ORDER BY CAST(SUBSTRING(Booking_ID, 2) AS UNSIGNED)
+        ORDER BY CAST(SUBSTRING(Booking_ID, 2) AS UNSIGNED) ASC
     """)
 
-    existing_ids = cursor.fetchall()
+    # Use a set for fast lookup and to avoid duplicates
+    existing_ids = {int(booking_id[1:]) for (booking_id,) in cursor.fetchall()}
+
     cursor.close()
     conn.close()
 
-    # Look for the first missing ID in sequence
+    # Find first unused ID in sequence
     expected_id = 1
-    for (booking_id,) in existing_ids:
-        num_id = int(booking_id[1:])  # Remove 'B' prefix and convert to int
-        if num_id != expected_id:
-            break
+    while expected_id in existing_ids:
         expected_id += 1
 
-    new_booking_id = f'B{expected_id:05d}'  # Zero-padded to 5 digits
+    new_booking_id = f'B{expected_id:05d}'  # e.g., B00001, B00002
     return new_booking_id
+
+
 
 def search_bookings(keyword):
     conn   = connectDB()
