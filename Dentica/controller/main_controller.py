@@ -25,7 +25,7 @@ from backend.billing_comp import get_all_billings, search_payments
 from backend.booking_comp import get_all_bookings, search_bookings
 from backend.reports_comp import load_graphs, refresh_graphs
 from backend.cancelations_comp import get_all_cancellations
-from backend.treatment_comp import update_treatment, check_treatment_completion, auto_handle_all_treatments_canceled
+from backend.treatment_comp import update_treatment, check_treatment_completion, auto_handle_all_treatments_canceled, update_total_amount_treatment_canceled
 
 
 
@@ -214,8 +214,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     def reload_all_tables(self):
         
         summary_data = load_summary()
-
-
+        
         todays_appointment_status = get_todays_appointment_status_counts()
         self.update_summary(summary_data, todays_appointment_status)                
 
@@ -874,7 +873,9 @@ class MainController(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.StandardButton.Yes:
             success = update_treatment(self, appointment_id, treatment_id, "Canceled")
             if success:
-                auto_handle_all_treatments_canceled(appointment_id, self)
+                all_canceled = auto_handle_all_treatments_canceled(appointment_id, self)
+                if not all_canceled:
+                    update_total_amount_treatment_canceled(appointment_id, self)
                 self.reload_all_tables()
 
 

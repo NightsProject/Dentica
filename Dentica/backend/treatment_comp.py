@@ -222,3 +222,57 @@ def auto_handle_all_treatments_canceled(appointment_id, parent=None):
     finally:
         cursor.close()
         conn.close()
+
+
+def update_total_amount_treatment_canceled(appointment_id, parent=None):
+    """
+    Recalculates the total amount for an appointment based on
+    non-canceled treatments and updates the Payment record accordingly.
+
+    Args:
+        appointment_id (str): The appointment to update.
+        parent (QWidget or None): Optional parent for message box.
+
+    Returns:
+        bool: True if update was successful, False otherwise.
+    """
+    conn = connectDB()
+    cursor = conn.cursor()
+
+    try:
+        # Get sum of all non-canceled treatment costs
+        cursor.execute("""
+            SELECT SUM(Cost)
+            FROM Treatment
+            WHERE Appointment_ID = %s
+              AND Treatment_Status != 'Canceled'
+        """, (appointment_id,))
+        total = cursor.fetchone()[0] or 0.0
+
+        # Update the Payment table
+        cursor.execute("""
+            UPDATE Pays
+            SET Total_Amount = %s
+            WHERE Appointment_ID = %s
+        """, (total, appointment_id))
+
+        conn.commit()
+
+        if parent:
+            QMessageBox.information(
+                parent,
+                "Payment Updated",
+                f"The total payment amount has been updated to ₱{total:.2f} "
+                f"after canceling one or more treatments."
+            )
+
+        return True
+
+    except Exception as e:
+        print("Error updating total amount:", e)
+        conn.rollback()
+        return False
+
+    finally:
+        cursor.close()
+        conn.close()

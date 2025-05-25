@@ -125,11 +125,6 @@ def get_appointment_data(appointment_id):
         cursor.close()
         conn.close()
 
-
-
-from datetime import datetime
-from backend.patients_comp import connectDB  # adjust import as needed
-
 def update_appointment_in_db(appointment_data):
     """
     appointment_data must include:
@@ -196,6 +191,8 @@ def update_appointment_in_db(appointment_data):
                 INSERT INTO Books (
                     Booking_ID, Patient_ID, Appointment_ID, Booking_Date_Time
                 ) VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    Booking_Date_Time = VALUES(Booking_Date_Time)
             """, (
                 b["Booking_ID"],
                 b["Patient_ID"],
@@ -208,6 +205,11 @@ def update_appointment_in_db(appointment_data):
                     Payment_ID, Patient_ID, Appointment_ID,
                     Total_Amount, Payment_Method, Payment_Status, Payment_Date
                 ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    Total_Amount   = VALUES(Total_Amount),
+                    Payment_Method = VALUES(Payment_Method),
+                    Payment_Status = VALUES(Payment_Status),
+                    Payment_Date   = VALUES(Payment_Date)
             """, (
                 p["Payment_ID"],
                 p["Patient_ID"],
@@ -546,15 +548,26 @@ def get_appointment_details(appointment_id):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT Status, Schedule
-            FROM Appointment
-            WHERE Appointment_ID = %s
+            SELECT 
+                a.Status, a.Schedule,
+                b.Booking_ID, b.Booking_Date_Time,
+                p.Payment_ID, p.Payment_Method, p.Payment_Status, p.Payment_Date
+            FROM Appointment a
+            LEFT JOIN Books b ON a.Appointment_ID = b.Appointment_ID
+            LEFT JOIN Pays p ON a.Appointment_ID = p.Appointment_ID
+            WHERE a.Appointment_ID = %s
         """, (appointment_id,))
         result = cursor.fetchone()
         if result:
             return {
-                "Status": result[0],
-                "Schedule": result[1]  # Returns as datetime object
+                "Status":              result[0],
+                "Schedule":            result[1],  # datetime
+                "Booking_ID":          result[2],
+                "Booking_Date_Time":   result[3],  # datetime
+                "Payment_ID":          result[4],
+                "Payment_Method":      result[5],
+                "Payment_Status":      result[6],
+                "Payment_Date":        result[7]   # Can be None
             }
         else:
             return None
