@@ -39,24 +39,22 @@ def count_patients():
     print("Patients with scheduled appointments today:", patient_count)
     return patient_count
 
-
-
 def todays_appointments():
-    appointments = 0
     conn = connectDB()
     cursor = conn.cursor()
+
     cursor.execute("""
         SELECT COUNT(*) 
         FROM Appointment 
         WHERE DATE(Schedule) = CURDATE()
-          AND Status = 'Scheduled'
     """)
+
     result = cursor.fetchone()
-    if result:
-        appointments = result[0]
+    appointments = result[0] if result else 0
+
     cursor.close()
     conn.close()
-    print("Today's Appointments:", appointments)
+
     return str(appointments)
 
 
@@ -125,6 +123,7 @@ def get_todays_appointments():
     cursor.execute("""
         SELECT 
             a.Appointment_ID,
+            t.Treatment_ID,
             CONCAT(p.First_Name, ' ', p.Middle_Name, ' ', p.Last_Name) AS Patient_Full_Name,
             TIME(t.Treatment_Date_Time) AS Treatment_Time,
             t.Treatment_Procedure,
@@ -134,6 +133,14 @@ def get_todays_appointments():
         LEFT JOIN Treatment t ON a.Appointment_ID = t.Appointment_ID
         WHERE DATE(a.Schedule) = CURDATE()
           AND a.Status = 'Scheduled'
+        ORDER BY 
+            CASE t.Treatment_Status
+                WHEN 'Waiting' THEN 1
+                WHEN 'In-Progress' THEN 2
+                WHEN 'Completed' THEN 3
+                ELSE 4
+            END,
+            t.Treatment_Date_Time
     """)
     
     result = cursor.fetchall()
@@ -146,7 +153,7 @@ def get_todays_appointments():
     
     return todays_appointments
 
-from backend.DB import connectDB
+
 
 
 def get_todays_appointment_status_counts():
