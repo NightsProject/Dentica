@@ -1843,7 +1843,7 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Actions"))
         self.Search_book.setPlaceholderText(_translate("Main Window", "Search bookings..."))
         self.Search_cancel.setPlaceholderText(_translate("Main Window", "Search cancellations..."))
-        #TODO fix the todays appointments table size
+        
 
         #Patients Tab
         self.label_12.setText(_translate("MainWindow", "Patients"))
@@ -2395,5 +2395,4 @@ class Ui_MainWindow(object):
                 prev_btn.setIconSize(QtCore.QSize(20, 20))
                 next_btn.setIconSize(QtCore.QSize(20, 20))
         
-        #TODO all tables should not be editable
-        #TODO all column in a row should be selectable
+     
