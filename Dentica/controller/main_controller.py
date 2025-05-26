@@ -343,7 +343,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.insertRow(row_position)
             self.Billing_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(billing[1])))
             self.Billing_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(billing[2])))
-            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(billing[3])))
+            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(f"{billing[3]:.2f}")) # cost value
             self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[4])))
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[6])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
