@@ -70,8 +70,8 @@ class Add_Appointment(QtWidgets.QDialog):
       
         self.Treat_table = QtWidgets.QTableWidget(self)
         self.Treat_table.setGeometry(20, 220, 500, 280)
-        self.Treat_table.setColumnCount(4)
-        self.Treat_table.setHorizontalHeaderLabels(["TreatmentID", "Procedure", "Cost", "Actions"])
+        self.Treat_table.setColumnCount(7)
+        self.Treat_table.setHorizontalHeaderLabels(["TreatmentID","Diagnosis","Date & Time", "Procedure","Status", "Cost", "Actions"])
         self.Treat_table.setStyleSheet("""
             QTableWidget {
                 background-color: #B2CDE9;
@@ -101,7 +101,7 @@ class Add_Appointment(QtWidgets.QDialog):
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)  # TreatmentID
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)          # Procedure
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Cost
-        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Fixed)            # Actions
+        header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeMode.Fixed)            # Actions
         
         self.Treat_table.setColumnWidth(3, 100)
         self.Treat_table.verticalHeader().setVisible(False)
@@ -151,10 +151,7 @@ class Add_Appointment(QtWidgets.QDialog):
         self.treatments = appointment_data.get('Treatments', [])
         self.Treat_table.setRowCount(0)
         for treatment in self.treatments:
-            self.update_treatment_table_ui(treatment)
-        if self.treatments:
-            max_id = max(int(t['Treatment_ID']) for t in self.treatments)
-            self.treatment_counter = max_id + 1
+            self.update_treatments_table_ui()
 
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()

@@ -42,7 +42,7 @@ class View_Appointent_Ctr(View_Appointment):
             self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(str(treatment['Treatment_Date_Time'])))
             self.Treat_table.setItem(row, 3, QtWidgets.QTableWidgetItem(treatment['Treatment_Procedure']))
             self.Treat_table.setItem(row, 4, QtWidgets.QTableWidgetItem(treatment['Treatment_Status']))
-            self.Treat_table.setItem(row, 5, QtWidgets.QTableWidgetItem(f"${treatment['Cost']}"))
+            self.Treat_table.setItem(row, 5, QtWidgets.QTableWidgetItem(f"P{treatment['Cost']}"))
 
             
 
