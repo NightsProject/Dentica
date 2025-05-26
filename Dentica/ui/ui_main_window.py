@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget
+from PyQt6.QtWidgets import QVBoxLayout, QCalendarWidget, QAbstractItemView
 from ui.Dialogues.ui_exit_dialog import Exit_App
 
 from Frontend.Graphs.Common_Treatments import CommonTreatmentsBarChart
@@ -629,7 +629,7 @@ class Ui_MainWindow(object):
 
         #Count Treatment
         self.label_9 = QtWidgets.QLabel(parent=self.ComTreat_card)
-        self.label_9.setGeometry(QtCore.QRect(10, 50, 51, 31))
+        self.label_9.setGeometry(QtCore.QRect(10, 50, 155, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
@@ -664,19 +664,26 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 325))
+        self.UpAp_table.setGeometry(QtCore.QRect(10, 80, 560, 325))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
                 background-color: #C6D7EC;
                 border: none;
+                gridline-color: transparent;
         }
         QTableWidget::item {
                 border-bottom: 1px solid #e5e7eb;
+                color: #64748B;
+        }
+        QTableWidget::item:selected {
+                background-color: #AFCBE3;
+                color: #1E293B;
         }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
+                color: #64748B;
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
@@ -693,6 +700,9 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(4, item)
         self.UpAp_table.verticalHeader().setVisible(False)
+        self.UpAp_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.UpAp_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.UpAp_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
         self.UpAp_table.horizontalHeader().setStyleSheet("""
         QHeaderView::section {
@@ -705,10 +715,10 @@ class Ui_MainWindow(object):
 
   
         self.UpAp_table.setColumnWidth(0, 120)  # Pat. Name
-        self.UpAp_table.setColumnWidth(1, 70)  # Time
+        self.UpAp_table.setColumnWidth(1, 55)  # Time
         self.UpAp_table.setColumnWidth(2, 150)  # Treatment Proc
-        self.UpAp_table.setColumnWidth(3, 60)  # Status
-        self.UpAp_table.setColumnWidth(4, 100)  # Actions
+        self.UpAp_table.setColumnWidth(3, 80)  # Status
+        self.UpAp_table.setColumnWidth(4, 155)  # Actions
         
         self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
         
@@ -788,6 +798,11 @@ class Ui_MainWindow(object):
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
         }
+        QCalendarWidget QToolButton#qt_calendar_monthbutton::menu-indicator {
+        image: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        }
         QCalendarWidget QAbstractItemView:item:selected:!active,
         QCalendarWidget QAbstractItemView:item:selected:active {
         background-color: #5e93bf;
@@ -812,7 +827,6 @@ class Ui_MainWindow(object):
         self.calendar.setFont(font)
         self.calendar.setFixedHeight(300)
         self.calendar.setFixedWidth(300) 
-        
 
         self.scheduled_label = QtWidgets.QLabel("Scheduled:                                                                 0")
         self.completed_label = QtWidgets.QLabel("Completed:                                                                0")
@@ -821,7 +835,6 @@ class Ui_MainWindow(object):
         self.scheduled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")   
         self.completed_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
         self.cancelled_label.setStyleSheet("color: #8DB8E0; background-color: None; font-size: 14px; font-family: Inter;")
-
 
         layout.addWidget(self.calendar)
         layout.addWidget(self.scheduled_label)
@@ -914,17 +927,20 @@ class Ui_MainWindow(object):
         QTableWidget {
                 background-color: #C6D7EC;
                 border: none;
-                color: #64748B;
                 gridline-color: transparent;
         }
         QTableWidget::item {
-                border-bottom: 1px solid #8DB8E0;
-                text-align: center;
+                border-bottom: 1px solid #e5e7eb;
+                color: #64748B;
+        }
+        QTableWidget::item:selected {
+                background-color: #AFCBE3;
+                color: #1E293B;
         }
         QHeaderView::section {
                 border: none;
+                background-color: #C6D7EC;
                 color: #64748B;
-                background: #C6D7EC;
         }
         """)
         self.Patients_table.horizontalHeader().setStyleSheet("""
@@ -948,6 +964,9 @@ class Ui_MainWindow(object):
 
         #Row height for each patient
         self.Patients_table.verticalHeader().setDefaultSectionSize(60)
+        self.Patients_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Patients_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Patients_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
         self.patients_pagination = TablePagination(self.Patients_table, rows_per_page=10)
         self.patients_pagination.setup_pagination_controls(self.Patients_page, y_offset=85)
@@ -1025,6 +1044,10 @@ class Ui_MainWindow(object):
                 border-bottom: 1px solid #e5e7eb;
                 color: #64748B;
         }
+        QTableWidget::item:selected {
+                background-color: #AFCBE3;
+                color: #1E293B;
+        }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
@@ -1059,6 +1082,9 @@ class Ui_MainWindow(object):
         self.Appointments_table.setColumnWidth(4, 160)  # Actions
         
         self.Appointments_table.verticalHeader().setDefaultSectionSize(60)
+        self.Appointments_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Appointments_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Appointments_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
         self.appointments_pagination = TablePagination(self.Appointments_table, rows_per_page=10)
         self.appointments_pagination.setup_pagination_controls(self.Appointments_page, y_offset=85)
@@ -1224,6 +1250,10 @@ class Ui_MainWindow(object):
                 border-bottom: 1px solid #e5e7eb;
                 color: #64748B;
         }
+        QTableWidget::item:selected {
+                background-color: #AFCBE3;
+                color: #1E293B;
+        }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
@@ -1264,6 +1294,9 @@ class Ui_MainWindow(object):
 
         
         self.Billing_table.verticalHeader().setDefaultSectionSize(60)
+        self.Billing_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Billing_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Billing_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
         self.Billing_pagination = TablePagination(self.Billing_table, rows_per_page=10)
         self.Billing_pagination.setup_pagination_controls(self.Billing_page, y_offset=85)
@@ -1409,6 +1442,10 @@ class Ui_MainWindow(object):
                 border-bottom: 1px solid #e5e7eb;
                 color: #64748B;
         }
+        QTableWidget::item:selected {
+                background-color: #AFCBE3;
+                color: #1E293B;
+        }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
@@ -1444,6 +1481,9 @@ class Ui_MainWindow(object):
 
         
         self.Booking_table.verticalHeader().setDefaultSectionSize(60)
+        self.Booking_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Booking_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Booking_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
         self.Booking_pagination = TablePagination(self.Booking_table, rows_per_page=10)
         self.Booking_pagination.setup_pagination_controls(self.Booking_page, y_offset=85)
@@ -1512,6 +1552,10 @@ class Ui_MainWindow(object):
                 border-bottom: 1px solid #e5e7eb;
                 color: #64748B;
         }
+        QTableWidget::item:selected {
+                background-color: #AFCBE3;
+                color: #1E293B;
+        }
         QHeaderView::section {
                 border: none;
                 background-color: #C6D7EC;
@@ -1550,6 +1594,9 @@ class Ui_MainWindow(object):
 
         
         self.Cancel_table.verticalHeader().setDefaultSectionSize(60)
+        self.Cancel_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Cancel_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Cancel_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
         self.Cancel_pagination = TablePagination(self.Cancel_table, rows_per_page=10)
         self.Cancel_pagination.setup_pagination_controls(self.Cancel_page, y_offset=85)

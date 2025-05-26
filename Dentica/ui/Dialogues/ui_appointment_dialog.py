@@ -8,7 +8,7 @@ class Add_Appointment(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Book Appointment")
-        self.setFixedSize(550, 600)
+        self.setFixedSize(720, 600)
         self.setStyleSheet("""
             QDialog {
                 background-color: #B2CDE9;
@@ -69,7 +69,7 @@ class Add_Appointment(QtWidgets.QDialog):
         self.AddTreat_btn.setStyleSheet("background-color: #37547A; color: #fff;")
       
         self.Treat_table = QtWidgets.QTableWidget(self)
-        self.Treat_table.setGeometry(20, 220, 500, 280)
+        self.Treat_table.setGeometry(20, 220, 680, 280)
         self.Treat_table.setColumnCount(7)
         self.Treat_table.setHorizontalHeaderLabels(["TreatmentID","Diagnosis","Date & Time", "Procedure","Status", "Cost", "Actions"])
         self.Treat_table.setStyleSheet("""
@@ -98,12 +98,17 @@ class Add_Appointment(QtWidgets.QDialog):
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
         header = self.Treat_table.horizontalHeader()
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)  # TreatmentID
-        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)          # Procedure
-        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Cost
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # TreatmentID
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)          # Diagnosis
+        
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Date&Time
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)          # Procedure
+        
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Status
+        header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeMode.ResizeToContents) # Cost
         header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeMode.Fixed)            # Actions
         
-        self.Treat_table.setColumnWidth(3, 100)
+        self.Treat_table.setColumnWidth(6, 100)
         self.Treat_table.verticalHeader().setVisible(False)
         
         self.total_label = QtWidgets.QLabel("Total Bill:", self)
