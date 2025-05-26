@@ -664,7 +664,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(40, 80, 500, 325))
+        self.UpAp_table.setGeometry(QtCore.QRect(10, 80, 560, 325))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -715,10 +715,10 @@ class Ui_MainWindow(object):
 
   
         self.UpAp_table.setColumnWidth(0, 120)  # Pat. Name
-        self.UpAp_table.setColumnWidth(1, 70)  # Time
+        self.UpAp_table.setColumnWidth(1, 55)  # Time
         self.UpAp_table.setColumnWidth(2, 150)  # Treatment Proc
-        self.UpAp_table.setColumnWidth(3, 60)  # Status
-        self.UpAp_table.setColumnWidth(4, 100)  # Actions
+        self.UpAp_table.setColumnWidth(3, 80)  # Status
+        self.UpAp_table.setColumnWidth(4, 155)  # Actions
         
         self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
         
