@@ -12,6 +12,7 @@ from backend.treatment_comp import delete_treatment_by_id
 from backend.appointments_comp import get_appointment_details
 
 
+
 """
         
     Key Features
@@ -526,11 +527,9 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             self.treatments_to_delete = []
 
         # 10) Commit to DB
-        success = update_appointment_in_db(appointment_data)
+        success = update_appointment_in_db(self, appointment_data)
         if success:
             QMessageBox.information(self, "Success", "Appointment updated successfully.")
             self.appointment_added.emit()
             self.accept()
-        else:
-            QMessageBox.critical(self, "Database Error",
-                                "Failed to update the appointment. Please try again.")
+        
