@@ -26,7 +26,6 @@ def count_patients():
             SELECT 1
             FROM Appointment
             WHERE DATE(Schedule) = CURDATE()
-              AND Status = 'Scheduled'
             GROUP BY Patient_ID
         ) AS unique_patients;
     """)

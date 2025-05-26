@@ -102,8 +102,8 @@ def update_treatment(self, appointment_id, treatment_id, new_status):
 def check_treatment_completion(appointment_id, parent=None):
     """
     Checks all treatments for the given appointment_id. If every treatment
-    is marked 'Completed', updates the Appointment.Status to 'Completed'
-    and pops up a notification.
+    is marked 'Completed' (excluding canceled ones), updates the Appointment.Status
+    to 'Completed' and pops up a notification.
 
     Args:
         appointment_id (str): The appointment to check.
@@ -116,12 +116,12 @@ def check_treatment_completion(appointment_id, parent=None):
     cursor = conn.cursor()
 
     try:
-        # Count treatments not yet completed
+        # Count treatments that are neither Completed nor Canceled
         cursor.execute("""
             SELECT COUNT(*) 
             FROM Treatment
             WHERE Appointment_ID = %s
-              AND Treatment_Status != 'Completed'
+              AND Treatment_Status NOT IN ('Completed', 'Canceled')
         """, (appointment_id,))
         remaining = cursor.fetchone()[0]
 
@@ -148,7 +148,7 @@ def check_treatment_completion(appointment_id, parent=None):
                     QMessageBox.information(
                         parent,
                         "Appointment Completed",
-                        f"All treatments for appointment {appointment_id} are done.\n"
+                        f"All active treatments for appointment {appointment_id} are completed.\n"
                         "The appointment status has been set to Completed."
                     )
                 return True
@@ -163,6 +163,7 @@ def check_treatment_completion(appointment_id, parent=None):
     finally:
         cursor.close()
         conn.close()
+
 
 def auto_handle_all_treatments_canceled(appointment_id, parent=None):
     """

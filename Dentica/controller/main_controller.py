@@ -679,7 +679,6 @@ class MainController(QMainWindow, Ui_MainWindow):
                 self.reload_all_tables()  # Refresh the appointments list
             else:
                 QMessageBox.warning(self, "Failure", "Failed to delete appointment.")
-                #TODO inform for like cannot delete cause foreign key contraints or treatments exists under the appointment
         else:
             # Deletion canceled
             print("Deletion canceled.")

@@ -8,6 +8,8 @@ from datetime import datetime, date
 
 class Treatment_Dialog_Ctr(Add_Treatment):
     treatment_added = pyqtSignal(dict)
+    treatment_edited = pyqtSignal(dict)  
+
 
     def __init__(self, appointment_sched: datetime):
         super().__init__()
@@ -39,7 +41,7 @@ class Treatment_Dialog_Ctr(Add_Treatment):
         self.procedure_input.textChanged.connect(lambda: self.validate_required(self.procedure_input))
         self.cost_input.textChanged.connect(self.validate_cost)
 
-        self.add_btn.clicked.connect(self.on_add_treatment_clicked)
+        self.add_btn.clicked.connect(self.on_save_clicked)
         self.cancel_btn.clicked.connect(self.reject)
 
     # This method is called when the user changes the date/time in the QDateTimeEdit
@@ -68,14 +70,13 @@ class Treatment_Dialog_Ctr(Add_Treatment):
         else:
             self.cost_input.setStyleSheet("")
 
-    def on_add_treatment_clicked(self):
+    def on_save_clicked(self):
         # Validate all fields
         self.validate_required(self.treat_id_input)
         self.validate_required(self.diagnosis_input)
         self.validate_required(self.procedure_input)
         self.validate_cost()
 
-        # Check if any field is invalid
         if (
             not self.treat_id_input.text().strip()
             or not self.diagnosis_input.text().strip()
@@ -85,7 +86,7 @@ class Treatment_Dialog_Ctr(Add_Treatment):
             QMessageBox.warning(self, "Validation Error", "Please fill all required fields correctly.")
             return
 
-        # All inputs are valid — collect data
+        # Collect data
         treatment_data = {
             "Treatment_ID": self.treat_id_input.text(),
             "Diagnosis": self.diagnosis_input.text(),
@@ -95,6 +96,9 @@ class Treatment_Dialog_Ctr(Add_Treatment):
             "Treatment_Status": self.treat_status.currentText()
         }
 
+        # Emit both signals (controller listens to the one it cares about)
         self.treatment_added.emit(treatment_data)
-        QMessageBox.information(self, "Success", "Treatment added successfully!")
-        self.close()
+        self.treatment_edited.emit(treatment_data)
+
+        QMessageBox.information(self, "Success", "Treatment saved successfully!")
+        self.accept()

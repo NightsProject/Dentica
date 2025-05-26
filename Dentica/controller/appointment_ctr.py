@@ -6,10 +6,11 @@ from backend.appointments_comp import generate_new_appointment_id, save_appointm
 from backend.billing_comp import generate_new_payment_id
 from backend.booking_comp import generate_new_booking_id
 from controller.treatment_ctr import Treatment_Dialog_Ctr
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QDateTime
 from datetime import datetime
 from backend.treatment_comp import delete_treatment_by_id
 from backend.appointments_comp import get_appointment_details
+
 
 
 """
@@ -61,7 +62,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         
        # Setup treatments and counter based on appointment data
         self.treatments = appointment_data.get('Treatments', []) if appointment_data else []
-        self.treatment_counter = len(self.treatments) + 1
         self.treatments_to_delete = [] # when updating the appointment
 
         self.setup_patient_input()  # Initialize patient input components
@@ -157,24 +157,20 @@ class Appointment_Dialog_Ctr(Add_Appointment):
     def get_selected_patient_id(self):
         return self.patient_input.currentData()
 
-    def get_new_treatment_id(self):
-        return self.treatment_counter
-
     def on_add_treatment_clicked(self):
         appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
         form = Treatment_Dialog_Ctr(appointment_date)
-        form.treat_id_input.setText(str(self.get_new_treatment_id()))
+        form.treat_id_input.setText(str(len(self.treatments) + 1))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
 
     def handle_treatment_added(self, data):
         data["Appointment_ID"] = self.appointment_id
-        self.treatment_counter += 1
-        self.status_input.setCurrentText("Scheduled")
+        data["Treatment_ID"] = len(self.treatments) + 1
         self.treatments.append(data)
-        self.update_treatment_table_ui(data)
-        self.update_total_billing()  # Update total billing after treatment is added
-
+        self.update_treatments_table_ui()
+        self.update_total_billing()
+        
     def update_total_billing(self):
         total = 0.0
         for treatment in self.treatments:
@@ -189,93 +185,118 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.total_input.setText(f"₱{total:,.2f}")
         return total
 
-    def update_treatment_table_ui(self, treatment):
-        row = self.Treat_table.rowCount()
-        self.Treat_table.insertRow(row)
-        
-        print(treatment)
-        # Create action buttons
-        action_widget = QtWidgets.QWidget()
-        layout = QtWidgets.QHBoxLayout()
-        layout.setContentsMargins(5, 2, 5, 2)
-        layout.setSpacing(5)
-        
-        delete_btn = QtWidgets.QPushButton("Delete")
-        delete_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #ff4444;
-                color: white;
-                border: none;
-                padding: 4px 8px;
-                border-radius: 3px;
-                min-width: 60px;
-            }
-            QPushButton:hover {
-            background-color: #cc0000;
-        }
-        """)
-        delete_btn.clicked.connect(lambda: self.remove_treatment(row))
-        layout.addWidget(delete_btn)
-        action_widget.setLayout(layout)
-        
-        # Add items to table
-        self.Treat_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(treatment["Treatment_ID"])))
-        self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(treatment["Treatment_Procedure"]))
-        self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(f"{treatment['Cost']:.2f}"))
-        self.Treat_table.setCellWidget(row, 3, action_widget)
-    
-    
-    def remove_treatment(self, row):
+    def update_treatments_table_ui(self):
         """
-        Remove a treatment both from the internal list and the UI table by the given row index.
-        Tracks deletions for DB update if editing an existing appointment.
+        Clears and rebuilds the treatments table from self.treatments.
         """
-        if row < 0 or row >= len(self.treatments):
-            return  # Invalid row index
+        self.Treat_table.setRowCount(0)
+        for row, t in enumerate(self.treatments):
+            self.Treat_table.insertRow(row)
 
-        # Confirm deletion with user
-        confirm = QMessageBox.question(
-            self,
-            "Confirm Deletion",
-            "Are you sure you want to delete this treatment?",
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-        )
-        if confirm != QMessageBox.StandardButton.Yes:
+            # ID, Procedure, Cost
+            self.Treat_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(t['Treatment_ID'])))
+            self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(t['Diagnosis']))
+            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(str(t['Treatment_Date_Time'])))
+            self.Treat_table.setItem(row, 3, QtWidgets.QTableWidgetItem(t['Treatment_Procedure']))
+            self.Treat_table.setItem(row, 4, QtWidgets.QTableWidgetItem(t['Treatment_Status']))
+            cost_value = float(t["Cost"])
+            self.Treat_table.setItem(row, 5, QtWidgets.QTableWidgetItem(f"{cost_value:.2f}"))
+
+            # Action buttons cell
+            widget = QtWidgets.QWidget()
+            layout = QtWidgets.QHBoxLayout(widget)
+            layout.setContentsMargins(5, 2, 5, 2)
+            layout.setSpacing(5)
+
+            # Edit Button
+            edit_btn = QtWidgets.QPushButton("Edit")
+            edit_btn.setProperty("row", row)
+            edit_btn.clicked.connect(self.edit_treatment)
+            layout.addWidget(edit_btn)
+
+            # Delete Button
+            del_btn = QtWidgets.QPushButton("Delete")
+            del_btn.setProperty("row", row)
+            del_btn.clicked.connect(self.remove_treatment)
+            layout.addWidget(del_btn)
+
+            self.Treat_table.setCellWidget(row, 6, widget)
+
+    def edit_treatment(self):
+        """
+        Slot for Edit button: loads the selected treatment into the dialog.
+        """
+        button = self.sender()
+        row = button.property("row")
+        if row is None or row < 0 or row >= len(self.treatments):
+            return
+        t = self.treatments[row]
+
+        # Open and pre-fill dialog
+        edit_treatment = Treatment_Dialog_Ctr(self.schedule_input.dateTime().toPyDateTime().date())
+        edit_treatment.treat_id_input.setText(str(t["Treatment_ID"]))
+        edit_treatment.diagnosis_input.setText(t["Diagnosis"])
+        cost_value = float(t["Cost"])
+        edit_treatment.cost_input.setText(f"{cost_value:.2f}")
+        edit_treatment.procedure_input.setText(t["Treatment_Procedure"])
+        
+        #setting date time
+        dt = t["Treatment_Date_Time"]
+        if isinstance(dt, str):
+            try:
+                dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                # fallback: current datetime
+                dt = datetime.now()
+        # Now wrap into QDateTime
+        qdt = QDateTime(dt)
+        
+        edit_treatment.sched_input.setDateTime(qdt)
+        edit_treatment.treat_status.setCurrentText(t["Treatment_Status"])
+
+        # When saved, update and reload
+        def on_edited(data):
+            data["Treatment_ID"] = t["Treatment_ID"]  # preserve ID
+            self.treatments[row] = data
+            self.update_treatments_table_ui()
+            self.update_total_billing()
+
+        edit_treatment.treatment_edited.connect(on_edited)
+        edit_treatment.exec()
+
+    
+    def remove_treatment(self):
+        """
+        Slot for both delete buttons. Uses the 'row' property of the sender.
+        After removing, renumbers all Treatment_IDs and rebuilds the table.
+        """
+        button = self.sender()
+        row = button.property("row")
+        if row is None or row < 0 or row >= len(self.treatments):
             return
 
-        # Remove treatment from internal list
-        removed_treatment = self.treatments.pop(row)
+        if QMessageBox.question(
+            self, "Confirm Deletion",
+            "Delete this treatment?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        ) != QMessageBox.StandardButton.Yes:
+            return
 
-        # Mark for DB deletion if editing existing appointment
-        if self.appointment_data and "Treatment_ID" in removed_treatment:
-            if not hasattr(self, "treatments_to_delete"):
-                self.treatments_to_delete = []
-            self.treatments_to_delete.append(removed_treatment["Treatment_ID"])
+        # 1) Remove from the list
+        removed = self.treatments.pop(row)
 
-        # Remove row from the table
-        self.Treat_table.removeRow(row)
+        # 2) Track for DB deletion if editing existing appointment
+        if self.appointment_data:
+            self.treatments_to_delete.append(removed["Treatment_ID"])
 
-        # Update treatment IDs and UI rows below the removed row
-        for i in range(row, len(self.treatments)):
-            treatment = self.treatments[i]
-            treatment["Treatment_ID"] = i + 1  # Reassign new sequential ID
+        # 3) Renumber remaining treatments
+        for idx, t in enumerate(self.treatments):
+            t["Treatment_ID"] = idx + 1
 
-            # Update table UI row i (shifted up)
-            self.Treat_table.item(i, 0).setText(str(treatment["Treatment_ID"]))
-
-            # Reconnect delete button for new row index
-            action_widget = self.Treat_table.cellWidget(i, 3)
-            if action_widget:
-                btn = action_widget.findChild(QtWidgets.QPushButton)
-                if btn:
-                    btn.clicked.disconnect()
-                    btn.clicked.connect(lambda checked=False, r=i: self.remove_treatment(r))
-
-        # Decrement treatment counter
-        self.treatment_counter -= 1
-
-        # Update total billing
+        # 4) Rebuild table & recalc billing
+        self.update_treatments_table_ui()
         self.update_total_billing()
+
 
     
     def setup_patient_input(self):
@@ -506,11 +527,9 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             self.treatments_to_delete = []
 
         # 10) Commit to DB
-        success = update_appointment_in_db(appointment_data)
+        success = update_appointment_in_db(self, appointment_data)
         if success:
             QMessageBox.information(self, "Success", "Appointment updated successfully.")
             self.appointment_added.emit()
             self.accept()
-        else:
-            QMessageBox.critical(self, "Database Error",
-                                "Failed to update the appointment. Please try again.")
+        

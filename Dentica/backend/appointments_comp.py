@@ -1,6 +1,6 @@
 from backend.DB import connectDB
 from datetime import datetime
-
+from PyQt6.QtWidgets import QMessageBox
 def get_all_appointments_with_treatment_count():
     all_appointments = []
 
@@ -125,7 +125,7 @@ def get_appointment_data(appointment_id):
         cursor.close()
         conn.close()
 
-def update_appointment_in_db(appointment_data):
+def update_appointment_in_db(self, appointment_data):
     """
     appointment_data must include:
       - Appointment_ID (str)
@@ -176,6 +176,19 @@ def update_appointment_in_db(appointment_data):
              WHERE Appointment_ID = %s
         """, (pat_id, sched, status, appt_id))
 
+        #check if the appointment is already paid if the status set to completed
+        if status == "Completed":
+            payment = appointment_data.get("Payment")
+            if not payment or payment.get("Payment_Status") != "Paid":
+                QMessageBox.warning(
+                    self,
+                    "Payment Required",
+                    "Cannot mark appointment as 'Completed' while payment is 'Unpaid'."
+                )
+                conn.rollback()
+                return False
+
+            
         # 2) Books & Pays handling
         if status == "Cancelled":
             # a) Remove any existing booking & payment
@@ -237,8 +250,8 @@ def update_appointment_in_db(appointment_data):
                 child_stat = "Canceled"
             elif status == "Scheduled":
                 child_stat = "Waiting"
-            else:
-                child_stat = t["Treatment_Status"]
+            elif status == "Completed":
+                child_stat = "Completed"
 
             cursor.execute("""
                 INSERT INTO Treatment (
@@ -255,9 +268,10 @@ def update_appointment_in_db(appointment_data):
                 child_stat
             ))
 
-        # 4) Upsert payment on Scheduled/Completed (covers updates to total, method, status)
+                # 4) Upsert payment on Scheduled/Completed (covers updates to total, method, status)
         if status in ("Scheduled", "Completed") and "Payment" in appointment_data:
             p = appointment_data["Payment"]
+
             cursor.execute("""
                 INSERT INTO Pays (
                     Payment_ID, Patient_ID, Appointment_ID,
@@ -277,6 +291,7 @@ def update_appointment_in_db(appointment_data):
                 p["Payment_Status"],
                 p.get("Payment_Date")
             ))
+
 
         # 5) Cancel table
         if status == "Cancelled" and "Cancel" in appointment_data:
@@ -310,7 +325,8 @@ def update_appointment_in_db(appointment_data):
         return True
 
     except Exception as e:
-        print("Error updating appointment:", e)
+        QMessageBox.critical(self, "Database Error", f"{e}.")
+
         conn.rollback()
         return False
 
