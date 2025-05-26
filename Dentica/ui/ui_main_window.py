@@ -629,7 +629,7 @@ class Ui_MainWindow(object):
 
         #Count Treatment
         self.label_9 = QtWidgets.QLabel(parent=self.ComTreat_card)
-        self.label_9.setGeometry(QtCore.QRect(10, 50, 51, 31))
+        self.label_9.setGeometry(QtCore.QRect(10, 50, 155, 31))
         font = QtGui.QFont()
         font.setFamily("Inter")
         font.setPointSize(16)
