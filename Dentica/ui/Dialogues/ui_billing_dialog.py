@@ -18,6 +18,8 @@ class Add_Payment(QtWidgets.QDialog):
         """)
         self.oldPos = None
 
+        self.dark_mode = False
+        
         label_style = "color: #37547A; font-family: Inter; font-size: 14px;"
         x_label = 20
         x_input = 150
@@ -75,3 +77,60 @@ class Add_Payment(QtWidgets.QDialog):
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
         self.cancel_btn.clicked.connect(self.reject)
+        self.apply_theme()
+        
+    def apply_theme(self):
+        if self.dark_mode:
+            # Dark theme colors
+            bg_color = "#2D2D2D"
+            text_color = "#FFFFFF"
+            card_bg = "#3D3D3D"
+            button_bg = "#37547A"
+            header_bg = "#1F1F21"
+            header_text = "#FFFFFF"
+        else:
+            # Light theme colors
+            bg_color = "#B2CDE9"
+            text_color = "#37547A"
+            card_bg = "#C6D7EC"
+            button_bg = "#37547A"
+            header_bg = "#1F1F21"
+            header_text = "#FFFFFF"
+
+        self.setStyleSheet(f"""
+            QDialog {{
+                background-color: {bg_color};
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }}
+            QLabel {{
+                color: {text_color};
+                font-family: Inter;
+                font-size: 14px;
+            }}
+            QLineEdit, QComboBox, QDateEdit {{
+                background-color: {card_bg};
+                color: {text_color};
+                border: 1px solid {card_bg};
+                border-radius: 3px;
+                padding: 2px 5px;
+            }}
+            QPushButton {{
+                background-color: {button_bg};
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }}
+            QPushButton:hover {{
+                background-color: #8DB8E0;
+            }}
+        """)
+
+        for child in self.findChildren(QtWidgets.QLabel):
+            child.setStyleSheet(f"""
+                    color: {text_color};
+                    font-family: Inter;
+                    font-size: 14px;
+            """)
+    

@@ -1982,6 +1982,13 @@ class Ui_MainWindow(object):
         dark_icon = QtGui.QIcon(f"{filepath}Dark.svg")
         light_icon = QtGui.QIcon(f"{filepath}Light.svg")
         self.apply_theme(light_icon, dark_icon)
+        for dialog in self.findChildren(QtWidgets.QDialog):
+            if hasattr(dialog, 'dark_mode'):
+                dialog.dark_mode = self.dark_mode
+                dialog.apply_theme()
+        if hasattr(self, 'patient_profile_page'):
+            self.patient_profile_page.dark_mode = self.dark_mode
+            self.patient_profile_page.apply_theme()
         
         
     def apply_theme(self, light_icon, dark_icon):

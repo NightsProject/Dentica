@@ -160,6 +160,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
     def on_add_treatment_clicked(self):
         appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
         form = Treatment_Dialog_Ctr(appointment_date)
+        form.dark_mode = self.dark_mode  
+        form.apply_theme()
         form.treat_id_input.setText(str(len(self.treatments) + 1))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
@@ -253,6 +255,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         cost_value = float(t["Cost"])
         edit_treatment.cost_input.setText(f"{cost_value:.2f}")
         edit_treatment.procedure_input.setText(t["Treatment_Procedure"])
+        edit_treatment.dark_mode = self.dark_mode  
+        edit_treatment.apply_theme()
         
         #setting date time
         dt = t["Treatment_Date_Time"]
