@@ -1,4 +1,5 @@
 from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtWidgets import QAbstractItemView
 from PyQt6.QtCore import Qt
 from controller.treatment_ctr import Treatment_Dialog_Ctr
 from controller.patient_ctr import Patient_Dialog_Ctr
@@ -110,6 +111,9 @@ class Add_Appointment(QtWidgets.QDialog):
         
         self.Treat_table.setColumnWidth(6, 100)
         self.Treat_table.verticalHeader().setVisible(False)
+        self.Treat_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Treat_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Treat_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         
         self.total_label = QtWidgets.QLabel("Total Bill:", self)
         self.total_label.setGeometry(20, 510, 120, 20)
