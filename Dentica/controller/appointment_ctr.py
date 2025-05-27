@@ -446,6 +446,11 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         else:
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
 
+
+
+
+
+
     def on_update_pressed(self):
         # 1) Fetch current data from DB before update
         prev = get_appointment_details(self.appointment_id)
@@ -564,7 +569,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             }
 
         # 8) If still Scheduled (but not a re-schedule), carry forward and update payment info
-        elif new_status == "Scheduled" and "Booking" not in appointment_data:
+        elif new_status in ("Scheduled", "Completed") and "Booking" not in appointment_data:
             appointment_data["Booking"] = {
                 "Booking_ID":        prev["Booking_ID"],
                 "Patient_ID":        pat_id,
@@ -580,6 +585,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 "Payment_Status": prev["Payment_Status"],
                 "Payment_Date":   prev["Payment_Date"]
             }
+
 
         # 9) Delete treatments marked for deletion
         if hasattr(self, "treatments_to_delete"):
