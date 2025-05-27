@@ -198,7 +198,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             # ID, Procedure, Cost
             self.Treat_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(t['Treatment_ID'])))
             self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(t['Diagnosis']))
-            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(str(t['Treatment_Date_Time'])))
+            formatted_date = t['Treatment_Date_Time'].strftime('%Y-%m-%d %H:%M:%S')
+            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(formatted_date))
             self.Treat_table.setItem(row, 3, QtWidgets.QTableWidgetItem(t['Treatment_Procedure']))
             self.Treat_table.setItem(row, 4, QtWidgets.QTableWidgetItem(t['Treatment_Status']))
             cost_value = float(t["Cost"])
