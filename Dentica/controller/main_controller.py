@@ -78,7 +78,10 @@ class MainController(QMainWindow, Ui_MainWindow):
         
         self.setupUi(self)
         self.dark_mode = False
-    
+        self.first_login = True
+        self.open_login_popup()
+        
+        
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
@@ -98,13 +101,13 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(lambda: self.search_appointment_data("Cancelled")) #canceled button
         
     def open_login_popup(self):
-        login_popup = Database_Dialog_Ctr()
+        login_popup = Database_Dialog_Ctr(self.first_login)
         login_popup.credentialsSubmitted.connect(self.handle_credentials)
         login_popup.exec()
     
     def open_appointment(self):
         app_popup = Appointment_Dialog_Ctr()
-        app_popup.dark_mode = self.dark_mode  
+        app_popup.dark_mode = self.dark_mode
         app_popup.apply_theme()
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
@@ -129,8 +132,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     # If successful, it loads the data into the UI
     # If not, it shows an error message
     # It also handles the case where the connection is None
-    def handle_credentials(self, host, port, user, password, databaseName):
-        print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
+    def handle_credentials(self, host, port, user, password, databaseName, first_login):
         
         try:
             connection = connectDBF(host, port, user, password, databaseName)
@@ -142,7 +144,7 @@ class MainController(QMainWindow, Ui_MainWindow):
          
             set_credentials(host,port, user, password, databaseName)
             if connection:
-                
+                self.first_login = first_login
                 QMessageBox.information(self, "Success", f"Successfully connected to {databaseName} Database!")
            
                 

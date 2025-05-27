@@ -56,7 +56,7 @@ class Database_Login(QtWidgets.QDialog):
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
-        self.cancel_btn.clicked.connect(self.reject)
+
         
         #for testing
         self.host_input.setText("localhost")
