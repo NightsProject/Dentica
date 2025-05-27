@@ -271,12 +271,13 @@ def get_patient_data(patient_id):
             print("Unexpected Error:", e)
             QMessageBox.critical(None, "Error", str(e))
       
-            
 def search_patients(keyword):
     conn = connectDB()
     cursor = conn.cursor()
 
-    keyword = f"%{keyword}%"
+    like_keyword = f"%{keyword}%"
+    exact_keyword = keyword.strip()
+
     cursor.execute("""
         SELECT 
             Patient_ID, 
@@ -291,20 +292,22 @@ def search_patients(keyword):
            OR First_Name LIKE %s
            OR Middle_Name LIKE %s
            OR Last_Name LIKE %s
-           OR Gender LIKE %s
+           OR Gender = %s
            OR Birth_Date LIKE %s
            OR Contact_Number LIKE %s
            OR Email LIKE %s
            OR Address LIKE %s
-    """, (keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword))
+    """, (
+        like_keyword, like_keyword, like_keyword, like_keyword,
+        exact_keyword,  
+        like_keyword, like_keyword, like_keyword, like_keyword
+    ))
 
     rows = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    # Convert each tuple to a list for consistent return type
     patient_data = [list(row) for row in rows]
-
     return patient_data
 
