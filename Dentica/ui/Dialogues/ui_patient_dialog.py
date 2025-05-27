@@ -32,7 +32,7 @@ class Add_Patient(QtWidgets.QDialog):
         #Pic selector frame
         self.picture_label = QtWidgets.QLabel(self)
         self.picture_label.setGeometry(350, 100, 150, 150)
-        self.picture_label.setStyleSheet("background-color: #fff; border: 1px solid #37547A;")
+        self.picture_label.setStyleSheet("background-color: #fff; border: none; border-radius: 75px;")
         self.picture_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         #add pic button
