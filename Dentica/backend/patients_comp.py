@@ -75,13 +75,13 @@ def update_patient(
         # Check if another patient (not this one) has the same first and last name
         cursor.execute("""
             SELECT * FROM Patient
-            WHERE First_Name = %s AND Last_Name = %s AND Patient_ID != %s
-        """, (first_name, last_name, patient_id))
+            WHERE First_Name = %s AND Last_Name = %s AND Patient_ID != %s AND Middle_Name = %s
+        """, (first_name, last_name, patient_id, middle_name))
         duplicate = cursor.fetchone()
 
         if duplicate:
             QtWidgets.QMessageBox.warning(self, "Duplicate Entry",
-                "Another patient with the same first and last name already exists.")
+                "Another patient with the same name already exists.")
             return False
 
         # Proceed to update
