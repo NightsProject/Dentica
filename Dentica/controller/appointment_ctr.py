@@ -95,6 +95,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.status_input.currentIndexChanged.connect(self.validate_status)
         
         self.schedule_input.dateTimeChanged.connect(self.sync_treatment_dates)
+        
+        
 
     # This method is called when the user changes the date/time in the QDateTimeEdit
     # It prevents the user from changing the date part of the datetime

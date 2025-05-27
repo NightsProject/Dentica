@@ -1142,7 +1142,7 @@ class Ui_MainWindow(object):
                 """)
         self.horizontalLayout.addWidget(self.pushButton_9)
 
-        #Appointments Confirmed button
+        #Appointments Conpleted button
         self.pushButton_7 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget)
         self.pushButton_7.setObjectName("pushButton_7")
         self.pushButton_7.setStyleSheet("""
@@ -1164,7 +1164,7 @@ class Ui_MainWindow(object):
                 """)
         self.horizontalLayout.addWidget(self.pushButton_7)
         
-        #Appointments Waiting button
+        #Appointments cancelled button
         self.pushButton_6 = QtWidgets.QPushButton(parent=self.horizontalLayoutWidget)
         self.pushButton_6.setObjectName("pushButton_6")
         self.pushButton_6.setStyleSheet("""
