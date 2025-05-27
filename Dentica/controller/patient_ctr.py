@@ -31,6 +31,7 @@ class Patient_Dialog_Ctr(Add_Patient):
 
         contact_validator = QRegularExpressionValidator(QRegularExpression(r"^(09\d{9}|\+639\d{9})$"))
         self.contact_input.setValidator(contact_validator)
+        self.contact_input.setText("09") # Default prefix for mobile numbers
 
         # Real-time validation connections
         self.first_input.textChanged.connect(lambda: self.validate_alphabets_only(self.first_input))

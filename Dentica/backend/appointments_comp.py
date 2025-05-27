@@ -36,24 +36,26 @@ def generate_new_appointment_id():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT Appointment_ID 
-        FROM Appointment 
-        ORDER BY CAST(SUBSTRING(Appointment_ID, 2) AS UNSIGNED) DESC 
-        LIMIT 1
+        SELECT CAST(SUBSTRING(Appointment_ID, 2) AS UNSIGNED) AS num_id
+        FROM Appointment
+        ORDER BY num_id
     """)
 
-    result = cursor.fetchone()
+    existing_ids = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    if result:
-        last_id = int(result[0][1:])  # Remove the 'A' and convert the number part
-        new_id_num = last_id + 1
-    else:
-        new_id_num = 1  # Start from 1 if there are no appointments yet
+    # Extract numeric parts into a set
+    existing_id_set = set(num_id for (num_id,) in existing_ids)
 
-    new_appointment_id = f'A{new_id_num:05d}'  # Zero-padded to 5 digits
+    # Find the smallest missing positive integer
+    expected_id = 1
+    while expected_id in existing_id_set:
+        expected_id += 1
+
+    new_appointment_id = f'A{expected_id:05d}'  # e.g., A00002
     return new_appointment_id
+
 
 
 def get_appointment_data(appointment_id):

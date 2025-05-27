@@ -1,5 +1,7 @@
 from backend.DB import connectDB
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6 import QtWidgets
+
 # Function to get all patients from the database
 # This function retrieves all patients from the Patient table and returns them as a list of tuples.
 def get_all_patients():
@@ -54,9 +56,6 @@ def generate_new_patient_id():
 
     new_patient_id = f'P{expected_id:05d}'  # e.g., P00002
     return new_patient_id
-
-
-from PyQt6 import QtWidgets
 
 def update_patient(
     self,
@@ -142,16 +141,16 @@ def insert_patient(self,
     conn = connectDB()
     cursor = conn.cursor()
     try:
-        # Check for duplicate first and last name
+        # Check for duplicate full name of the patient
         cursor.execute("""
             SELECT COUNT(*) FROM Patient
-            WHERE First_Name = %s AND Last_Name = %s
-        """, (first_name, last_name))
+            WHERE First_Name = %s AND Last_Name = %s AND Middle_Name = %s
+        """, (first_name, last_name, middle_name))
         count = cursor.fetchone()[0]
 
         if count > 0:
             QMessageBox.warning(self, "Duplicate Entry",
-                    f"A patient with the name {first_name} {last_name} already exists.")
+                    f"A patient with the name {first_name} {middle_name} {last_name} already exists.")
             
             return False
 
