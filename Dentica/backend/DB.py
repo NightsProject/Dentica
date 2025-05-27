@@ -53,7 +53,7 @@ def connectDB():
         QMessageBox.warning(None, "Database Connection Error", f"Error: {e}")
     except NameError:
         QMessageBox.warning(None, "No Database Connection", "Please login to a database first.")
-       
+        
     return None
 
 
