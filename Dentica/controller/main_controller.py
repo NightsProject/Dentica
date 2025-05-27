@@ -23,7 +23,7 @@ from backend.appointments_comp import get_appointment_data, get_all_appointments
 from backend.billing_comp import get_all_billings, search_payments
 from backend.booking_comp import get_all_bookings, search_bookings
 from backend.reports_comp import load_graphs, refresh_graphs
-from backend.cancelations_comp import get_all_cancellations
+from backend.cancelations_comp import get_all_cancellations, search_cancellations
 from backend.treatment_comp import update_treatment, check_treatment_completion, auto_handle_all_treatments_canceled, update_total_amount_treatment_canceled
 
 
@@ -88,6 +88,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.Search_app.textChanged.connect(self.search_appointment_data)
         self.Search_bill.textChanged.connect(self.search_payment_data)
         self.Search_book.textChanged.connect(self.search_booking_data)
+        self.Search_cancel.textChanged.connect(self.search_cancel_data)
         self.calendar.clicked.connect(self.on_calendar_date_clicked)
         
         #appointment button
@@ -905,3 +906,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def search_booking_data(self, keyword):
         data = search_bookings(keyword)
         self.update_bookings_list(data)
+        
+    def search_cancel_data(self, keyword):
+        data = search_cancellations(keyword)
+        self.update_cancel_list(data)
+        

@@ -325,15 +325,17 @@ def update_appointment_in_db(self, appointment_data):
             # delete old
             cursor.execute("""
                 DELETE FROM Cancel
-                WHERE Patient_ID     = %s
-                  AND Appointment_ID = %s
-            """, (pat_id, appt_id))
+                WHERE Appointment_ID = %s
+            """, (appt_id,))
             # insert new
             cursor.execute("""
                 INSERT INTO Cancel (
                     Patient_ID, Appointment_ID,
                     Cancellation_Date_Time, Reason
                 ) VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    Cancellation_Date_Time = VALUES(Cancellation_Date_Time),
+                    Reason = VALUES(Reason)
             """, (
                 pat_id, appt_id,
                 c["Cancellation_Date_Time"],
