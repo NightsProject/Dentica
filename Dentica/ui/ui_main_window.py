@@ -1517,7 +1517,7 @@ class Ui_MainWindow(object):
 
         #Search cancels
         self.Search_cancel = QtWidgets.QLineEdit(parent=self.Cancel_frame)
-        self.Search_cancel.setGeometry(QtCore.QRect(700, 25, 211, 31))
+        self.Search_cancel.setGeometry(QtCore.QRect(710, 25, 211, 31))
         self.Search_cancel.setStyleSheet("background-color: #F1F5F9; border-radius: 8px;")
         self.Search_cancel.setReadOnly(False)
         self.Search_cancel.setObjectName("Search_cancel")
@@ -2079,13 +2079,13 @@ class Ui_MainWindow(object):
                                        """)
     
         # Apply to headers (TOP BAR)
-        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Book_frame]:
+        for header in [self.frame_4,self.app_frame,self.Bill_frame,self.Book_frame,self.Cancel_frame]:
                 header.setStyleSheet(f"""
                         background-color: {main_bg};
                                      """)
         
         # Apply to header labels (TOP BAR)
-        for title in [self.label_12,self.label_13,self.label_14,self.payment_label]:
+        for title in [self.label_12,self.label_13,self.label_14,self.payment_label,self.cancel_label]:
                 title.setStyleSheet(f"""
                         background-color: {main_bg};
                         color: {main_text};
@@ -2175,7 +2175,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to all search
-        for search in [self.search_patient, self.Search_app, self.Search_bill,self.Search_book]:
+        for search in [self.search_patient, self.Search_app, self.Search_bill, self.Search_book, self.Search_cancel]:
                 search.setStyleSheet(f"""
                         background-color: {search_bg}; 
                         border-radius: 8px;        
@@ -2183,7 +2183,7 @@ class Ui_MainWindow(object):
                         """)
 
         # Apply to all add buttons
-        for add_btn in [self.add_icon, self.AddApp_btn, self.AddBill_btn]:
+        for add_btn in [self.add_icon, self.AddApp_btn]:
                 add_btn.setStyleSheet(f"""
                         background-color: {add_bg}; 
                         border-radius: 8px; 
@@ -2226,8 +2226,17 @@ class Ui_MainWindow(object):
                         }}                                                 
                         """)
 
+        # Apply to Cancellation table frame
+        self.cancel_table_frame.setStyleSheet(f"""
+        #cancel_table_frame {{
+                background: {table_bg};
+                border: 1px solid {card_bd};  
+                border-radius: 12px;
+        }}
+        """)
+
         # Apply to all tables
-        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table,self.Booking_table]:
+        for tables in [self.Patients_table, self.Appointments_table, self.Billing_table, self.Booking_table, self.Cancel_table]:
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
