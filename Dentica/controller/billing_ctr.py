@@ -19,7 +19,7 @@ class Billing_Dialog_Ctr(Add_Payment):
         self.payment_input.setText(payment_id_val)
         self.patient_input.setText(patient_name)
         self.appointment_input.setText(appointment_id)
-        self.total_input.setText(str(total_amount))
+        self.total_input.setText(f"{total_amount:.2f}")
         self.method_input.setCurrentText(method)
         self.status_input.setCurrentText("Paid")
 

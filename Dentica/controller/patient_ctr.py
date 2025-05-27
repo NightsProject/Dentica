@@ -7,6 +7,7 @@ from PyQt6 import QtCore
 from PyQt6.QtWidgets import QMessageBox
 from ui.Dialogues.ui_patient_dialog import Add_Patient
 from backend.patients_comp import generate_new_patient_id, insert_patient, update_patient
+from PyQt6.QtWidgets import QToolTip
 
 class Patient_Dialog_Ctr(Add_Patient):
     patient_added = pyqtSignal()
@@ -30,12 +31,13 @@ class Patient_Dialog_Ctr(Add_Patient):
 
         contact_validator = QRegularExpressionValidator(QRegularExpression(r"^(09\d{9}|\+639\d{9})$"))
         self.contact_input.setValidator(contact_validator)
+        self.contact_input.setText("09") # Default prefix for mobile numbers
 
         # Real-time validation connections
-        self.first_input.textChanged.connect(lambda: self.validate_required(self.first_input))
-        self.middle_input.textChanged.connect(lambda: self.validate_required(self.middle_input))
-        self.last_input.textChanged.connect(lambda: self.validate_required(self.last_input))
-        self.address_input.textChanged.connect(lambda: self.validate_required(self.address_input))
+        self.first_input.textChanged.connect(lambda: self.validate_alphabets_only(self.first_input))
+        self.middle_input.textChanged.connect(lambda: self.validate_alphabets_only(self.middle_input))
+        self.last_input.textChanged.connect(lambda: self.validate_alphabets_only(self.last_input))
+        self.address_input.textChanged.connect(lambda: self.validate_address(self.address_input))
         self.gender_combo.currentIndexChanged.connect(self.validate_gender)
         self.email_input.textChanged.connect(self.validate_email)
         self.contact_input.textChanged.connect(self.validate_contact)
@@ -83,8 +85,18 @@ class Patient_Dialog_Ctr(Add_Patient):
 
             pixmap.setMask(mask)
             self.picture_label.setPixmap(pixmap)
+            
 
-    def validate_required(self, field):
+
+    def validate_alphabets_only(self, field):
+        text = field.text().strip()
+        if not text or not text.isalpha():
+            field.setStyleSheet("border: 2px solid red;")
+            QToolTip.showText(field.mapToGlobal(field.rect().bottomLeft()), "Only alphabets are allowed!", field)
+        else:
+            field.setStyleSheet("")
+
+    def validate_address(self, field):
         if not field.text().strip():
             field.setStyleSheet("border: 2px solid red;")
         else:
@@ -136,10 +148,10 @@ class Patient_Dialog_Ctr(Add_Patient):
 
     def on_add_pressed(self):   
         # Validate all fields
-        self.validate_required(self.first_input)
-        self.validate_required(self.middle_input)
-        self.validate_required(self.last_input)
-        self.validate_required(self.address_input)
+        self.validate_alphabets_only(self.first_input)
+        self.validate_alphabets_only(self.middle_input)
+        self.validate_alphabets_only(self.last_input)
+        self.validate_address(self.address_input)
         self.validate_gender()
         self.validate_email()
         self.validate_contact()

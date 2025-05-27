@@ -1,6 +1,10 @@
 from backend.DB import connectDB
 from datetime import datetime
 from PyQt6.QtWidgets import QMessageBox
+from decimal import Decimal, InvalidOperation
+
+
+
 def get_all_appointments_with_treatment_count():
     all_appointments = []
 
@@ -36,24 +40,26 @@ def generate_new_appointment_id():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT Appointment_ID 
-        FROM Appointment 
-        ORDER BY CAST(SUBSTRING(Appointment_ID, 2) AS UNSIGNED) DESC 
-        LIMIT 1
+        SELECT CAST(SUBSTRING(Appointment_ID, 2) AS UNSIGNED) AS num_id
+        FROM Appointment
+        ORDER BY num_id
     """)
 
-    result = cursor.fetchone()
+    existing_ids = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    if result:
-        last_id = int(result[0][1:])  # Remove the 'A' and convert the number part
-        new_id_num = last_id + 1
-    else:
-        new_id_num = 1  # Start from 1 if there are no appointments yet
+    # Extract numeric parts into a set
+    existing_id_set = set(num_id for (num_id,) in existing_ids)
 
-    new_appointment_id = f'A{new_id_num:05d}'  # Zero-padded to 5 digits
+    # Find the smallest missing positive integer
+    expected_id = 1
+    while expected_id in existing_id_set:
+        expected_id += 1
+
+    new_appointment_id = f'A{expected_id:05d}'  # e.g., A00002
     return new_appointment_id
+
 
 
 def get_appointment_data(appointment_id):
@@ -242,17 +248,36 @@ def update_appointment_in_db(self, appointment_data):
                  WHERE Appointment_ID   = %s
             """, (now, appt_id))
 
-        # 3) Refresh Treatments
+     # 3) Refresh Treatments
         cursor.execute("DELETE FROM Treatment WHERE Appointment_ID = %s", (appt_id,))
-        for t in appointment_data["Treatments"]:
-            # force child status if appointment-level override
-            if status == "Cancelled":
-                child_stat = "Canceled"
-            elif status == "Scheduled":
-                child_stat = "Waiting"
-            elif status == "Completed":
-                child_stat = "Completed"
 
+        total_amount = Decimal("0.00") # This will store the sum minus canceled treatment costs
+
+        for t in appointment_data["Treatments"]:
+            cost = t["Cost"]
+
+            # Determine final treatment status
+            if t.get("Treatment_Status") == "Canceled":
+                child_stat = "Canceled"
+            else:
+                if status == "Cancelled":
+                    child_stat = "Canceled"
+                elif status == "Scheduled":
+                    child_stat = "Waiting"
+                elif status == "Completed":
+                    child_stat = "Completed"
+           
+            # Add cost only if treatment is not canceled
+            if child_stat != "Canceled":
+                try:
+                    cost_decimal = Decimal(str(t["Cost"]))  # Safely convert cost
+                    total_amount += cost_decimal
+                except (InvalidOperation, KeyError, TypeError):
+                    print("Invalid cost value:", t.get("Cost"))
+                    # Handle or skip invalid cost entries if necessary
+                    
+
+            # Insert the treatment record
             cursor.execute("""
                 INSERT INTO Treatment (
                     Appointment_ID, Treatment_ID, Diagnosis, Cost,
@@ -262,13 +287,13 @@ def update_appointment_in_db(self, appointment_data):
                 appt_id,
                 t["Treatment_ID"],
                 t["Diagnosis"],
-                t["Cost"],
+                cost,
                 t["Treatment_Procedure"],
                 t["Treatment_Date_Time"],
                 child_stat
             ))
 
-                # 4) Upsert payment on Scheduled/Completed (covers updates to total, method, status)
+        # 4) Upsert payment on Scheduled/Completed
         if status in ("Scheduled", "Completed") and "Payment" in appointment_data:
             p = appointment_data["Payment"]
 
@@ -286,11 +311,12 @@ def update_appointment_in_db(self, appointment_data):
                 p["Payment_ID"],
                 p["Patient_ID"],
                 p["Appointment_ID"],
-                p["Total_Amount"],
+                total_amount,  # Updated dynamic value
                 p["Payment_Method"],
                 p["Payment_Status"],
                 p.get("Payment_Date")
             ))
+
 
 
         # 5) Cancel table
@@ -299,15 +325,17 @@ def update_appointment_in_db(self, appointment_data):
             # delete old
             cursor.execute("""
                 DELETE FROM Cancel
-                WHERE Patient_ID     = %s
-                  AND Appointment_ID = %s
-            """, (pat_id, appt_id))
+                WHERE Appointment_ID = %s
+            """, (appt_id,))
             # insert new
             cursor.execute("""
                 INSERT INTO Cancel (
                     Patient_ID, Appointment_ID,
                     Cancellation_Date_Time, Reason
                 ) VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    Cancellation_Date_Time = VALUES(Cancellation_Date_Time),
+                    Reason = VALUES(Reason)
             """, (
                 pat_id, appt_id,
                 c["Cancellation_Date_Time"],

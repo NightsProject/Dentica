@@ -306,7 +306,7 @@ def update_total_amount_treatment_canceled(appointment_id, parent=None):
                 parent,
                 "Payment Updated",
                 f"The total payment amount has been updated to ₱{total:.2f} "
-                f"after canceling one or more treatments."
+                f"after canceling one treatment."
             )
 
         return True

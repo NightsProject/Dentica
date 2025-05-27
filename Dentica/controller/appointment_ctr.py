@@ -11,8 +11,6 @@ from datetime import datetime
 from backend.treatment_comp import delete_treatment_by_id
 from backend.appointments_comp import get_appointment_details
 
-
-
 """
         
     Key Features
@@ -95,6 +93,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         self.status_input.currentIndexChanged.connect(self.validate_status)
         
         self.schedule_input.dateTimeChanged.connect(self.sync_treatment_dates)
+        
+        
 
     # This method is called when the user changes the date/time in the QDateTimeEdit
     # It prevents the user from changing the date part of the datetime
@@ -196,7 +196,21 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             # ID, Procedure, Cost
             self.Treat_table.setItem(row, 0, QtWidgets.QTableWidgetItem(str(t['Treatment_ID'])))
             self.Treat_table.setItem(row, 1, QtWidgets.QTableWidgetItem(t['Diagnosis']))
-            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(str(t['Treatment_Date_Time'])))
+            
+            treatment_date_time = t['Treatment_Date_Time']
+
+            if isinstance(treatment_date_time, datetime):
+                # It's already a datetime object, just format it
+                formatted_date = treatment_date_time.strftime('%Y-%m-%d %H:%M:%S')
+            elif isinstance(treatment_date_time, (int, float)):
+                # It's a UNIX timestamp, convert first then format
+                formatted_date = datetime.fromtimestamp(treatment_date_time).strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                # Fallback: just convert to string (or handle error)
+                formatted_date = str(treatment_date_time)
+
+            self.Treat_table.setItem(row, 2, QtWidgets.QTableWidgetItem(formatted_date))
+            
             self.Treat_table.setItem(row, 3, QtWidgets.QTableWidgetItem(t['Treatment_Procedure']))
             self.Treat_table.setItem(row, 4, QtWidgets.QTableWidgetItem(t['Treatment_Status']))
             cost_value = float(t["Cost"])
@@ -335,10 +349,13 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         return True
 
     def on_add_pressed(self):
+               
         if not self.treatments:
             QMessageBox.warning(self, "No Treatments",
                                 "You must add at least one treatment before saving the appointment.")
             return
+
+
 
         # validate patient selection and status
         valid_patient = bool(self.get_selected_patient_id())
@@ -359,6 +376,33 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
         status = self.status_input.currentText()
 
+
+        # Check if all treatments are canceled
+        if all(t.get("Treatment_Status") == "Canceled" for t in self.treatments):
+            reply = QMessageBox.question(
+                self,
+                "Confirm Status Change",
+                "All treatments are canceled. Do you want to automatically set the appointment status to 'Cancelled'?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+
+            if reply == QMessageBox.StandardButton.Yes:
+                status = "Cancelled"
+            else:
+                return
+            
+            
+        # Check if status is valid for new appointment
+        if status in ("Cancelled", "Completed"):
+            QMessageBox.warning(
+                self,
+                "Invalid Status",
+                "You cannot set the appointment status to 'Cancelled' or 'Completed' when creating a new appointment."
+            )
+            return
+
+     
+
         #setup booking and payment details
         booking_id = generate_new_booking_id()
         booking_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -368,7 +412,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         payment_method = "None"
         payment_status = "Unpaid"
        
-        
         booking_data = {
             "Booking_ID": booking_id,
             "Patient_ID": pat_id,
@@ -445,6 +488,24 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         app_id = self.appointment_id
         pat_id = self.get_selected_patient_id()
         formatted_sched = new_schedule.strftime('%Y-%m-%d %H:%M:%S')
+
+
+
+        # Check if all treatments are canceled
+        if all(t.get("Treatment_Status") == "Canceled" for t in self.treatments):
+            reply = QMessageBox.question(
+                self,
+                "Confirm Status Change",
+                "All treatments are canceled. Do you want to automatically set the appointment status to 'Cancelled'?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            )
+
+            if reply == QMessageBox.StandardButton.Yes:
+                new_status = "Cancelled"
+            else:
+                return
+            
+
 
         appointment_data = {
             "Appointment_ID": app_id,

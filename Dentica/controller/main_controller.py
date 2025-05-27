@@ -19,12 +19,11 @@ from controller.billing_ctr import Billing_Dialog_Ctr
 from backend.DB import connectDBF, set_credentials, createAllTables
 from backend.dashboard_comp import load_summary, get_todays_appointments, get_todays_appointment_status_counts, create_appointment_status_chart, refresh_appointment_chart
 from backend.patients_comp import get_all_patients, perform_patient_deletion, get_patient_data, search_patients
-from backend.appointments_comp import get_appointment_data
-from backend.appointments_comp import get_all_appointments_with_treatment_count, perform_appointment_deletion, search_appointments
+from backend.appointments_comp import get_appointment_data, get_all_appointments_with_treatment_count, perform_appointment_deletion, search_appointments
 from backend.billing_comp import get_all_billings, search_payments
 from backend.booking_comp import get_all_bookings, search_bookings
 from backend.reports_comp import load_graphs, refresh_graphs
-from backend.cancelations_comp import get_all_cancellations
+from backend.cancelations_comp import get_all_cancellations, search_cancellations
 from backend.treatment_comp import update_treatment, check_treatment_completion, auto_handle_all_treatments_canceled, update_total_amount_treatment_canceled
 
 
@@ -89,8 +88,15 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.Search_app.textChanged.connect(self.search_appointment_data)
         self.Search_bill.textChanged.connect(self.search_payment_data)
         self.Search_book.textChanged.connect(self.search_booking_data)
+        self.Search_cancel.textChanged.connect(self.search_cancel_data)
         self.calendar.clicked.connect(self.on_calendar_date_clicked)
-
+        
+        #appointment button
+        self.pushButton_8.clicked.connect(self.reload_all_tables) #all button
+        self.pushButton_9.clicked.connect(lambda: self.search_appointment_data("Scheduled")) #scheduled button
+        self.pushButton_7.clicked.connect(lambda: self.search_appointment_data("Completed")) #completed button
+        self.pushButton_6.clicked.connect(lambda: self.search_appointment_data("Cancelled")) #canceled button
+        
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr()
         login_popup.credentialsSubmitted.connect(self.handle_credentials)
@@ -343,7 +349,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             self.Billing_table.insertRow(row_position)
             self.Billing_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(str(billing[1])))
             self.Billing_table.setItem(row_position, 1, QtWidgets.QTableWidgetItem(str(billing[2])))
-            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(str(billing[3])))
+            self.Billing_table.setItem(row_position, 2, QtWidgets.QTableWidgetItem(f"{billing[3]:.2f}")) # cost value
             self.Billing_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(str(billing[4])))
             self.Billing_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(str(billing[6])))
             self.Billing_table.setItem(row_position, 5, QtWidgets.QTableWidgetItem(str(billing[5])))
@@ -900,3 +906,8 @@ class MainController(QMainWindow, Ui_MainWindow):
     def search_booking_data(self, keyword):
         data = search_bookings(keyword)
         self.update_bookings_list(data)
+        
+    def search_cancel_data(self, keyword):
+        data = search_cancellations(keyword)
+        self.update_cancel_list(data)
+        

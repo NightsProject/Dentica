@@ -65,17 +65,34 @@ class Treatment_Dialog_Ctr(Add_Treatment):
 
     def validate_cost(self):
         text = self.cost_input.text().strip()
-        if not text or not self.cost_input.hasAcceptableInput():
+
+        # Try converting to float to check > 0
+        try:
+            cost_value = float(text)
+        except ValueError:
+            cost_value = -1  # invalid value, force fail
+
+        if not text or not self.cost_input.hasAcceptableInput() or cost_value <= 0:
             self.cost_input.setStyleSheet("border: 2px solid red;")
+            QMessageBox.warning(
+                self,
+                "Invalid Cost",
+                "Please enter a valid cost greater than 0."
+            )
+            return False
         else:
             self.cost_input.setStyleSheet("")
+            return True
+
 
     def on_save_clicked(self):
         # Validate all fields
         self.validate_required(self.treat_id_input)
         self.validate_required(self.diagnosis_input)
         self.validate_required(self.procedure_input)
-        self.validate_cost()
+        cost = self.validate_cost()
+        if not cost:
+            return
 
         if (
             not self.treat_id_input.text().strip()
