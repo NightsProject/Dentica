@@ -81,6 +81,10 @@ class Billing_Dialog_Ctr(Add_Payment):
         status = self.status_input.currentText()
         payment_date = self.date_input.dateTime().toString("yyyy-MM-dd HH:mm:ss")
 
+        if status == "Unpaid" and method != "None":
+            QtWidgets.QMessageBox.warning(self, "Update Error", "Cannot set status to Unpaid with a payment method selected.")
+            return
+          
         # Update the backend 
         success = update_payment_record(
             payment_id=self.payment_id,
