@@ -2183,7 +2183,7 @@ class Ui_MainWindow(object):
                         """)
 
         # Apply to all add buttons
-        for add_btn in [self.add_icon, self.AddApp_btn, self.AddBill_btn]:
+        for add_btn in [self.add_icon, self.AddApp_btn]:
                 add_btn.setStyleSheet(f"""
                         background-color: {add_bg}; 
                         border-radius: 8px; 
