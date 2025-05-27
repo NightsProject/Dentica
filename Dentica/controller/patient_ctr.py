@@ -17,6 +17,8 @@ class Patient_Dialog_Ctr(Add_Patient):
         self.patient_data = patient_data 
         self.picture_path = None  # Store the selected picture path
 
+        self.dark_mode = False
+        
         if not patient_data:
             new_id = generate_new_patient_id()
             self.patient_input.setText(new_id)
@@ -238,3 +240,4 @@ class Patient_Dialog_Ctr(Add_Patient):
             self.accept()
         else:
             QMessageBox.warning(self, "Error", "Failed to update patient.")
+    

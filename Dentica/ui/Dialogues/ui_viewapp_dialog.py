@@ -6,7 +6,7 @@ class View_Appointment(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setWindowTitle("Book Appointment")
+        self.setWindowTitle("View Appointment")
         self.setFixedSize(670, 500)
         self.setStyleSheet("""
             QDialog {
@@ -17,6 +17,8 @@ class View_Appointment(QtWidgets.QDialog):
         """)
         self.oldPos = None
 
+        self.dark_mode = False
+        
         label_style = "color: #37547A; font-family: Inter; font-size: 14px;"
         input_x = 150
         label_x = 20
@@ -119,6 +121,7 @@ class View_Appointment(QtWidgets.QDialog):
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
         self.exit_btn.clicked.connect(self.reject)
+        self.apply_theme()
 
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
@@ -136,3 +139,86 @@ class View_Appointment(QtWidgets.QDialog):
 
     def mouseReleaseEvent(self, event):
         self.oldPos = None
+        
+    def apply_theme(self):
+        if self.dark_mode:
+            # Dark theme colors
+            bg_color = "#2D2D2D"
+            text_color = "#FFFFFF"
+            card_bg = "#3D3D3D"
+            button_bg = "#37547A"
+            card_bd = "gray"
+            header_bg = "#1F1F21"
+            header_text = "#FFFFFF"
+            row_sep = "lightgray"
+        else:
+            # Light theme colors
+            bg_color = "#B2CDE9"
+            text_color = "#37547A"
+            card_bg = "#C6D7EC"
+            button_bg = "#37547A"
+            card_bd = "#fff"
+            header_bg = "#1F1F21"
+            header_text = "#FFFFFF"
+            row_sep = "#e5e7eb"
+
+        self.setStyleSheet(f"""
+            QDialog {{
+                background-color: {bg_color};
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }}
+            QLabel {{
+                color: {text_color};
+                font-family: Inter;
+                font-size: 14px;
+            }}
+            QLineEdit, QComboBox, QDateEdit {{
+                background-color: {card_bg};
+                color: {text_color};
+                border: 1px solid {card_bg};
+                border-radius: 3px;
+                padding: 2px 5px;
+            }}
+            QPushButton {{
+                background-color: {button_bg};
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }}
+            QPushButton:hover {{
+                background-color: #8DB8E0;
+            }}
+        """)
+        
+        self.Treat_table.setStyleSheet(f"""
+            QTableWidget {{
+                background-color: {bg_color};
+                color: {text_color};
+                gridline-color: {bg_color};
+                border: 1px solid {card_bd};
+                font-family: Inter;
+                font-size: 13px;
+            }}
+            QHeaderView::section {{
+                background-color: {bg_color};
+                color: {text_color};
+                font-weight: bold;
+                border: none;
+                padding: 4px;
+                margin: 0px;
+            }}
+            QTableWidget::item:selected {{
+                background-color: #88A9C9;
+                color: white;
+            }}
+        """)
+
+        for child in self.findChildren(QtWidgets.QLabel):
+            child.setStyleSheet(f"""
+                    color: {text_color};
+                    font-family: Inter;
+                    font-size: 14px;
+            """)
+    
