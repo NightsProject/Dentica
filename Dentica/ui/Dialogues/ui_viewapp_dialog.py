@@ -1,5 +1,6 @@
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QAbstractItemView
 from controller.patient_ctr import Patient_Dialog_Ctr
 
 class View_Appointment(QtWidgets.QDialog):
@@ -102,6 +103,10 @@ class View_Appointment(QtWidgets.QDialog):
         self.Treat_table.horizontalHeader().setContentsMargins(0, 0, 0, 0)
         self.Treat_table.horizontalHeader().setStyleSheet("margin: 0px; padding: 0px;")
         self.Treat_table.verticalHeader().setVisible(False)
+        self.Treat_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Treat_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.Treat_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+
         
         self.Total_cost = QtWidgets.QLabel("Total Cost:", self)
         self.Total_cost.setGeometry(20, 420, 120, 20)
