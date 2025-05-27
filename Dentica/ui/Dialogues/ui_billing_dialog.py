@@ -49,7 +49,7 @@ class Add_Payment(QtWidgets.QDialog):
         add_row(3, "Amount:", self.total_input)
 
         self.method_input = QtWidgets.QComboBox(self)
-        self.method_input.addItems(["None", "Cash", "Gcash"])
+        self.method_input.addItems(["None", "Cash", "GCash"])
         add_row(4, "Payment Method:", self.method_input)
         
         self.status_input = QtWidgets.QComboBox(self)
