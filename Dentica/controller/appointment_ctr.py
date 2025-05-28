@@ -336,6 +336,25 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         Slot for both delete buttons. Uses the 'row' property of the sender.
         After removing, renumbers all Treatment_IDs and rebuilds the table.
         """
+        
+        if not self.new_appointment:
+            prev = get_appointment_details(self.appointment_id)
+            if not prev:
+                QMessageBox.critical(self, "Error", "Failed to fetch existing appointment details.")
+                return
+
+            previous_payment_status = prev.get("Payment_Status")
+            if previous_payment_status == "Paid":
+                QMessageBox.warning(
+                    self, "Treatment Modification Restricted",
+                    "Cannot delete treatments because the appointment is already marked as Paid.\n"
+                    "Please mark payment status as Unpaid first."
+                )
+                return
+            
+        
+        
+        
         button = self.sender()
         row = button.property("row")
         if row is None or row < 0 or row >= len(self.treatments):
@@ -348,8 +367,10 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         ) != QMessageBox.StandardButton.Yes:
             return
 
+
         # 1) Remove from the list
         removed = self.treatments.pop(row)
+        
 
         # 2) Track for DB deletion if editing existing appointment
         if self.appointment_data:
@@ -523,6 +544,15 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         new_status        = self.status_input.currentText()
         new_schedule      = self.schedule_input.dateTime().toPyDateTime()
 
+
+        if previous_status == "Completed" and new_status == "Cancelled":
+            QMessageBox.warning(
+                self, "Invalid Status Change",
+                "You cannot change the status from 'Completed' to 'Cancelled'."
+            )
+            return
+
+
         # 2) Notify for cancel-record deletion if coming back from Cancelled
         if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
             QMessageBox.information(
@@ -530,16 +560,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 "The appointment was previously cancelled. Cancellation data will now be removed."
             )
 
-        # 3) Notify for schedule change
-        prev_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
-        new_str  = new_schedule.strftime('%Y-%m-%d %H:%M')
-        if previous_schedule != new_schedule:
-            QMessageBox.information(
-                self, "Appointment Rescheduled",
-                f"Appointment moved from {prev_str} to {new_str}."
-            )
-
-        # 4) Validation
+      
+        # 3) Validation
         if not (self.get_selected_patient_id() and self.validate_status()):
             QMessageBox.warning(self, "Validation Error",
                                 "Please select a valid patient and status.")
@@ -548,6 +570,15 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.warning(self, "No Treatments",
                                 "You must add at least one treatment for non-cancelled appointments.")
             return
+
+        #4) Notify for schedule change
+        prev_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
+        new_str  = new_schedule.strftime('%Y-%m-%d %H:%M')
+        if previous_schedule != new_schedule:
+            QMessageBox.information(
+                self, "Appointment Rescheduled",
+                f"Appointment moved from {prev_str} to {new_str}."
+            )
 
         # 5) Prepare core appointment_data
         app_id = self.appointment_id
