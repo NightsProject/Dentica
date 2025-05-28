@@ -206,7 +206,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         reply = QMessageBox.question(
             self,
             "Confirm Add Patient",
-            "Are you sure you want to add this patient details?. \n Once added, pateint gender and Birth Date cannot be changed.",
+            "Are you sure you want to add this patient details?. \nOnce added, patients Gender and Birth Date cannot be changed.",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
         )
 
