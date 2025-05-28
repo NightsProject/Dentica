@@ -158,13 +158,32 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         return self.patient_input.currentData()
 
     def on_add_treatment_clicked(self):
+        prev = get_appointment_details(self.appointment_id)
+        if not prev:
+            QMessageBox.critical(self, "Error", "Failed to fetch existing appointment details.")
+            return
+
+        previous_payment_status = prev.get("Payment_Status")  # could be None
+        previous_treatment_count = prev.get("Treatment_Count", 0)
+
+        # Treat "None" payment status as "not paid"
+        if previous_payment_status == "Paid" and previous_treatment_count != len(self.treatments):
+            QMessageBox.warning(
+                self, "Treatment Modification Restricted",
+                "Cannot add a new treatment because the appointment is already marked as Paid, "
+                "and the treatment count has changed. Please mark payment status as Unpaid first."
+            )
+            return
+
+        # Proceed to open treatment form
         appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
         form = Treatment_Dialog_Ctr(appointment_date)
-        form.dark_mode = self.dark_mode  
+        form.dark_mode = self.dark_mode
         form.apply_theme()
         form.treat_id_input.setText(str(len(self.treatments) + 1))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
+
 
     def handle_treatment_added(self, data):
         data["Appointment_ID"] = self.appointment_id
@@ -477,16 +496,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         previous_schedule = prev["Schedule"]
         new_status        = self.status_input.currentText()
         new_schedule      = self.schedule_input.dateTime().toPyDateTime()
-        previous_payment_status = prev["Payment_Status"]
-        previous_treatment_count = prev.get("Treatment_Count", 0)
-        
-        if previous_payment_status == "Paid" and previous_treatment_count != len(self.treatments):
-            QMessageBox.warning(
-                self, "Treatment Count Mismatch",
-                "The number of treatments has changed since the last payment. Please review the payment status and/or set the payment status to Unpaid before adding/deleting treatments."
-            )
-            return
-        
 
         # 2) Notify for cancel-record deletion if coming back from Cancelled
         if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
