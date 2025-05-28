@@ -356,12 +356,31 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         return True
 
     def on_add_pressed(self):
-               
+        status = self.status_input.currentText()
+        
+          # Check if status is valid for new appointment
+        if status in ("Cancelled", "Completed"):
+            QMessageBox.warning(
+                self,
+                "Invalid Status",
+                "You cannot set the appointment status to 'Cancelled' or 'Completed' when creating a new appointment."
+            )
+            return
+
+     
+      # Check if any treatment has status 'Canceled'
+        has_canceled_treatment = any(t.get("Treatment_Status") == "Canceled" for t in self.treatments)
+
+        if has_canceled_treatment:
+            QMessageBox.warning(self, "Invalid Treatment Status",
+                                "You cannot add an appointment if any treatment is marked as 'Canceled'.")
+            return
+
+        # Also check if there is at least one treatment at all (optional)
         if not self.treatments:
             QMessageBox.warning(self, "No Treatments",
                                 "You must add at least one treatment before saving the appointment.")
             return
-
 
 
         # validate patient selection and status
@@ -381,9 +400,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
         sched = self.schedule_input.dateTime().toPyDateTime()
         formatted_sched = sched.strftime('%Y-%m-%d %H:%M:%S')
-        status = self.status_input.currentText()
-
-
+        
         # Check if all treatments are canceled
         if all(t.get("Treatment_Status") == "Canceled" for t in self.treatments):
             reply = QMessageBox.question(
@@ -399,16 +416,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 return
             
             
-        # Check if status is valid for new appointment
-        if status in ("Cancelled", "Completed"):
-            QMessageBox.warning(
-                self,
-                "Invalid Status",
-                "You cannot set the appointment status to 'Cancelled' or 'Completed' when creating a new appointment."
-            )
-            return
-
-     
+      
 
         #setup booking and payment details
         booking_id = generate_new_booking_id()
