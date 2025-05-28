@@ -952,7 +952,8 @@ class Ui_MainWindow(object):
         }
         """)
         self.Patients_table.verticalHeader().setVisible(False)
-
+        self.Patients_table.setShowGrid(False)
+        
         #Sizing
         self.Patients_table.setColumnWidth(0, 175)  # Name
         self.Patients_table.setColumnWidth(1, 70)  # Gender
@@ -1073,7 +1074,8 @@ class Ui_MainWindow(object):
         }
         """)
         self.Appointments_table.verticalHeader().setVisible(False)
-
+        self.Appointments_table.setShowGrid(False)
+        
         #Appointment table sizing
         self.Appointments_table.setColumnWidth(0, 215)  # Pat. Name
         self.Appointments_table.setColumnWidth(1, 165)  # Date
@@ -1282,6 +1284,7 @@ class Ui_MainWindow(object):
         }
         """)
         self.Billing_table.verticalHeader().setVisible(False)
+        self.Billing_table.setShowGrid(False)
 
         # Bill Sizing
         self.Billing_table.setColumnWidth(0, 160)  # Pat. name
@@ -1472,6 +1475,7 @@ class Ui_MainWindow(object):
         }
         """)
         self.Booking_table.verticalHeader().setVisible(False)
+        self.Booking_table.setShowGrid(False)
 
         # Book Sizing
         self.Booking_table.setColumnWidth(0, 185)  # Booking ID 
@@ -1585,6 +1589,7 @@ class Ui_MainWindow(object):
         }
         """)
         self.Cancel_table.verticalHeader().setVisible(False)
+        self.Cancel_table.setShowGrid(False)
 
         # Cacncel Sizing
         self.Cancel_table.setColumnWidth(0, 145)  # Appointment ID 
@@ -2007,6 +2012,8 @@ class Ui_MainWindow(object):
                 search_bg = "gray"
                 add_bg = "#0E283F"
                 row_sep = "light gray"
+                table_selected_bg = "gray"
+                table_selected_text = "white"
                 
                 self.theme_btn.setIcon(light_icon)
         else:
@@ -2024,6 +2031,9 @@ class Ui_MainWindow(object):
                 search_bg = "#F1F5F9"
                 add_bg = "#0E283F"
                 row_sep = "#e5e7eb"
+                table_selected_bg = "#AFCBE3"
+                table_selected_text = "#1E293B"
+                
                 self.theme_btn.setIcon(dark_icon)
 
         
@@ -2244,6 +2254,7 @@ class Ui_MainWindow(object):
 
         # Apply to all tables
         for tables in [self.Patients_table, self.Appointments_table, self.Billing_table, self.Booking_table, self.Cancel_table]:
+                tables.setShowGrid(False)
                 tables.setStyleSheet(f"""
                         QTableWidget {{
                                 background-color: {table_bg};
@@ -2252,7 +2263,18 @@ class Ui_MainWindow(object):
                         }}
                         QTableWidget::item {{
                                 border-bottom: 1px solid {row_sep};
+                                border-left: none;
+                                border-right: none;
+                                border-top: none;
                                 color: {table_text};
+                        }}
+                        QTableWidget::item:selected {{
+                                background-color: {table_selected_bg};
+                                border: {table_bg};
+                                color: {table_selected_text};
+                                border-left: none;
+                                border-right: none;
+                                border-top: none;
                         }}
                         QHeaderView::section {{
                                 border: none;

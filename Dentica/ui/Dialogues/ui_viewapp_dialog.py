@@ -108,6 +108,7 @@ class View_Appointment(QtWidgets.QDialog):
         self.Treat_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.Treat_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.Treat_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.Treat_table.setShowGrid(False)
 
         
         self.Total_cost = QtWidgets.QLabel("Total Cost:", self)
@@ -156,6 +157,8 @@ class View_Appointment(QtWidgets.QDialog):
             header_bg = "#1F1F21"
             header_text = "#FFFFFF"
             row_sep = "lightgray"
+            table_selected_bg = "gray"
+            table_selected_text = "white"
         else:
             # Light theme colors
             bg_color = "#B2CDE9"
@@ -166,6 +169,8 @@ class View_Appointment(QtWidgets.QDialog):
             header_bg = "#1F1F21"
             header_text = "#FFFFFF"
             row_sep = "#e5e7eb"
+            table_selected_bg = "#AFCBE3"
+            table_selected_text = "#1E293B"
 
         self.setStyleSheet(f"""
             QDialog {{
@@ -215,8 +220,11 @@ class View_Appointment(QtWidgets.QDialog):
                 margin: 0px;
             }}
             QTableWidget::item:selected {{
-                background-color: #88A9C9;
-                color: white;
+                background-color: {table_selected_bg};
+                color: {table_selected_text};
+                border-left: none;
+                border-right: none;
+                border-top: none;
             }}
         """)
 
