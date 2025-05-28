@@ -24,10 +24,14 @@ class Patient_Dialog_Ctr(Add_Patient):
             new_id = generate_new_patient_id()
             self.patient_input.setText(new_id)
             self.add_patient.clicked.connect(self.on_add_pressed)
+            self.cancel_btn.clicked.connect(self.cancel)
+
         else:
             self.add_patient.setText("Update")
             self.add_patient.clicked.connect(self.update_patient)
             self.load_patient_data(patient_data)  # Load existing patient data
+            self.cancel_btn.clicked.connect(self.cancel_update)
+
 
         email_validator = QRegularExpressionValidator(QRegularExpression(r"^[\w\.-]+@[\w\.-]+\.\w+$"))
         self.email_input.setValidator(email_validator)
@@ -35,7 +39,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         contact_validator = QRegularExpressionValidator(QRegularExpression(r"^(09\d{9}|\+639\d{9})$"))
         self.contact_input.setValidator(contact_validator)
         self.contact_input.setPlaceholderText("09") # Default prefix for mobile numbers
-
+        
         # Real-time validation connections
         self.first_input.textChanged.connect(lambda: self.validate_alphabets_only(self.first_input))
         self.middle_input.textChanged.connect(lambda: self.validate_alphabets_only(self.middle_input))
@@ -44,7 +48,29 @@ class Patient_Dialog_Ctr(Add_Patient):
         self.gender_combo.currentIndexChanged.connect(self.validate_gender)
         self.email_input.textChanged.connect(self.validate_email)
         self.contact_input.textChanged.connect(self.validate_contact)
+   
+    def cancel(self):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Cancel",
+            "Are you sure you want to cancel adding this patient?\nAll unsaved information will be lost.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
 
+        if reply == QMessageBox.StandardButton.Yes:
+            self.reject()
+       
+    def cancel_update(self):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Cancel",
+            "Are you sure you want to cancel updating this patient?\nAll unsaved information will be lost.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            self.reject()
+        
     def load_patient_data(self, patient_data):
         """Load existing patient data into the form fields."""
         self.patient_input.setText(patient_data['Patient_ID'])

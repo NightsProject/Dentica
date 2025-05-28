@@ -114,6 +114,7 @@ class Add_Appointment(QtWidgets.QDialog):
         
         self.Treat_table.setColumnWidth(6, 100)
         self.Treat_table.verticalHeader().setVisible(False)
+        self.Treat_table.setShowGrid(False)
         self.Treat_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.Treat_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.Treat_table.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
@@ -137,7 +138,6 @@ class Add_Appointment(QtWidgets.QDialog):
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
-        self.cancel_btn.clicked.connect(self.reject)
         self.apply_theme()
         if appointment_data:
             self.populate_fields(appointment_data)

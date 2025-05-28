@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtWidgets, QtGui
 from PyQt6.QtCore import QRegularExpression, pyqtSignal, QDateTime
 from ui.Dialogues.ui_billing_dialog import Add_Payment
 from backend.billing_comp import get_billing_by_payment_id, update_payment_record
-
+from PyQt6.QtWidgets import QMessageBox
 class Billing_Dialog_Ctr(Add_Payment):
     payment_added = pyqtSignal()
 
@@ -43,9 +43,33 @@ class Billing_Dialog_Ctr(Add_Payment):
         
         if status == "Unpaid":
             self.save.clicked.connect(self.pay)
+            self.cancel_btn.clicked.connect(self.cancel)
         else:
             self.save.clicked.connect(self.update)
+            self.cancel_btn.clicked.connect(self.cancel_update)
 
+    def cancel(self):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Cancel",
+            "Are you sure you want to cancel Paying this Billing?\nAll unsaved information will be lost.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            self.reject()
+       
+    def cancel_update(self):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Cancel",
+            "Are you sure you want to cancel updating this Billing?\nAll unsaved information will be lost.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        
+        if reply == QMessageBox.StandardButton.Yes:
+            self.reject()
+            
     def pay(self):
         method = self.method_input.currentText()
 

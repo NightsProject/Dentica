@@ -29,7 +29,7 @@ class TablePagination:
         self.prev_btn.setStyleSheet("""
             QPushButton {
                 background: #8DB8E0;
-                color: white;
+                color: #64748B;
                 border: none;
                 border-radius: 4px;
                 padding: 5px;
@@ -51,7 +51,7 @@ class TablePagination:
         self.next_btn.setStyleSheet("""
             QPushButton {
                 background: #8DB8E0;
-                color: white;
+                color: #64748B;
                 border: none;
                 border-radius: 4px;
                 padding: 5px;
