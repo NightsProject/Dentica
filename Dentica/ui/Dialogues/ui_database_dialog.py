@@ -5,11 +5,13 @@ class Database_Login(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowSystemMenuHint)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+
         self.setWindowTitle("Login")
         self.setFixedSize(400, 480)
         self.setStyleSheet("""
             QDialog {
-                background-color: #f0f4f8;
+                background-color: transparent;
                 border-radius: 15px;
             }
         """)
