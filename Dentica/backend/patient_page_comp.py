@@ -86,4 +86,4 @@ def get_all_patient_records(patient_id):
     conn.close()
     return patient_data
 
-def get_patient_appointment(patient_id):
+#def get_patient_appointment(patient_id):
