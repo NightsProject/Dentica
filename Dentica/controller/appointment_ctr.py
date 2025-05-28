@@ -477,6 +477,16 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         previous_schedule = prev["Schedule"]
         new_status        = self.status_input.currentText()
         new_schedule      = self.schedule_input.dateTime().toPyDateTime()
+        previous_payment_status = prev["Payment_Status"]
+        previous_treatment_count = prev.get("Treatment_Count", 0)
+        
+        if previous_payment_status == "Paid" and previous_treatment_count != len(self.treatments):
+            QMessageBox.warning(
+                self, "Treatment Count Mismatch",
+                "The number of treatments has changed since the last payment. Please review the payment status and/or set the payment status to Unpaid before adding/deleting treatments."
+            )
+            return
+        
 
         # 2) Notify for cancel-record deletion if coming back from Cancelled
         if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
