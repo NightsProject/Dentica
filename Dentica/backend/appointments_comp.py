@@ -595,12 +595,7 @@ def get_appointment_details(appointment_id):
             SELECT 
                 a.Status, a.Schedule,
                 b.Booking_ID, b.Booking_Date_Time,
-                p.Payment_ID, p.Payment_Method, p.Payment_Status, p.Payment_Date,
-                (
-                    SELECT COUNT(*) 
-                    FROM Treatment t 
-                    WHERE t.Appointment_ID = a.Appointment_ID
-                ) AS Treatment_Count
+                p.Payment_ID, p.Payment_Method, p.Payment_Status, p.Payment_Date
             FROM Appointment a
             LEFT JOIN Books b ON a.Appointment_ID = b.Appointment_ID
             LEFT JOIN Pays p ON a.Appointment_ID = p.Appointment_ID
@@ -616,8 +611,8 @@ def get_appointment_details(appointment_id):
                 "Payment_ID":          result[4],
                 "Payment_Method":      result[5],
                 "Payment_Status":      result[6],
-                "Payment_Date":        result[7],  # Can be None
-                "Treatment_Count":     result[8]
+                "Payment_Date":        result[7] # Can be None
+               
             }
         else:
             return None
