@@ -85,6 +85,16 @@ class Billing_Dialog_Ctr(Add_Payment):
 
         payment_date = QDateTime.currentDateTime().toString("yyyy-MM-dd HH:mm:ss")
 
+        reply = QMessageBox.question(
+            self,
+            "Confirm Payment",
+            "You are about to mark this appointment as PAID.\nDo you want to proceed?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
+
         # Update the backend
         success = update_payment_record(
             payment_id=self.payment_id,
@@ -112,6 +122,18 @@ class Billing_Dialog_Ctr(Add_Payment):
         if status == "Paid" and method == "None":
             QtWidgets.QMessageBox.warning(self, "Update Error", "Cannot set status to Paid with a None payment method selected.")
             return
+            
+            
+        reply = QMessageBox.question(
+            self,
+            "Confirm Payment details upadte",
+            f"You are about to update this appointment as {status} with {method} as the Payment Method.\nDo you want to proceed?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
+            
             
         # Update the backend 
         success = update_payment_record(

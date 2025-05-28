@@ -482,7 +482,15 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 return
             
             
-      
+        reply = QMessageBox.question(
+            self,
+            "Confirm Add Appointment",
+            "Are you sure you want to add this Appointment?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
 
         #setup booking and payment details
         booking_id = generate_new_booking_id()
@@ -561,16 +569,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             return
 
 
-
-        # 2) Notify for cancel-record deletion if coming back from Cancelled
-        if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
-            QMessageBox.information(
-                self, "Cancellation Record Removed",
-                "The appointment was previously cancelled. Cancellation data will now be removed."
-            )
-
-      
-        # 3) Validation
+        # 2) Validation
         if not (self.get_selected_patient_id() and self.validate_status()):
             QMessageBox.warning(self, "Validation Error",
                                 "Please select a valid patient and status.")
@@ -579,6 +578,24 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.warning(self, "No Treatments",
                                 "You must add at least one treatment for non-cancelled appointments.")
             return
+        
+        #confirm before proceeding     
+        reply = QMessageBox.question(
+            self,
+            "Confirm Update Appointment",
+            "Are you sure you want to Update this Appointment?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
+        
+        # 3) Notify for cancel-record deletion if coming back from Cancelled
+        if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
+            QMessageBox.information(
+                self, "Cancellation Record Removed",
+                "The appointment was previously cancelled. Cancellation data will now be removed."
+            )
 
         #4) Notify for schedule change
         prev_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
@@ -593,7 +610,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         app_id = self.appointment_id
         pat_id = self.get_selected_patient_id()
         formatted_sched = new_schedule.strftime('%Y-%m-%d %H:%M:%S')
-
 
 
         # Check if all treatments are canceled
