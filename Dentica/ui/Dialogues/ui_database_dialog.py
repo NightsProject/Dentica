@@ -1,5 +1,6 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtCore import Qt
+filepath = "Dentica/ui/icons/"
 
 class Database_Login(QtWidgets.QDialog):
     def __init__(self, parent=None):
@@ -21,7 +22,7 @@ class Database_Login(QtWidgets.QDialog):
         self.container = QtWidgets.QWidget(self)
         self.container.setGeometry(20, 20, 360, 440)
         self.container.setStyleSheet("""
-            background-color: white;
+            background-color: #B2CDE9;
             border-radius: 15px;
             border: none;
         """)
@@ -33,20 +34,30 @@ class Database_Login(QtWidgets.QDialog):
         shadow.setColor(QtGui.QColor(0, 0, 0, 60))
         self.container.setGraphicsEffect(shadow)
 
-        # Welcome title label
-        self.title_label = QtWidgets.QLabel("Welcome Back", self.container)
-        self.title_label.setGeometry(0, 30, 360, 40)
+        # Dentica Icon
+        self.DenticaIcon = QtWidgets.QLabel(parent = self.container)
+        self.DenticaIcon.setGeometry(QtCore.QRect(70, 12, 60, 60))
+        dent_icon = QtGui.QIcon(f"{filepath}Dentica_blue.svg")
+        pixmap = dent_icon.pixmap(60,60)
+        self.DenticaIcon.setPixmap(pixmap)
+        
+        # Title label
+        self.title_label = QtWidgets.QLabel("Dentica", self.container)
+        self.title_label.setGeometry(130, 20, 150, 40)
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        font = QtGui.QFont()
+        font.setFamily("Katarine")
+        font.setBold(True)
         self.title_label.setStyleSheet("""
-            font-family: 'Inter', sans-serif;
+            font-family: Katarine;
             font-weight: 700;
-            font-size: 26px;
+            font-size: 40px;
             color: #1e293b;
         """)
 
         # Subtitle label
         self.subtitle_label = QtWidgets.QLabel("Please login to your database account", self.container)
-        self.subtitle_label.setGeometry(20, 75, 320, 20)
+        self.subtitle_label.setGeometry(20, 85, 320, 20)
         self.subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.subtitle_label.setStyleSheet("""
             font-family: 'Inter', sans-serif;
@@ -82,7 +93,7 @@ class Database_Login(QtWidgets.QDialog):
             }
         """
 
-        x_label = 25
+        x_label = 22
         x_input = 130
         row_height = 45
         row_start = 115
@@ -90,7 +101,7 @@ class Database_Login(QtWidgets.QDialog):
         def add_row(row, text, widget):
             y = row_start + row * row_height
             label = QtWidgets.QLabel(text, self.container)
-            label.setGeometry(x_label, y+7, 90, 20)  # adjusted vertical center with input
+            label.setGeometry(x_label, y+7, 105, 20)  # adjusted vertical center with input
             label.setStyleSheet(label_style)
             widget.setParent(self.container)
             widget.setGeometry(x_input, y, 195, 30)
