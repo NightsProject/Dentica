@@ -551,6 +551,15 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 "You cannot change the status from 'Completed' to 'Cancelled'."
             )
             return
+        
+        
+        if previous_status == "Completed" and new_status == "Scheduled":
+            QMessageBox.warning(
+                self, "Invalid Status Change",
+                "You cannot change the status from 'Completed' to 'Scheduled'."
+            )
+            return
+
 
 
         # 2) Notify for cancel-record deletion if coming back from Cancelled
