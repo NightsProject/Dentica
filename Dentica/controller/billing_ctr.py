@@ -109,6 +109,10 @@ class Billing_Dialog_Ctr(Add_Payment):
             QtWidgets.QMessageBox.warning(self, "Update Error", "Cannot set status to Unpaid with a payment method selected.")
             return
           
+        if status == "Paid" and method == "None":
+            QtWidgets.QMessageBox.warning(self, "Update Error", "Cannot set status to Paid with a None payment method selected.")
+            return
+            
         # Update the backend 
         success = update_payment_record(
             payment_id=self.payment_id,
