@@ -177,6 +177,9 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         total = 0.0
         for treatment in self.treatments:
             try:
+                
+                if treatment.get("Treatment_Status") == "Canceled":
+                    continue
                 #treatment dict has a 'Cost' field with a string/float
                 cost = float(treatment.get("Cost", 0))
                 total += cost
