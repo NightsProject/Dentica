@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import QMessageBox
 from ui.Dialogues.ui_patient_dialog import Add_Patient
 from backend.patients_comp import generate_new_patient_id, insert_patient, update_patient
 from PyQt6.QtWidgets import QToolTip
+import re
 
 class Patient_Dialog_Ctr(Add_Patient):
     patient_added = pyqtSignal()
@@ -89,16 +90,17 @@ class Patient_Dialog_Ctr(Add_Patient):
             self.picture_label.setPixmap(pixmap)
             
 
-
     def validate_alphabets_only(self, field):
         text = field.text().strip()
-        if not text or not text.isalpha():
+        # Regex: one or more letters or spaces, but not empty
+        if not text or not re.fullmatch(r"[A-Za-z ]+", text):
             field.setStyleSheet("border: 2px solid red;")
-            QToolTip.showText(field.mapToGlobal(field.rect().bottomLeft()), "Only alphabets are allowed!", field)
+            QToolTip.showText(field.mapToGlobal(field.rect().bottomLeft()), "Only alphabets and spaces are allowed!", field)
             return False
         else:
             field.setStyleSheet("")
             return True
+
 
     def validate_address(self, field):
         if not field.text().strip():
