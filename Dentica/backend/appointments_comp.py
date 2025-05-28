@@ -611,7 +611,8 @@ def get_appointment_details(appointment_id):
                 "Payment_ID":          result[4],
                 "Payment_Method":      result[5],
                 "Payment_Status":      result[6],
-                "Payment_Date":        result[7]   # Can be None
+                "Payment_Date":        result[7] # Can be None
+               
             }
         else:
             return None
@@ -621,3 +622,4 @@ def get_appointment_details(appointment_id):
     finally:
         cursor.close()
         conn.close()
+

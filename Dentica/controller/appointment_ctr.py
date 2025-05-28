@@ -64,6 +64,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
         self.setup_patient_input()  # Initialize patient input components
 
+        self.new_appointment = False
         # If editing an existing appointment
         if appointment_data:
             self.appointment_id = appointment_data.get('Appointment_ID')  # Needed for updates
@@ -80,6 +81,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         else:
             # Creating a new appointment
             self.appointment_id = generate_new_appointment_id()
+            self.new_appointment = True
             self.appointment_input.setText(self.appointment_id)
             self.add_btn.setText("Add")
             try:
@@ -158,13 +160,33 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         return self.patient_input.currentData()
 
     def on_add_treatment_clicked(self):
+        
+        if not self.new_appointment:
+            prev = get_appointment_details(self.appointment_id)
+            if not prev:
+                QMessageBox.critical(self, "Error", "Failed to fetch existing appointment details.")
+                return
+
+            previous_payment_status = prev.get("Payment_Status")  # could be None
+
+            # Treat "None" payment status as "not paid"
+            if previous_payment_status == "Paid":
+                QMessageBox.warning(
+                    self, "Treatment Modification Restricted",
+                    "Cannot add a new treatment because the appointment is already marked as Paid, "
+                    "Please mark payment status as Unpaid first."
+                )
+                return
+
+        # Proceed to open treatment form
         appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
         form = Treatment_Dialog_Ctr(appointment_date)
-        form.dark_mode = self.dark_mode  
+        form.dark_mode = self.dark_mode
         form.apply_theme()
         form.treat_id_input.setText(str(len(self.treatments) + 1))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
+
 
     def handle_treatment_added(self, data):
         data["Appointment_ID"] = self.appointment_id

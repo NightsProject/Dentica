@@ -380,7 +380,7 @@ class PatientPage(QtWidgets.QWidget):
                 border: none;
                 }}
                 QTableWidget::item {{
-                        border: 1px solid #e5e7eb;
+                        border: none;
                 }}
                 QHeaderView::section {{
                         border: none;
