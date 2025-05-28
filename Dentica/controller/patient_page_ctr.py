@@ -13,7 +13,7 @@ class Patient_Page_Ctr(PatientPage):
     def __init__(self, stacked_widget, patient_id):
         super().__init__(stacked_widget)
         self.Pages = stacked_widget
-        
+        self.dark_mode = False
         self.Editpat_btn.setProperty("Patient ID", patient_id)
         self.Editpat_btn.clicked.connect(self.edit_patient)
         
@@ -93,7 +93,12 @@ class Patient_Page_Ctr(PatientPage):
             return
         
         patient_popup = Patient_Dialog_Ctr(patient_data=patient_data)
+        patient_popup.dark_mode = self.dark_mode 
+        patient_popup.apply_theme()
         if patient_popup.exec():
             # After the dialog closes and if accepted, reload the updated data
             self.load_patient_infos(patient_id)
             self.reload_patient_signal.emit()
+    
+
+        

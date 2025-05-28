@@ -160,6 +160,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
     def on_add_treatment_clicked(self):
         appointment_date = self.schedule_input.dateTime().toPyDateTime().date()
         form = Treatment_Dialog_Ctr(appointment_date)
+        form.dark_mode = self.dark_mode  
+        form.apply_theme()
         form.treat_id_input.setText(str(len(self.treatments) + 1))
         form.treatment_added.connect(self.handle_treatment_added)
         form.exec()
@@ -253,6 +255,8 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         cost_value = float(t["Cost"])
         edit_treatment.cost_input.setText(f"{cost_value:.2f}")
         edit_treatment.procedure_input.setText(t["Treatment_Procedure"])
+        edit_treatment.dark_mode = self.dark_mode  
+        edit_treatment.apply_theme()
         
         #setting date time
         dt = t["Treatment_Date_Time"]
@@ -446,6 +450,11 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         else:
             QMessageBox.critical(self, "Database Error", "Failed to save the appointment. Please try again.")
 
+
+
+
+
+
     def on_update_pressed(self):
         # 1) Fetch current data from DB before update
         prev = get_appointment_details(self.appointment_id)
@@ -564,7 +573,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             }
 
         # 8) If still Scheduled (but not a re-schedule), carry forward and update payment info
-        elif new_status == "Scheduled" and "Booking" not in appointment_data:
+        elif new_status in ("Scheduled", "Completed") and "Booking" not in appointment_data:
             appointment_data["Booking"] = {
                 "Booking_ID":        prev["Booking_ID"],
                 "Patient_ID":        pat_id,
@@ -580,6 +589,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 "Payment_Status": prev["Payment_Status"],
                 "Payment_Date":   prev["Payment_Date"]
             }
+
 
         # 9) Delete treatments marked for deletion
         if hasattr(self, "treatments_to_delete"):

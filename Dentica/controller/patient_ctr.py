@@ -17,6 +17,8 @@ class Patient_Dialog_Ctr(Add_Patient):
         self.patient_data = patient_data 
         self.picture_path = None  # Store the selected picture path
 
+        self.dark_mode = False
+        
         if not patient_data:
             new_id = generate_new_patient_id()
             self.patient_input.setText(new_id)
@@ -31,7 +33,7 @@ class Patient_Dialog_Ctr(Add_Patient):
 
         contact_validator = QRegularExpressionValidator(QRegularExpression(r"^(09\d{9}|\+639\d{9})$"))
         self.contact_input.setValidator(contact_validator)
-        self.contact_input.setText("09") # Default prefix for mobile numbers
+        self.contact_input.setPlaceholderText("09") # Default prefix for mobile numbers
 
         # Real-time validation connections
         self.first_input.textChanged.connect(lambda: self.validate_alphabets_only(self.first_input))
@@ -93,8 +95,10 @@ class Patient_Dialog_Ctr(Add_Patient):
         if not text or not text.isalpha():
             field.setStyleSheet("border: 2px solid red;")
             QToolTip.showText(field.mapToGlobal(field.rect().bottomLeft()), "Only alphabets are allowed!", field)
+            return False
         else:
             field.setStyleSheet("")
+            return True
 
     def validate_address(self, field):
         if not field.text().strip():
@@ -145,29 +149,26 @@ class Patient_Dialog_Ctr(Add_Patient):
 
                 orig.setMask(mask)
                 self.picture_label.setPixmap(orig)
-
+   
     def on_add_pressed(self):   
-        # Validate all fields
-        self.validate_alphabets_only(self.first_input)
-        self.validate_alphabets_only(self.middle_input)
-        self.validate_alphabets_only(self.last_input)
-        self.validate_address(self.address_input)
-        self.validate_gender()
-        self.validate_email()
-        self.validate_contact()
 
-        # Check for validation failures
-        if (
-            not self.first_input.text().strip()
-            or not self.middle_input.text().strip()
-            or not self.last_input.text().strip()
-            or not self.address_input.text().strip()
-            or self.gender_combo.currentIndex() == 0
-            or not self.email_input.hasAcceptableInput()
-            or not self.contact_input.hasAcceptableInput()
-        ):
-            QtWidgets.QMessageBox.warning(self, "Validation Error", "Please fill all required fields correctly.")
-            return  # Stop submission
+        # Collect validation results
+        first =  self.validate_alphabets_only(self.first_input)
+        middle =  self.validate_alphabets_only(self.middle_input)
+        last =   self.validate_alphabets_only(self.last_input)
+        address = self.address_input.text().strip()
+        gender_selected = self.gender_combo.currentIndex() != 0
+        email_valid = self.email_input.hasAcceptableInput()
+        contact_valid = self.contact_input.hasAcceptableInput()
+
+        # Check for any invalid field
+        if not (first and middle and last and address and gender_selected and email_valid and contact_valid):
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Validation Error",
+                "Please fill in all required fields with valid data before submitting."
+            )
+            return
 
         # All valid, proceed to collect data
         patient_id = self.patient_input.text()
@@ -203,6 +204,25 @@ class Patient_Dialog_Ctr(Add_Patient):
                 print(f"Error copying picture: {e}")
 
     def update_patient(self):
+        
+        # Collect validation results
+        first =  self.validate_alphabets_only(self.first_input)
+        middle =  self.validate_alphabets_only(self.middle_input)
+        last =   self.validate_alphabets_only(self.last_input)
+        address = self.address_input.text().strip()
+        gender_selected = self.gender_combo.currentIndex() != 0
+        email_valid = self.email_input.hasAcceptableInput()
+        contact_valid = self.contact_input.hasAcceptableInput()
+
+        # Check for any invalid field
+        if not (first and middle and last and address and gender_selected and email_valid and contact_valid):
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Validation Error",
+                "Please fill in all required fields with valid data before submitting."
+            )
+            return
+        
         patient_id = self.patient_input.text()
         first_name = self.first_input.text()
         middle_name = self.middle_input.text()
@@ -213,10 +233,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         email = self.email_input.text()
         address = self.address_input.text()
 
-        # Validate required fields
-        if not all([first_name, last_name, gender, contact_number]):
-            QMessageBox.warning(self, "Validation Error", "Please fill in all required fields.")
-            return
+
 
         success = update_patient(self,
             patient_id,
@@ -238,3 +255,4 @@ class Patient_Dialog_Ctr(Add_Patient):
             self.accept()
         else:
             QMessageBox.warning(self, "Error", "Failed to update patient.")
+    

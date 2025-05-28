@@ -1,4 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QHeaderView
+
 
 filepath = "Dentica/ui/icons/"
 
@@ -6,6 +8,7 @@ class PatientPage(QtWidgets.QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.Pages = stacked_widget
+        self.dark_mode = False
         
         #Return Button
         self.return_btn = QtWidgets.QPushButton(self)
@@ -232,7 +235,7 @@ class PatientPage(QtWidgets.QWidget):
        
         #Appointment history table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.profile_card3)
-        self.UpAp_table.setGeometry(QtCore.QRect(20, 40, 400, 300))
+        self.UpAp_table.setGeometry(QtCore.QRect(20, 40, 840, 300))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -272,4 +275,113 @@ class PatientPage(QtWidgets.QWidget):
                 padding: 5px;         
         }
         """)
-       
+        header = self.UpAp_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.apply_theme()
+        
+    def apply_theme(self):
+        if self.dark_mode:
+            # Dark theme colors
+            bg_color = "#2D2D2D"
+            text_color = "#FFFFFF"
+            card_bg = "#3D3D3D"
+            card_text = "lightgray"
+            card_bd = "gray"
+            button_bg = "#37547A"
+            header_bg = "#1F1F21"
+            header_text = "#FFFFFF"
+        else:
+            # Light theme colors
+            bg_color = "#B2CDE9"
+            text_color = "#37547A"
+            card_bg = "#C6D7EC"
+            card_text = "#64748B"
+            card_bd = "#FFFFFF"
+            button_bg = "#37547A"
+            header_bg = "#1F1F21"
+            header_text = "#FFFFFF"
+            
+        #LABELS    
+            
+        self.patient.setStyleSheet(f"background-color: {bg_color}; color: {text_color};")
+        
+        self.AppHis.setStyleSheet(f"""
+                background: {card_bg}; 
+                color: {text_color}; 
+                font-family: Katarine; 
+                font-size: 16px; 
+                font-weight: bold;
+                                  
+                                  """)
+
+        
+        #FRAMES
+        
+        self.profile_card.setStyleSheet(f"""
+        #profile_card {{
+                background: {card_bg}; 
+                font-family: Katarine; 
+                font-size: 14px; 
+                color: {card_text};
+                border: 1px solid {card_bd};  
+                border-radius: 12px;
+        }}
+        """)
+        self.profile_card2.setStyleSheet(f"""
+        #profile_card2 {{
+                background: {card_bg}; 
+                border: 1px solid {card_bd};  
+                border-radius: 12px;
+        }}
+        """)
+        
+        self.profile_card3.setStyleSheet(f"""
+        #profile_card3 {{
+                background: {card_bg}; 
+                font-family: Katarine; 
+                font-size: 14px; 
+                color: {card_text};
+                border: 1px solid {card_bd};  
+                border-radius: 12px;
+        }}
+        """)
+        
+        
+        #Details
+        
+        for det_text in [self.fn, self.address, self.email, self.mn, self.gender, self.birth_date, self.ln, self.contact, self.blank]:
+                det_text.setStyleSheet(f"""
+                        background: {card_bg}; 
+                        font-family: Katarine; 
+                        font-size: 14px; 
+                        color: {card_text};               
+                                       """)
+        for text_value in [self.fnval, self.adval, self.emailval, self.mnval, self.genval, self.bdval, self.lndval, self.condval, self.blankdval]:
+                text_value.setStyleSheet(f"""
+                        background: {card_bg}; 
+                        font-family: Katarine; 
+                        font-size: 18px; 
+                 
+                                         """)
+        
+        #Table
+        self.UpAp_table.setStyleSheet(f"""
+                QTableWidget {{
+                background-color: {card_bg};
+                border: none;
+                }}
+                QTableWidget::item {{
+                        border: 1px solid #e5e7eb;
+                }}
+                QHeaderView::section {{
+                        border: none;
+                        background-color: {card_bg};
+                }}
+                """)
+        
+        
+        
+  

@@ -77,8 +77,11 @@ class MainController(QMainWindow, Ui_MainWindow):
         super().__init__()
         
         self.setupUi(self)
+        self.dark_mode = False
+        self.first_login = True
+        self.open_login_popup()
         
-    
+        
         self.userbtn.clicked.connect(lambda: self.open_login_popup())
         self.AddApp_btn.clicked.connect(lambda: self.open_appointment())
         self.add_icon.clicked.connect(lambda: self.open_patient())
@@ -98,18 +101,22 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.pushButton_6.clicked.connect(lambda: self.search_appointment_data("Cancelled")) #canceled button
         
     def open_login_popup(self):
-        login_popup = Database_Dialog_Ctr()
+        login_popup = Database_Dialog_Ctr(self.first_login)
         login_popup.credentialsSubmitted.connect(self.handle_credentials)
         login_popup.exec()
     
     def open_appointment(self):
         app_popup = Appointment_Dialog_Ctr()
+        app_popup.dark_mode = self.dark_mode
+        app_popup.apply_theme()
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
 
         
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
+        patient_popup.dark_mode = self.dark_mode  
+        patient_popup.apply_theme()
         patient_popup.patient_added.connect(self.reload_all_tables) 
         patient_popup.exec()
         
@@ -125,8 +132,7 @@ class MainController(QMainWindow, Ui_MainWindow):
     # If successful, it loads the data into the UI
     # If not, it shows an error message
     # It also handles the case where the connection is None
-    def handle_credentials(self, host, port, user, password, databaseName):
-        print(f"Received credentials: host={host}, port ={port}, user={user}, password={password}, database name={databaseName}")
+    def handle_credentials(self, host, port, user, password, databaseName, first_login):
         
         try:
             connection = connectDBF(host, port, user, password, databaseName)
@@ -138,7 +144,7 @@ class MainController(QMainWindow, Ui_MainWindow):
          
             set_credentials(host,port, user, password, databaseName)
             if connection:
-                
+                self.first_login = first_login
                 QMessageBox.information(self, "Success", f"Successfully connected to {databaseName} Database!")
            
                 
@@ -514,6 +520,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         # Create the patient profile page once and reuse it every time
         if not hasattr(self, 'patient_profile_page'):
             self.patient_profile_page = Patient_Page_Ctr(self.Pages, patient_id)
+            self.patient_profile_page.dark_mode = self.dark_mode  
+            self.patient_profile_page.apply_theme()
             self.Pages.addWidget(self.patient_profile_page)
 
         # Load the patient info for the selected patient ID
@@ -531,6 +539,8 @@ class MainController(QMainWindow, Ui_MainWindow):
             return
         
         patient_popup = Patient_Dialog_Ctr(patient_data=patient_data)
+        patient_popup.dark_mode = self.dark_mode  
+        patient_popup.apply_theme()
         patient_popup.patient_added.connect(self.reload_all_tables)
         patient_popup.exec()
         
@@ -648,6 +658,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         button = self.sender()
         appointment_id = button.property("Appointment ID")
         view_appointment = View_Appointent_Ctr(appointment_id)
+        view_appointment.dark_mode = self.dark_mode 
+        view_appointment.apply_theme()
         #view_appointment.view_app_reload.connect(self.reload_all_tables)
         view_appointment.exec()
   
@@ -661,6 +673,8 @@ class MainController(QMainWindow, Ui_MainWindow):
             return
         
         app_popup = Appointment_Dialog_Ctr(appointment_data=appointment_data)
+        app_popup.dark_mode = self.dark_mode  
+        app_popup.apply_theme()
         app_popup.appointment_added.connect(self.reload_all_tables)
         app_popup.exec()
         
@@ -751,6 +765,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         button = self.sender()
         billing_id = button.property("Billing_ID")
         bill_popup = Billing_Dialog_Ctr(billing_id)
+        bill_popup.dark_mode = self.dark_mode  
+        bill_popup.apply_theme()
         bill_popup.payment_added.connect(self.reload_all_tables)
         bill_popup.exec()
 
@@ -759,6 +775,8 @@ class MainController(QMainWindow, Ui_MainWindow):
         button = self.sender()
         billing_id = button.property("Billing_ID")
         bill_popup = Billing_Dialog_Ctr(billing_id)
+        bill_popup.dark_mode = self.dark_mode  
+        bill_popup.apply_theme()
         bill_popup.payment_added.connect(self.reload_all_tables)
         bill_popup.exec()
     

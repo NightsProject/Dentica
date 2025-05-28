@@ -664,7 +664,7 @@ class Ui_MainWindow(object):
 
         #Todays Appointment Table
         self.UpAp_table = QtWidgets.QTableWidget(parent=self.frame_2)
-        self.UpAp_table.setGeometry(QtCore.QRect(10, 80, 560, 325))
+        self.UpAp_table.setGeometry(QtCore.QRect(10, 50, 560, 335))
         self.UpAp_table.setShowGrid(False)
         self.UpAp_table.setStyleSheet("""
         QTableWidget {
@@ -722,8 +722,8 @@ class Ui_MainWindow(object):
         
         self.UpAp_table.verticalHeader().setDefaultSectionSize(60)
         
-        self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=10)
-        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=-3)
+        self.UpAp_pagination = TablePagination(self.UpAp_table, rows_per_page=5)
+        self.UpAp_pagination.setup_pagination_controls(self.frame_2, y_offset=12)
   
   
         # Calendar Frame
@@ -1982,6 +1982,13 @@ class Ui_MainWindow(object):
         dark_icon = QtGui.QIcon(f"{filepath}Dark.svg")
         light_icon = QtGui.QIcon(f"{filepath}Light.svg")
         self.apply_theme(light_icon, dark_icon)
+        for dialog in self.findChildren(QtWidgets.QDialog):
+            if hasattr(dialog, 'dark_mode'):
+                dialog.dark_mode = self.dark_mode
+                dialog.apply_theme()
+        if hasattr(self, 'patient_profile_page'):
+            self.patient_profile_page.dark_mode = self.dark_mode
+            self.patient_profile_page.apply_theme()
         
         
     def apply_theme(self, light_icon, dark_icon):

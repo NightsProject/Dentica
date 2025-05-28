@@ -19,6 +19,9 @@ class Add_Appointment(QtWidgets.QDialog):
         """)
         self.oldPos = None
 
+        self.dark_mode = False
+
+        
         label_style = "color: #37547A; font-family: Inter; font-size: 14px;"
         input_x = 150
         label_x = 20
@@ -135,7 +138,7 @@ class Add_Appointment(QtWidgets.QDialog):
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
         self.cancel_btn.clicked.connect(self.reject)
-        
+        self.apply_theme()
         if appointment_data:
             self.populate_fields(appointment_data)
             
@@ -164,6 +167,8 @@ class Add_Appointment(QtWidgets.QDialog):
 
     def open_patient(self):
         patient_popup = Patient_Dialog_Ctr()
+        patient_popup.dark_mode = self.dark_mode
+        patient_popup.apply_theme()
         patient_popup.exec()
 
     def mousePressEvent(self, event):
@@ -178,3 +183,89 @@ class Add_Appointment(QtWidgets.QDialog):
 
     def mouseReleaseEvent(self, event):
         self.oldPos = None
+
+    def apply_theme(self):
+        if self.dark_mode:
+            # Dark theme colors
+            bg_color = "#2D2D2D"
+            text_color = "#FFFFFF"
+            card_bg = "#3D3D3D"
+            card_bd = "gray"
+            button_bg = "#37547A"
+            header_bg = "#1F1F21"
+            select = "light gray"
+            header_text = "#FFFFFF"
+        else:
+            # Light theme colors
+            bg_color = "#B2CDE9"
+            text_color = "#37547A"
+            card_bg = "#C6D7EC"
+            card_bd = "#fff"
+            button_bg = "#37547A"
+            header_bg = "#1F1F21"
+            select = "#88A9C9"
+            header_text = "#FFFFFF"
+
+        self.setStyleSheet(f"""
+            QDialog {{
+                background-color: {bg_color};
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }}
+            QLabel {{
+                color: {text_color};
+                font-family: Inter;
+                font-size: 14px;
+            }}
+            QLineEdit, QComboBox, QDateTimeEdit {{
+                background-color: {card_bg};
+                color: {text_color};
+                border: 1px solid {card_bg};
+                border-radius: 3px;
+                padding: 2px 5px;
+            }}
+            QPushButton {{
+                background-color: {button_bg};
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }}
+            QPushButton:hover {{
+                background-color: #8DB8E0;
+            }}
+        """)
+        
+        
+        
+        self.Treat_table.setStyleSheet(f"""
+            QTableWidget {{
+                background-color: {bg_color};
+                color: {text_color};
+                gridline-color: {bg_color};
+                border: 1px solid {card_bd};
+                font-family: Inter;
+                font-size: 13px;
+            }}
+            QHeaderView::section {{
+            background-color: {bg_color};
+            color: {text_color};
+            font-weight: bold;
+            border: none;
+            padding: 4px;
+            margin: 0px;
+            }}
+            QTableWidget::item:selected {{
+                background-color: {select};
+                color: white;
+            }}
+        """)
+
+        for child in self.findChildren(QtWidgets.QLabel):
+            if child != self.header:  # Skip the header we already styled
+                child.setStyleSheet(f"""
+                    color: {text_color};
+                    font-family: Inter;
+                    font-size: 14px;
+            """)
+    
