@@ -85,3 +85,5 @@ def get_all_patient_records(patient_id):
     cursor.close()
     conn.close()
     return patient_data
+
+def get_patient_appointment(patient_id):
