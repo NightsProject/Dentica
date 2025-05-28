@@ -167,11 +167,11 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         previous_treatment_count = prev.get("Treatment_Count", 0)
 
         # Treat "None" payment status as "not paid"
-        if previous_payment_status == "Paid" and previous_treatment_count != len(self.treatments):
+        if previous_payment_status == "Paid":
             QMessageBox.warning(
                 self, "Treatment Modification Restricted",
                 "Cannot add a new treatment because the appointment is already marked as Paid, "
-                "and the treatment count has changed. Please mark payment status as Unpaid first."
+                "Please mark payment status as Unpaid first."
             )
             return
 
