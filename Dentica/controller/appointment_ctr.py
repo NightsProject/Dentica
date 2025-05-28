@@ -141,39 +141,36 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             self.patient_input_line_edit = self.patient_input.lineEdit()
             if self.patient_input_line_edit is None:
                 return
-        
-        self.all_patients = get_patients_name()
-        
+
+        # Fetch all patients if not already fetched
+        if not hasattr(self, 'all_patients') or not self.all_patients:
+            self.all_patients = get_patients_name()
+
         combo = self.patient_input
         edit = self.patient_input_line_edit
-        
-        # Block signals to prevent recursion
+
+        # Block signals to avoid unwanted signal emission during update
         combo.blockSignals(True)
         edit.blockSignals(True)
 
-        # Clear current items
+        current_text = text.strip().lower()
         combo.clear()
 
-        # If empty text, show nothing
-        if not text.strip():
-            combo.blockSignals(False)
-            edit.blockSignals(False)
-            return
+        if current_text:
+            filtered = [
+                p for p in self.all_patients
+                if current_text in p["Full_Name"].lower()
+            ]
 
-        # Filter patients based on search text
-        filtered = [
-            p for p in self.all_patients
-            if text.lower() in p["Full_Name"].lower()
-        ]
+            if filtered:
+                for p in filtered:
+                    combo.addItem(p["Full_Name"], p["Patient_ID"])
+            else:
+                combo.addItem("No matches found", None)
 
-        if filtered:
-            for p in filtered:
-                combo.addItem(p["Full_Name"], p["Patient_ID"])
-        else:
-            combo.addItem("No matches found", None)
-
-        # Restore the text that was being typed
+        # Restore the typed text in the editable field
         edit.setText(text)
+        edit.setCursorPosition(len(text))  # keep cursor at end
 
         # Re-enable signals
         combo.blockSignals(False)
