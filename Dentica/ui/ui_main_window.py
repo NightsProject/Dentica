@@ -2037,7 +2037,7 @@ class Ui_MainWindow(object):
         self.UserCard.setStyleSheet(f"background-color: {main_bg} ; border-radius: 10px;")
         
         # Apply to top bars
-        for frame in [self.dash_graph, self.frame_4, self.app_frame, self.Bill_frame]:
+        for frame in [self.frame_4, self.app_frame, self.Bill_frame]:
                 frame.setStyleSheet(f"background-color: {main_bg};")
         
         # Apply to labels in top bars
@@ -2045,7 +2045,7 @@ class Ui_MainWindow(object):
                 label.setStyleSheet(f"background-color: {main_bg}; color: {main_text};")
         
         # Apply to cards
-        for card in [self.dash_graph, self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
+        for card in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card, 
                         self.frame_2, self.frame_3, self.Pat_table_Frame, self.app_table_frame, 
                         self.bill_table_frame]:
                 card.setStyleSheet(f"""
@@ -2100,7 +2100,7 @@ class Ui_MainWindow(object):
         
         # DASHBOARD PAGE
         # Apply to Card frames
-        for card_fr in [self.dash_graph,self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card]:
+        for card_fr in [self.TotPat_card, self.TodApp_card, self.PendPay_card, self.ComTreat_card]:
                 card_fr.setStyleSheet(f"""
                         background-color: {card_bg};
                         border: 1px solid {card_bd};
@@ -2115,7 +2115,7 @@ class Ui_MainWindow(object):
                         """)
                 
         # Apply to Dashboard titles
-        for titles in [self.graph_label, self.label_2, self.label_3, self.label_4, self.label_8, self.label_10]:
+        for titles in [self.label_2, self.label_3, self.label_4, self.label_8, self.label_10]:
                 titles.setStyleSheet(f"""
                         background: {card_bg};
                         color: {card_text};
