@@ -14,6 +14,7 @@ class Patient_Page_Ctr(PatientPage):
         super().__init__(stacked_widget)
         self.Pages = stacked_widget
         self.dark_mode = False
+        
         self.Editpat_btn.setProperty("Patient ID", patient_id)
         self.Editpat_btn.clicked.connect(self.edit_patient)
         
@@ -131,6 +132,7 @@ class Patient_Page_Ctr(PatientPage):
             # After the dialog closes and if accepted, reload the updated data
             self.load_patient_infos(patient_id)
             self.reload_patient_signal.emit()
+        
     
 
         

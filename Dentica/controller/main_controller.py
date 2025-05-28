@@ -517,17 +517,20 @@ class MainController(QMainWindow, Ui_MainWindow):
         button = self.sender()
         patient_id = button.property("Patient ID")
 
-        # Create the patient profile page once and reuse it every time
-        if not hasattr(self, 'patient_profile_page'):
-            self.patient_profile_page = Patient_Page_Ctr(self.Pages, patient_id)
-            self.patient_profile_page.dark_mode = self.dark_mode  
-            self.patient_profile_page.apply_theme()
-            self.Pages.addWidget(self.patient_profile_page)
+        # Delete old patient profile page if it exists
+        if hasattr(self, 'patient_profile_page'):
+            self.Pages.removeWidget(self.patient_profile_page)
+            self.patient_profile_page.deleteLater()
+            del self.patient_profile_page
 
-        # Load the patient info for the selected patient ID
-        self.patient_profile_page.load_patient_infos(patient_id)
-        # Set the current page to the patient page index
+        # Create a new patient profile page
+        self.patient_profile_page = Patient_Page_Ctr(self.Pages, patient_id)
+        self.patient_profile_page.dark_mode = self.dark_mode
+        self.patient_profile_page.apply_theme()
         self.patient_profile_page.reload_patient_signal.connect(self.reload_all_tables)
+
+        # Add the new widget and switch to it
+        self.Pages.addWidget(self.patient_profile_page)
         self.Pages.setCurrentWidget(self.patient_profile_page)
 
     def edit_patient(self):
