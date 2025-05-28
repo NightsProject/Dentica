@@ -141,39 +141,36 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             self.patient_input_line_edit = self.patient_input.lineEdit()
             if self.patient_input_line_edit is None:
                 return
-        
-        self.all_patients = get_patients_name()
-        
+
+        # Fetch all patients if not already fetched
+        if not hasattr(self, 'all_patients') or not self.all_patients:
+            self.all_patients = get_patients_name()
+
         combo = self.patient_input
         edit = self.patient_input_line_edit
-        
-        # Block signals to prevent recursion
+
+        # Block signals to avoid unwanted signal emission during update
         combo.blockSignals(True)
         edit.blockSignals(True)
 
-        # Clear current items
+        current_text = text.strip().lower()
         combo.clear()
 
-        # If empty text, show nothing
-        if not text.strip():
-            combo.blockSignals(False)
-            edit.blockSignals(False)
-            return
+        if current_text:
+            filtered = [
+                p for p in self.all_patients
+                if current_text in p["Full_Name"].lower()
+            ]
 
-        # Filter patients based on search text
-        filtered = [
-            p for p in self.all_patients
-            if text.lower() in p["Full_Name"].lower()
-        ]
+            if filtered:
+                for p in filtered:
+                    combo.addItem(p["Full_Name"], p["Patient_ID"])
+            else:
+                combo.addItem("No matches found", None)
 
-        if filtered:
-            for p in filtered:
-                combo.addItem(p["Full_Name"], p["Patient_ID"])
-        else:
-            combo.addItem("No matches found", None)
-
-        # Restore the text that was being typed
+        # Restore the typed text in the editable field
         edit.setText(text)
+        edit.setCursorPosition(len(text))  # keep cursor at end
 
         # Re-enable signals
         combo.blockSignals(False)
@@ -482,7 +479,15 @@ class Appointment_Dialog_Ctr(Add_Appointment):
                 return
             
             
-      
+        reply = QMessageBox.question(
+            self,
+            "Confirm Add Appointment",
+            "Are you sure you want to add this Appointment?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
 
         #setup booking and payment details
         booking_id = generate_new_booking_id()
@@ -561,16 +566,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             return
 
 
-
-        # 2) Notify for cancel-record deletion if coming back from Cancelled
-        if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
-            QMessageBox.information(
-                self, "Cancellation Record Removed",
-                "The appointment was previously cancelled. Cancellation data will now be removed."
-            )
-
-      
-        # 3) Validation
+        # 2) Validation
         if not (self.get_selected_patient_id() and self.validate_status()):
             QMessageBox.warning(self, "Validation Error",
                                 "Please select a valid patient and status.")
@@ -579,6 +575,24 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             QMessageBox.warning(self, "No Treatments",
                                 "You must add at least one treatment for non-cancelled appointments.")
             return
+        
+        #confirm before proceeding     
+        reply = QMessageBox.question(
+            self,
+            "Confirm Update Appointment",
+            "Are you sure you want to Update this Appointment?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
+        
+        # 3) Notify for cancel-record deletion if coming back from Cancelled
+        if previous_status == "Cancelled" and new_status in ("Scheduled", "Completed"):
+            QMessageBox.information(
+                self, "Cancellation Record Removed",
+                "The appointment was previously cancelled. Cancellation data will now be removed."
+            )
 
         #4) Notify for schedule change
         prev_str = previous_schedule.strftime('%Y-%m-%d %H:%M')
@@ -593,7 +607,6 @@ class Appointment_Dialog_Ctr(Add_Appointment):
         app_id = self.appointment_id
         pat_id = self.get_selected_patient_id()
         formatted_sched = new_schedule.strftime('%Y-%m-%d %H:%M:%S')
-
 
 
         # Check if all treatments are canceled

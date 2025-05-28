@@ -13,7 +13,7 @@ class Treatment_Dialog_Ctr(Add_Treatment):
 
     def __init__(self, appointment_sched: datetime):
         super().__init__()
-        self.cost_input.setText("0.00")
+        self.cost_input.setPlaceholderText("0.00")
 
          # datetime or date input)
         if isinstance(appointment_sched, datetime):
@@ -74,11 +74,6 @@ class Treatment_Dialog_Ctr(Add_Treatment):
 
         if not text or not self.cost_input.hasAcceptableInput() or cost_value <= 0:
             self.cost_input.setStyleSheet("border: 2px solid red;")
-            QMessageBox.warning(
-                self,
-                "Invalid Cost",
-                "Please enter a valid cost greater than 0."
-            )
             return False
         else:
             self.cost_input.setStyleSheet("")
@@ -91,7 +86,13 @@ class Treatment_Dialog_Ctr(Add_Treatment):
         self.validate_required(self.diagnosis_input)
         self.validate_required(self.procedure_input)
         cost = self.validate_cost()
+    
         if not cost:
+            QMessageBox.warning(
+                self,
+                "Invalid Cost",
+                "Please enter a valid cost greater than 0."
+            )
             return
 
         if (

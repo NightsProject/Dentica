@@ -180,6 +180,9 @@ class Patient_Dialog_Ctr(Add_Patient):
    
     def on_add_pressed(self):   
 
+      
+            
+            
         # Collect validation results
         first =  self.validate_alphabets_only(self.first_input)
         middle =  self.validate_alphabets_only(self.middle_input)
@@ -197,6 +200,18 @@ class Patient_Dialog_Ctr(Add_Patient):
                 "Please fill in all required fields with valid data before submitting."
             )
             return
+        
+        
+        reply = QMessageBox.question(
+            self,
+            "Confirm Add Patient",
+            "Are you sure you want to add this patient details?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
+
 
         # All valid, proceed to collect data
         patient_id = self.patient_input.text()
@@ -249,6 +264,16 @@ class Patient_Dialog_Ctr(Add_Patient):
                 "Validation Error",
                 "Please fill in all required fields with valid data before submitting."
             )
+            return
+        
+        reply = QMessageBox.question(
+            self,
+            "Confirm Update Patient",
+            "Are you sure you want to update this patient details?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
             return
         
         patient_id = self.patient_input.text()

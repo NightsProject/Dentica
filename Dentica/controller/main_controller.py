@@ -100,6 +100,14 @@ class MainController(QMainWindow, Ui_MainWindow):
         self.pushButton_7.clicked.connect(lambda: self.search_appointment_data("Completed")) #completed button
         self.pushButton_6.clicked.connect(lambda: self.search_appointment_data("Cancelled")) #canceled button
         
+        #payment button
+        self.pushButton_12.clicked.connect(self.reload_all_tables)
+        self.pushButton_13.clicked.connect(lambda: self.search_payment_data("Paid"))
+        self.pushButton_14.clicked.connect(lambda: self.search_payment_data("unpaid"))
+        
+  
+        
+        
     def open_login_popup(self):
         login_popup = Database_Dialog_Ctr(self.first_login)
         login_popup.credentialsSubmitted.connect(self.handle_credentials)
