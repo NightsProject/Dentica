@@ -137,7 +137,6 @@ class Add_Appointment(QtWidgets.QDialog):
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
-        self.cancel_btn.clicked.connect(self.reject)
         self.apply_theme()
         if appointment_data:
             self.populate_fields(appointment_data)

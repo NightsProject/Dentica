@@ -78,6 +78,7 @@ class Appointment_Dialog_Ctr(Add_Appointment):
 
             self.update_patient_search(appointment_data.get('Patient_Name', ''))
             self.update_total_billing()
+            self.cancel_btn.clicked.connect(self.cancel_update)
         else:
             # Creating a new appointment
             self.appointment_id = generate_new_appointment_id()
@@ -89,13 +90,35 @@ class Appointment_Dialog_Ctr(Add_Appointment):
             except TypeError:
                 pass
             self.add_btn.clicked.connect(self.on_add_pressed)
+            self.cancel_btn.clicked.connect(self.cancel)
 
         # Connect treatment addition and status validation
         self.AddTreat_btn.clicked.connect(self.on_add_treatment_clicked)
         self.status_input.currentIndexChanged.connect(self.validate_status)
         
         self.schedule_input.dateTimeChanged.connect(self.sync_treatment_dates)
+    
+    def cancel(self):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Cancel",
+            "Are you sure you want to cancel adding this Appointment?\nAll unsaved information will be lost.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            self.reject()
+       
+    def cancel_update(self):
+        reply = QMessageBox.question(
+            self,
+            "Confirm Cancel",
+            "Are you sure you want to cancel updating this Appointment?\nAll unsaved information will be lost.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
         
+        if reply == QMessageBox.StandardButton.Yes:
+            self.reject()
         
 
     # This method is called when the user changes the date/time in the QDateTimeEdit

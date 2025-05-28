@@ -97,7 +97,6 @@ class Add_Patient(QtWidgets.QDialog):
             QPushButton {background-color: #37547A; color: #fff;}
             QPushButton:hover {background-color: #fff; color: #000;}
         """)
-        self.cancel_btn.clicked.connect(self.reject)
         self.apply_theme()
         if patient_data:
             self.populate_fields(patient_data)
