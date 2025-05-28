@@ -251,7 +251,7 @@ class PatientPage(QtWidgets.QWidget):
         }
         """)
         self.UpAp_table.setObjectName("UpAp_table")
-        self.UpAp_table.setColumnCount(4)
+        self.UpAp_table.setColumnCount(6)
         self.UpAp_table.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(0, item)
@@ -261,10 +261,16 @@ class PatientPage(QtWidgets.QWidget):
         item.setText("Date")
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(2, item)
-        item.setText("Procedure")
+        item.setText("Appointment Status")
         item = QtWidgets.QTableWidgetItem()
         self.UpAp_table.setHorizontalHeaderItem(3, item)
-        item.setText("Cost")
+        item.setText("Treatment/s")
+        item = QtWidgets.QTableWidgetItem()
+        self.UpAp_table.setHorizontalHeaderItem(4, item)
+        item.setText("Total Cost")
+        item = QtWidgets.QTableWidgetItem()
+        self.UpAp_table.setHorizontalHeaderItem(5, item)
+        item.setText("Payment Status")
         self.UpAp_table.verticalHeader().setVisible(False)
 
         self.UpAp_table.horizontalHeader().setStyleSheet("""

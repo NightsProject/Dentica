@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from ui.Patients_Page import PatientPage
-from backend.patient_page_comp import get_all_patient_records
+from backend.patient_page_comp import get_all_patient_records, get_patients_appointment
 from controller.patient_ctr import Patient_Dialog_Ctr
 from PyQt6.QtWidgets import QDialog, QMessageBox
 from backend.patients_comp import get_patient_data
@@ -19,6 +19,38 @@ class Patient_Page_Ctr(PatientPage):
         
         # Load patient information when the page is initialized
         self.load_patient_infos(patient_id)
+        self.load_appointments(patient_id)
+
+    def load_appointments(self, patient_id):
+        """Load appointments for the given patient ID."""
+        appointments = get_patients_appointment(patient_id)
+
+        if not appointments:
+            self.UpAp_table.setRowCount(0)
+            return
+
+        self.UpAp_table.setRowCount(len(appointments))
+
+        for row_idx, appt in enumerate(appointments):
+            appointment_id = appt.get("Appointment_ID")
+            schedule = appt.get("Schedule")
+            status = appt.get("Status")
+            treatment_count = appt.get("Treatment_Count", 0)
+            total_cost = appt.get("Total_Cost", 0.0)
+            payment_status = appt.get("Payment_Status")
+
+            self.UpAp_table.setItem(row_idx, 0, QtWidgets.QTableWidgetItem(str(appointment_id)))
+            self.UpAp_table.setItem(row_idx, 1, QtWidgets.QTableWidgetItem(str(schedule)))
+            self.UpAp_table.setItem(row_idx, 2, QtWidgets.QTableWidgetItem(status))
+            self.UpAp_table.setItem(row_idx, 3, QtWidgets.QTableWidgetItem(str(treatment_count)))
+
+            try:
+                formatted_cost = f"₱{float(total_cost):,.2f}"
+            except (ValueError, TypeError):
+                formatted_cost = "₱0.00"
+
+            self.UpAp_table.setItem(row_idx, 4, QtWidgets.QTableWidgetItem(formatted_cost))
+            self.UpAp_table.setItem(row_idx, 5, QtWidgets.QTableWidgetItem(str(payment_status)))
 
     def load_patient_infos(self, patient_id):
         data = get_all_patient_records(patient_id)

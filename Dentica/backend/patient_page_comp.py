@@ -1,4 +1,5 @@
 from backend.DB import connectDB
+from mysql.connector import Error
 
 def get_all_patient_records(patient_id):
     conn = connectDB()
@@ -86,4 +87,53 @@ def get_all_patient_records(patient_id):
     conn.close()
     return patient_data
 
-def get_patient_appointment(patient_id):
+
+
+def get_patients_appointment(patient_id):
+    try:
+        conn = connectDB()
+        cursor = conn.cursor()
+
+        query = """
+        SELECT 
+            a.Appointment_ID,
+            a.Schedule,
+            a.Status,
+            COUNT(t.Treatment_ID) AS Treatment_Count,
+            IFNULL(SUM(CASE 
+                WHEN t.Treatment_Status != 'Canceled' THEN t.Cost 
+                ELSE 0 
+            END), 0) AS Total_Cost,
+            IFNULL(p.Payment_Status, 'Unpaid') AS Payment_Status
+        FROM Appointment a
+        LEFT JOIN Treatment t ON a.Appointment_ID = t.Appointment_ID
+        LEFT JOIN Pays p ON a.Appointment_ID = p.Appointment_ID AND a.Patient_ID = p.Patient_ID
+        WHERE a.Patient_ID = %s
+        GROUP BY a.Appointment_ID, a.Schedule, a.Status, p.Payment_Status
+        ORDER BY a.Schedule DESC
+        """
+
+        cursor.execute(query, (patient_id,))
+        rows = cursor.fetchall()
+
+        appointments = []
+        for row in rows:
+            appointments.append({
+                "Appointment_ID": row[0],
+                "Schedule": row[1].strftime("%Y-%m-%d %H:%M:%S"),
+                "Status": row[2],
+                "Treatment_Count": row[3],
+                "Total_Cost": float(row[4]),
+                "Payment_Status": row[5]
+            })
+
+        return appointments
+
+    except Error as e:
+        print(f"MySQL error: {e}")
+        return []
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
