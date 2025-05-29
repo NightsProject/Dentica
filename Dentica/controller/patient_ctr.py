@@ -82,6 +82,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         gender_index = self.gender_combo.findText(patient_data['Gender'])
         if gender_index >= 0:
             self.gender_combo.setCurrentIndex(gender_index)
+        self.gender_combo.setEnabled(False)  # Disable
         
         self.contact_input.setText(patient_data['Contact_Number'])
         self.email_input.setText(patient_data['Email'])
@@ -90,7 +91,7 @@ class Patient_Dialog_Ctr(Add_Patient):
         if isinstance(birth_date, str):
             birth_date = QtCore.QDate.fromString(birth_date, QtCore.Qt.DateFormat.ISODate)
         self.birth_input.setDate(birth_date)
-
+        self.birth_input.setEnabled(False)  # Disable birth date editing
         # Load and display the patient's picture if it exists
         self.load_patient_picture(patient_data['Patient_ID'])
 
@@ -180,6 +181,9 @@ class Patient_Dialog_Ctr(Add_Patient):
    
     def on_add_pressed(self):   
 
+      
+            
+            
         # Collect validation results
         first =  self.validate_alphabets_only(self.first_input)
         middle =  self.validate_alphabets_only(self.middle_input)
@@ -197,6 +201,18 @@ class Patient_Dialog_Ctr(Add_Patient):
                 "Please fill in all required fields with valid data before submitting."
             )
             return
+        
+        
+        reply = QMessageBox.question(
+            self,
+            "Confirm Add Patient",
+            "Are you sure you want to add this patient details?. \nOnce added, patients Gender and Birth Date cannot be changed.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
+            return
+
 
         # All valid, proceed to collect data
         patient_id = self.patient_input.text()
@@ -249,6 +265,16 @@ class Patient_Dialog_Ctr(Add_Patient):
                 "Validation Error",
                 "Please fill in all required fields with valid data before submitting."
             )
+            return
+        
+        reply = QMessageBox.question(
+            self,
+            "Confirm Update Patient",
+            "Are you sure you want to update this patient details?.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.No:
             return
         
         patient_id = self.patient_input.text()

@@ -120,7 +120,7 @@ def search_payments(keyword):
          OR LOWER(pay.Appointment_ID)   LIKE %s
          OR CAST(pay.Total_Amount AS CHAR) LIKE %s
          OR LOWER(pay.Payment_Method)   LIKE %s
-         OR LOWER(pay.Payment_Status)   LIKE %s
+         OR LOWER(pay.Payment_Status)   = %s
          OR CAST(pay.Payment_Date AS CHAR) LIKE %s
         ORDER BY pay.Payment_ID
     """
@@ -135,7 +135,7 @@ def search_payments(keyword):
         like_kw,
         like_kw,
         like_kw,
-        like_kw,
+        kw,
         like_kw
     ]
 
