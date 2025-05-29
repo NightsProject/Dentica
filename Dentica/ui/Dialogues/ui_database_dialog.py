@@ -142,7 +142,7 @@ class Database_Login(QtWidgets.QDialog):
             QPushButton:pressed {
                 background-color: #1e3a8a;
             }
-        """)
+            """)
 
         self.cancel_btn = QtWidgets.QPushButton("Cancel", self.container)
         self.cancel_btn.setGeometry(185, 350, 110, 40)
